@@ -1,9 +1,21 @@
 class Player
 {
+static width = 10;
+static height = 10;
+static _container: createjs.Container;
+
 shape: createjs.Shape;
 movement_speed: number;
 width: number;
 height: number;
+
+
+static init( stage )
+    {
+    Player._container = new createjs.Container();
+
+    stage.addChild( Player._container );
+    }
 
 constructor()
     {
@@ -23,12 +35,17 @@ constructor()
     shape.x = canvas.width / 2 - width / 2;
     shape.y = canvas.height - height;
 
-    G.STAGE.addChild( shape );
+    Player._container.addChild( shape );
 
     this.movement_speed = 10;   //HERE  pixel per tick
     this.shape = shape;
     this.width = width;
     this.height = height;
+    }
+
+remove()
+    {
+    Player._container.removeChild( this.shape );
     }
 
 moveLeft()
@@ -56,6 +73,34 @@ moveRight()
         }
 
     this.shape.x = nextX;
+    }
+
+/*
+    top/left origin
+ */
+
+getX()
+    {
+    return this.shape.x;
+    }
+
+/*
+    top/left origin
+ */
+
+getY()
+    {
+    return this.shape.y;
+    }
+
+getCenterX()
+    {
+    return this.shape.x + this.width / 2;
+    }
+
+getCenterY()
+    {
+    return this.shape.y + this.height / 2;
     }
 
 tick( event )

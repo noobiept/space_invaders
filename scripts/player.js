@@ -10,12 +10,19 @@ var Player = (function () {
         var canvas = G.STAGE.canvas;
         shape.x = canvas.width / 2 - width / 2;
         shape.y = canvas.height - height;
-        G.STAGE.addChild(shape);
+        Player._container.addChild(shape);
         this.movement_speed = 10; //HERE  pixel per tick
         this.shape = shape;
         this.width = width;
         this.height = height;
     }
+    Player.init = function (stage) {
+        Player._container = new createjs.Container();
+        stage.addChild(Player._container);
+    };
+    Player.prototype.remove = function () {
+        Player._container.removeChild(this.shape);
+    };
     Player.prototype.moveLeft = function () {
         var nextX = this.shape.x - this.movement_speed;
         if (nextX < 0) {
@@ -32,7 +39,27 @@ var Player = (function () {
         }
         this.shape.x = nextX;
     };
+    /*
+        top/left origin
+     */
+    Player.prototype.getX = function () {
+        return this.shape.x;
+    };
+    /*
+        top/left origin
+     */
+    Player.prototype.getY = function () {
+        return this.shape.y;
+    };
+    Player.prototype.getCenterX = function () {
+        return this.shape.x + this.width / 2;
+    };
+    Player.prototype.getCenterY = function () {
+        return this.shape.y + this.height / 2;
+    };
     Player.prototype.tick = function (event) {
     };
+    Player.width = 10;
+    Player.height = 10;
     return Player;
 })();

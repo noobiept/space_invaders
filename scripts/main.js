@@ -2,6 +2,7 @@
 /// <reference path="../typings/utilities-1.4.d.ts" />
 /// <reference path="game.ts" />
 /// <reference path="player.ts" />
+/// <reference path="bullet.ts" />
 var G = {
     STAGE: null
 };
@@ -10,5 +11,8 @@ window.onload = function () {
     canvas.width = 600;
     canvas.height = 400;
     G.STAGE = new createjs.Stage(canvas);
+    // the order matters for the z-index (player is going to appear on top of the bullets for example)
+    Bullet.init(G.STAGE);
+    Player.init(G.STAGE);
     Game.start();
 };
