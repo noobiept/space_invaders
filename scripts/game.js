@@ -34,10 +34,10 @@ var Game;
         PLAYER = new Player();
         createjs.Ticker.on('tick', function (event) {
             if (MOVE_LEFT) {
-                PLAYER.moveLeft();
+                PLAYER.moveLeft(event);
             }
             else if (MOVE_RIGHT) {
-                PLAYER.moveRight();
+                PLAYER.moveRight(event);
             }
             PLAYER.tick(event);
             Bullet.tick(event);

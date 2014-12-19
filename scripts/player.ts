@@ -3,9 +3,9 @@ class Player
 static width = 10;
 static height = 10;
 static _container: createjs.Container;
+static movement_speed = 80;
 
 shape: createjs.Shape;
-movement_speed: number;
 width: number;
 height: number;
 
@@ -37,7 +37,6 @@ constructor()
 
     Player._container.addChild( shape );
 
-    this.movement_speed = 10;   //HERE  pixel per tick
     this.shape = shape;
     this.width = width;
     this.height = height;
@@ -48,9 +47,9 @@ remove()
     Player._container.removeChild( this.shape );
     }
 
-moveLeft()
+moveLeft( event )
     {
-    var nextX = this.shape.x - this.movement_speed;
+    var nextX = this.shape.x - Player.movement_speed * event.delta / 1000;
 
     if ( nextX < 0 )
         {
@@ -60,9 +59,9 @@ moveLeft()
     this.shape.x = nextX;
     }
 
-moveRight()
+moveRight( event )
     {
-    var nextX = this.shape.x + this.movement_speed;
+    var nextX = this.shape.x + Player.movement_speed * event.delta / 1000;
 
     var canvasWidth = G.STAGE.canvas.width;
     var limit = canvasWidth - this.width;

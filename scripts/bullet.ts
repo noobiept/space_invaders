@@ -4,9 +4,9 @@ static width = 2;
 static height = 6;
 static _container: createjs.Container;
 static all_bullets: Bullet[] = [];
+static movement_speed = 100;
 
 shape: createjs.Shape;
-movement_speed: number;
 
 static init( stage )
     {
@@ -29,7 +29,6 @@ constructor( x: number, y: number )
     shape.y = y;
 
     this.shape = shape;
-    this.movement_speed = 20;   //HERE
 
     Bullet._container.addChild( shape );
 
@@ -45,9 +44,9 @@ remove()
     Bullet._container.removeChild( this.shape );
     }
 
-tick( event )
+tick( tickMove )
     {
-    this.shape.y -= this.movement_speed;
+    this.shape.y -= tickMove;
 
     if ( this.shape.y < 0 )
         {
@@ -57,9 +56,12 @@ tick( event )
 
 static tick( event )
     {
+        // how much each bullet moves per tick
+    var tickMove = Bullet.movement_speed *  event.delta / 1000;
+
     for (var a = Bullet.all_bullets.length - 1 ; a >= 0 ; a--)
         {
-        Bullet.all_bullets[ a ].tick( event );
+        Bullet.all_bullets[ a ].tick( tickMove );
         }
     }
 }

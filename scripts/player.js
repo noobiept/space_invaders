@@ -11,7 +11,6 @@ var Player = (function () {
         shape.x = canvas.width / 2 - width / 2;
         shape.y = canvas.height - height;
         Player._container.addChild(shape);
-        this.movement_speed = 10; //HERE  pixel per tick
         this.shape = shape;
         this.width = width;
         this.height = height;
@@ -23,15 +22,15 @@ var Player = (function () {
     Player.prototype.remove = function () {
         Player._container.removeChild(this.shape);
     };
-    Player.prototype.moveLeft = function () {
-        var nextX = this.shape.x - this.movement_speed;
+    Player.prototype.moveLeft = function (event) {
+        var nextX = this.shape.x - Player.movement_speed * event.delta / 1000;
         if (nextX < 0) {
             nextX = 0;
         }
         this.shape.x = nextX;
     };
-    Player.prototype.moveRight = function () {
-        var nextX = this.shape.x + this.movement_speed;
+    Player.prototype.moveRight = function (event) {
+        var nextX = this.shape.x + Player.movement_speed * event.delta / 1000;
         var canvasWidth = G.STAGE.canvas.width;
         var limit = canvasWidth - this.width;
         if (nextX > limit) {
@@ -61,5 +60,6 @@ var Player = (function () {
     };
     Player.width = 10;
     Player.height = 10;
+    Player.movement_speed = 80;
     return Player;
 })();

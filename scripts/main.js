@@ -11,6 +11,7 @@ window.onload = function () {
     canvas.width = 600;
     canvas.height = 400;
     G.STAGE = new createjs.Stage(canvas);
+    createjs.Ticker.framerate = 50;
     // the order matters for the z-index (player is going to appear on top of the bullets for example)
     Bullet.init(G.STAGE);
     Player.init(G.STAGE);

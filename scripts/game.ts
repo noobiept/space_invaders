@@ -62,12 +62,12 @@ export function start()
         {
         if ( MOVE_LEFT )
             {
-            PLAYER.moveLeft();
+            PLAYER.moveLeft( event );
             }
 
         else if ( MOVE_RIGHT )
             {
-            PLAYER.moveRight();
+            PLAYER.moveRight( event );
             }
 
         PLAYER.tick( event );
