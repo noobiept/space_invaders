@@ -4,7 +4,7 @@ var Game;
     var MOVE_LEFT = false;
     var MOVE_RIGHT = false;
     var PLAYER;
-    function start() {
+    function init() {
         document.body.addEventListener('keydown', function (event) {
             var key = event.keyCode;
             if (key === Utilities.KEY_CODE.leftArrow || key === Utilities.KEY_CODE.a) {
@@ -41,8 +41,30 @@ var Game;
             }
             PLAYER.tick(event);
             Bullet.tick(event);
+            Enemy.tick(event);
             G.STAGE.update();
         });
+    }
+    Game.init = init;
+    function start() {
+        var numberOfLines = 5;
+        var numberOfColumns = 11;
+        var spaceBetween = 10;
+        var canvasWidth = G.STAGE.canvas.width;
+        var enemiesSpace = numberOfColumns * Enemy.width + (numberOfColumns - 1) * spaceBetween;
+        // start position
+        var startX = canvasWidth / 2 - enemiesSpace / 2;
+        var x = startX;
+        var y = 20;
+        for (var line = 0; line < numberOfLines; line++) {
+            for (var column = 0; column < numberOfColumns; column++) {
+                new Enemy(x, y);
+                x += Enemy.width + spaceBetween;
+            }
+            x = startX;
+            y += Enemy.height + spaceBetween;
+        }
+        Enemy.findLeftRight();
     }
     Game.start = start;
 })(Game || (Game = {}));

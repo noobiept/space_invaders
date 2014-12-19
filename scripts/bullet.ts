@@ -57,7 +57,7 @@ tick( tickMove )
 static tick( event )
     {
         // how much each bullet moves per tick
-    var tickMove = Bullet.movement_speed *  event.delta / 1000;
+    var tickMove = Bullet.movement_speed * event.delta / 1000;
 
     for (var a = Bullet.all_bullets.length - 1 ; a >= 0 ; a--)
         {

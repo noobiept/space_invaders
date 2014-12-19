@@ -1,14 +1,11 @@
 class Player
 {
-static width = 10;
+static width = 20;
 static height = 10;
 static _container: createjs.Container;
 static movement_speed = 80;
 
 shape: createjs.Shape;
-width: number;
-height: number;
-
 
 static init( stage )
     {
@@ -21,25 +18,20 @@ constructor()
     {
     var shape = new createjs.Shape();
 
-    var width = 10;
-    var height = 10;
-
     var g = shape.graphics;
 
     g.beginFill( 'green' );
-    g.drawRect( 0, 0, width, height );
+    g.drawRect( 0, 0, Player.width, Player.height );
     g.endFill();
 
     var canvas = G.STAGE.canvas;
 
-    shape.x = canvas.width / 2 - width / 2;
-    shape.y = canvas.height - height;
+    shape.x = canvas.width / 2 - Player.width / 2;
+    shape.y = canvas.height - Player.height;
 
     Player._container.addChild( shape );
 
     this.shape = shape;
-    this.width = width;
-    this.height = height;
     }
 
 remove()
@@ -64,7 +56,7 @@ moveRight( event )
     var nextX = this.shape.x + Player.movement_speed * event.delta / 1000;
 
     var canvasWidth = G.STAGE.canvas.width;
-    var limit = canvasWidth - this.width;
+    var limit = canvasWidth - Player.width;
 
     if ( nextX > limit )
         {
@@ -94,12 +86,12 @@ getY()
 
 getCenterX()
     {
-    return this.shape.x + this.width / 2;
+    return this.shape.x + Player.width / 2;
     }
 
 getCenterY()
     {
-    return this.shape.y + this.height / 2;
+    return this.shape.y + Player.height / 2;
     }
 
 tick( event )
