@@ -1,12 +1,15 @@
+enum BulletDirection { top, bottom }
+
 class Bullet
 {
 static width = 2;
 static height = 6;
 static _container: createjs.Container;
-static all_bullets: Bullet[] = [];
+static all: Bullet[] = [];
 static movement_speed = 100;
 
 shape: createjs.Shape;
+direction: BulletDirection;
 
 static init( stage )
     {
@@ -15,7 +18,7 @@ static init( stage )
     stage.addChild( Bullet._container );
     }
 
-constructor( x: number, y: number )
+constructor( x: number, y: number, direction: BulletDirection )
     {
     var shape = new createjs.Shape();
 
@@ -28,29 +31,44 @@ constructor( x: number, y: number )
     shape.x = x;
     shape.y = y;
 
+    this.direction = direction;
     this.shape = shape;
 
     Bullet._container.addChild( shape );
 
-    Bullet.all_bullets.push( this );
+    Bullet.all.push( this );
     }
 
 remove()
     {
-    var index = Bullet.all_bullets.indexOf( this );
+    var index = Bullet.all.indexOf( this );
 
-    Bullet.all_bullets.splice( index, 1 );
+    Bullet.all.splice( index, 1 );
 
     Bullet._container.removeChild( this.shape );
     }
 
 tick( tickMove )
     {
-    this.shape.y -= tickMove;
-
-    if ( this.shape.y < 0 )
+    if ( this.direction === BulletDirection.top )
         {
-        this.remove();
+        this.shape.y -= tickMove;
+
+        if ( this.shape.y < 0 )
+            {
+            this.remove();
+            }
+        }
+
+        // bottom
+    else
+        {
+        this.shape.y += tickMove;
+
+        if ( this.shape.y > G.CANVAS_HEIGHT )
+            {
+            this.remove();
+            }
         }
     }
 
@@ -59,9 +77,9 @@ static tick( event )
         // how much each bullet moves per tick
     var tickMove = Bullet.movement_speed * event.delta / 1000;
 
-    for (var a = Bullet.all_bullets.length - 1 ; a >= 0 ; a--)
+    for (var a = Bullet.all.length - 1 ; a >= 0 ; a--)
         {
-        Bullet.all_bullets[ a ].tick( tickMove );
+        Bullet.all[ a ].tick( tickMove );
         }
     }
 }

@@ -48,6 +48,15 @@ remove()
     }
 
 
+fire()
+    {
+    var bulletX = this.shape.x + Ship.width / 2 - Bullet.width / 2;
+    var bulletY = this.shape.y + Ship.height / 2 - Bullet.height / 2;
+
+    new Bullet( bulletX, bulletY, BulletDirection.bottom );
+    }
+
+
 tick( tickMove )
     {
     if ( Ship.moving_right )
@@ -107,14 +116,6 @@ static moveOneLineDown()
 
 static tick( event )
     {
-    var tickMove = Ship.movement_speed * event.delta / 1000;
-
-    for (var a = Ship.all.length - 1 ; a >= 0 ; a--)
-        {
-        Ship.all[ a ].tick( tickMove );
-        }
-
-
         // determine if we reach the extremes of the canvas, and if so, need to change direction
     var limit = 10;
 
@@ -124,6 +125,7 @@ static tick( event )
             {
             Ship.moving_right = false;
             Ship.moveOneLineDown();
+            return;
             }
         }
 
@@ -133,7 +135,16 @@ static tick( event )
             {
             Ship.moving_right = true;
             Ship.moveOneLineDown();
+            return;
             }
+        }
+
+
+     var tickMove = Ship.movement_speed * event.delta / 1000;
+
+    for (var a = Ship.all.length - 1 ; a >= 0 ; a--)
+        {
+        Ship.all[ a ].tick( tickMove );
         }
     }
 }

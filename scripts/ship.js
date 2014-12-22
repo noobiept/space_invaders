@@ -20,6 +20,11 @@ var Ship = (function () {
         Ship.all.splice(index, 1);
         Ship._container.removeChild(this.shape);
     };
+    Ship.prototype.fire = function () {
+        var bulletX = this.shape.x + Ship.width / 2 - Bullet.width / 2;
+        var bulletY = this.shape.y + Ship.height / 2 - Bullet.height / 2;
+        new Bullet(bulletX, bulletY, 1 /* bottom */);
+    };
     Ship.prototype.tick = function (tickMove) {
         if (Ship.moving_right) {
             this.shape.x += tickMove;
@@ -57,23 +62,25 @@ var Ship = (function () {
         }
     };
     Ship.tick = function (event) {
-        var tickMove = Ship.movement_speed * event.delta / 1000;
-        for (var a = Ship.all.length - 1; a >= 0; a--) {
-            Ship.all[a].tick(tickMove);
-        }
         // determine if we reach the extremes of the canvas, and if so, need to change direction
         var limit = 10;
         if (Ship.moving_right) {
             if (Ship.furthest_right.shape.x > G.CANVAS_WIDTH - Ship.width - limit) {
                 Ship.moving_right = false;
                 Ship.moveOneLineDown();
+                return;
             }
         }
         else {
             if (Ship.furthest_left.shape.x < limit) {
                 Ship.moving_right = true;
                 Ship.moveOneLineDown();
+                return;
             }
+        }
+        var tickMove = Ship.movement_speed * event.delta / 1000;
+        for (var a = Ship.all.length - 1; a >= 0; a--) {
+            Ship.all[a].tick(tickMove);
         }
     };
     Ship.width = 20;

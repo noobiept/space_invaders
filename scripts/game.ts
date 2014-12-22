@@ -14,6 +14,10 @@ var TEMPO_LIMIT = 600;
 var MYSTERY_COUNT = 0;
 var MYSTERY_LIMIT = 0;
 
+    // time until a random ship fires a bullet
+var FIRE_COUNT = 0;
+var FIRE_LIMIT = 0; // its assigned randomly
+
 export function init()
     {
     document.body.addEventListener( 'keydown', function( event )
@@ -59,7 +63,7 @@ export function init()
             var bulletX = PLAYER.getCenterX() - Bullet.width / 2;
             var bulletY = PLAYER.getCenterY() - Bullet.height / 2;
 
-            new Bullet( bulletX, bulletY );
+            new Bullet( bulletX, bulletY, BulletDirection.top );
             }
         });
 
@@ -98,19 +102,32 @@ export function start()
     Ship.findLeftRight();
 
     setMysteryLimit();
+    setFireLimit();
     }
 
 
 function setMysteryLimit()
     {
+    MYSTERY_COUNT = 0;
     MYSTERY_LIMIT = Utilities.getRandomInt( 8000, 15000 );
+    }
+
+
+function setFireLimit()
+    {
+    FIRE_COUNT = 0;
+    FIRE_LIMIT = Utilities.getRandomInt( 1000, 5000 );
     }
 
 
 export function tick( event )
     {
-    TEMPO_COUNT += event.delta;
-    MYSTERY_COUNT += event.delta;
+        // update the counters
+    var delta = event.delta;
+
+    TEMPO_COUNT += delta;
+    MYSTERY_COUNT += delta;
+    FIRE_COUNT += delta;
 
         // deal with the movement of the player
     if ( MOVE_LEFT )
@@ -137,12 +154,21 @@ export function tick( event )
         // spawn a new mystery ship
     if ( MYSTERY_COUNT > MYSTERY_LIMIT )
         {
-        MYSTERY_COUNT = 0;
-
         new MysteryShip();
 
             // new random limit for the next one
         setMysteryLimit();
+        }
+
+        // a random ship fires a bullet
+    if ( FIRE_COUNT > FIRE_LIMIT )
+        {
+            // get a random ship
+        var position = Utilities.getRandomInt( 0, Ship.all.length - 1 );
+
+        Ship.all[ position ].fire();
+
+        setFireLimit();
         }
 
     PLAYER.tick( event );
