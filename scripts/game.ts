@@ -75,7 +75,7 @@ export function start()
     var numberOfColumns = 11;
     var spaceBetween = 10;
     var canvasWidth = G.STAGE.canvas.width;
-    var enemiesSpace = numberOfColumns * Enemy.width + (numberOfColumns - 1) * spaceBetween;
+    var enemiesSpace = numberOfColumns * Ship.width + (numberOfColumns - 1) * spaceBetween;
 
         // start position
     var startX = canvasWidth / 2 - enemiesSpace / 2;
@@ -86,16 +86,16 @@ export function start()
         {
         for (var column = 0 ; column < numberOfColumns ; column++)
             {
-            new Enemy( x, y );
+            new Ship( x, y );
 
-            x += Enemy.width + spaceBetween;
+            x += Ship.width + spaceBetween;
             }
 
         x = startX;
-        y += Enemy.height + spaceBetween;
+        y += Ship.height + spaceBetween;
         }
 
-    Enemy.findLeftRight();
+    Ship.findLeftRight();
 
     setMysteryLimit();
     }
@@ -128,7 +128,7 @@ export function tick( event )
         {
         TEMPO_COUNT = 0;
 
-        Enemy.tick( event );
+        Ship.tick( event );
         }
 
         // the mystery ship is moved normally every tick

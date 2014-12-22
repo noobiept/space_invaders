@@ -1,21 +1,21 @@
-class Enemy
+class Ship
 {
 static width = 20;
 static height = 20;
 static _container: createjs.Container;
-static all_enemies: Enemy[] = [];
+static all: Ship[] = [];
 static movement_speed = 100;
-static furthest_left: Enemy;
-static furthest_right: Enemy;
+static furthest_left: Ship;
+static furthest_right: Ship;
 static moving_right = true;
 
 shape: createjs.Shape;
 
 static init( stage )
     {
-    Enemy._container = new createjs.Container();
+    Ship._container = new createjs.Container();
 
-    stage.addChild( Enemy._container );
+    stage.addChild( Ship._container );
     }
 
 constructor( x: number, y: number )
@@ -25,7 +25,7 @@ constructor( x: number, y: number )
     var g = shape.graphics;
 
     g.beginFill( 'red' );
-    g.drawRect( 0, 0, Enemy.width, Enemy.height );
+    g.drawRect( 0, 0, Ship.width, Ship.height );
     g.endFill();
 
     shape.x = x;
@@ -33,24 +33,24 @@ constructor( x: number, y: number )
 
     this.shape = shape;
 
-    Enemy._container.addChild( shape );
+    Ship._container.addChild( shape );
 
-    Enemy.all_enemies.push( this );
+    Ship.all.push( this );
     }
 
 remove()
     {
-    var index = Enemy.all_enemies.indexOf( this );
+    var index = Ship.all.indexOf( this );
 
-    Enemy.all_enemies.splice( index, 1 );
+    Ship.all.splice( index, 1 );
 
-    Enemy._container.removeChild( this.shape );
+    Ship._container.removeChild( this.shape );
     }
 
 
 tick( tickMove )
     {
-    if ( Enemy.moving_right )
+    if ( Ship.moving_right )
         {
         this.shape.x += tickMove;
         }
@@ -67,7 +67,7 @@ tick( tickMove )
 
 static findLeftRight()
     {
-    var all = Enemy.all_enemies;
+    var all = Ship.all;
     var furthestLeft = all[ 0 ];
     var furthestRight = furthestLeft;
     var length = all.length;
@@ -87,8 +87,8 @@ static findLeftRight()
             }
         }
 
-    Enemy.furthest_left = furthestLeft;
-    Enemy.furthest_right = furthestRight
+    Ship.furthest_left = furthestLeft;
+    Ship.furthest_right = furthestRight
     }
 
 
@@ -98,41 +98,41 @@ static findLeftRight()
 
 static moveOneLineDown()
     {
-    for (var a = Enemy.all_enemies.length - 1 ; a >= 0 ; a--)
+    for (var a = Ship.all.length - 1 ; a >= 0 ; a--)
         {
-        Enemy.all_enemies[ a ].shape.y += Enemy.height;
+        Ship.all[ a ].shape.y += Ship.height;
         }
     }
 
 
 static tick( event )
     {
-    var tickMove = Enemy.movement_speed * event.delta / 1000;
+    var tickMove = Ship.movement_speed * event.delta / 1000;
 
-    for (var a = Enemy.all_enemies.length - 1 ; a >= 0 ; a--)
+    for (var a = Ship.all.length - 1 ; a >= 0 ; a--)
         {
-        Enemy.all_enemies[ a ].tick( tickMove );
+        Ship.all[ a ].tick( tickMove );
         }
 
 
         // determine if we reach the extremes of the canvas, and if so, need to change direction
     var limit = 10;
 
-    if ( Enemy.moving_right )
+    if ( Ship.moving_right )
         {
-        if ( Enemy.furthest_right.shape.x > G.CANVAS_WIDTH - Enemy.width - limit )
+        if ( Ship.furthest_right.shape.x > G.CANVAS_WIDTH - Ship.width - limit )
             {
-            Enemy.moving_right = false;
-            Enemy.moveOneLineDown();
+            Ship.moving_right = false;
+            Ship.moveOneLineDown();
             }
         }
 
     else
         {
-        if ( Enemy.furthest_left.shape.x < limit )
+        if ( Ship.furthest_left.shape.x < limit )
             {
-            Enemy.moving_right = true;
-            Enemy.moveOneLineDown();
+            Ship.moving_right = true;
+            Ship.moveOneLineDown();
             }
         }
     }
