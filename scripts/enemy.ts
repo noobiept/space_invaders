@@ -4,7 +4,7 @@ static width = 20;
 static height = 20;
 static _container: createjs.Container;
 static all_enemies: Enemy[] = [];
-static movement_speed = 50;
+static movement_speed = 100;
 static furthest_left: Enemy;
 static furthest_right: Enemy;
 static moving_right = true;
@@ -92,6 +92,19 @@ static findLeftRight()
     }
 
 
+/*
+    Moves all ships one line down (called when we reach an extremity of the canvas)
+ */
+
+static moveOneLineDown()
+    {
+    for (var a = Enemy.all_enemies.length - 1 ; a >= 0 ; a--)
+        {
+        Enemy.all_enemies[ a ].shape.y += Enemy.height;
+        }
+    }
+
+
 static tick( event )
     {
     var tickMove = Enemy.movement_speed * event.delta / 1000;
@@ -110,6 +123,7 @@ static tick( event )
         if ( Enemy.furthest_right.shape.x > G.CANVAS_WIDTH - Enemy.width - limit )
             {
             Enemy.moving_right = false;
+            Enemy.moveOneLineDown();
             }
         }
 
@@ -118,6 +132,7 @@ static tick( event )
         if ( Enemy.furthest_left.shape.x < limit )
             {
             Enemy.moving_right = true;
+            Enemy.moveOneLineDown();
             }
         }
     }

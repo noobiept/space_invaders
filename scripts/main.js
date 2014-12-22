@@ -4,6 +4,7 @@
 /// <reference path="player.ts" />
 /// <reference path="bullet.ts" />
 /// <reference path="enemy.ts" />
+/// <reference path="mystery_ship.ts" />
 var G = {
     CANVAS_WIDTH: 0,
     CANVAS_HEIGHT: 0,
@@ -11,13 +12,14 @@ var G = {
 };
 window.onload = function () {
     var canvas = document.querySelector('#MainCanvas');
-    canvas.width = G.CANVAS_WIDTH = 500;
+    canvas.width = G.CANVAS_WIDTH = 400;
     canvas.height = G.CANVAS_HEIGHT = 400;
     G.STAGE = new createjs.Stage(canvas);
     createjs.Ticker.framerate = 50;
     // the order matters for the z-index (player is going to appear on top of the bullets for example)
     Bullet.init(G.STAGE);
     Enemy.init(G.STAGE);
+    MysteryShip.init(G.STAGE);
     Player.init(G.STAGE);
     Game.init();
     Game.start();

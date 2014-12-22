@@ -48,6 +48,14 @@ var Enemy = (function () {
         Enemy.furthest_left = furthestLeft;
         Enemy.furthest_right = furthestRight;
     };
+    /*
+        Moves all ships one line down (called when we reach an extremity of the canvas)
+     */
+    Enemy.moveOneLineDown = function () {
+        for (var a = Enemy.all_enemies.length - 1; a >= 0; a--) {
+            Enemy.all_enemies[a].shape.y += Enemy.height;
+        }
+    };
     Enemy.tick = function (event) {
         var tickMove = Enemy.movement_speed * event.delta / 1000;
         for (var a = Enemy.all_enemies.length - 1; a >= 0; a--) {
@@ -58,18 +66,20 @@ var Enemy = (function () {
         if (Enemy.moving_right) {
             if (Enemy.furthest_right.shape.x > G.CANVAS_WIDTH - Enemy.width - limit) {
                 Enemy.moving_right = false;
+                Enemy.moveOneLineDown();
             }
         }
         else {
             if (Enemy.furthest_left.shape.x < limit) {
                 Enemy.moving_right = true;
+                Enemy.moveOneLineDown();
             }
         }
     };
     Enemy.width = 20;
     Enemy.height = 20;
     Enemy.all_enemies = [];
-    Enemy.movement_speed = 50;
+    Enemy.movement_speed = 100;
     Enemy.moving_right = true;
     return Enemy;
 })();

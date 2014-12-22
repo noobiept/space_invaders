@@ -6,6 +6,14 @@ var MOVE_RIGHT = false;
 
 var PLAYER: Player;
 
+    // the tempo of the song/game (the movement of the enemies follow the tempo as well)
+var TEMPO_COUNT = 0;
+var TEMPO_LIMIT = 600;
+
+    // when to spawn a mystery ship, the limit is a random value assigned later
+var MYSTERY_COUNT = 0;
+var MYSTERY_LIMIT = 0;
+
 export function init()
     {
     document.body.addEventListener( 'keydown', function( event )
@@ -58,24 +66,7 @@ export function init()
 
     PLAYER = new Player();
 
-    createjs.Ticker.on( 'tick', function( event )
-        {
-        if ( MOVE_LEFT )
-            {
-            PLAYER.moveLeft( event );
-            }
-
-        else if ( MOVE_RIGHT )
-            {
-            PLAYER.moveRight( event );
-            }
-
-        PLAYER.tick( event );
-        Bullet.tick( event );
-        Enemy.tick( event );
-
-        G.STAGE.update();
-        });
+    createjs.Ticker.addEventListener( 'tick', Game.tick );
     }
 
 export function start()
@@ -89,7 +80,7 @@ export function start()
         // start position
     var startX = canvasWidth / 2 - enemiesSpace / 2;
     var x = startX;
-    var y = 20;
+    var y = MysteryShip.height * 3;
 
     for (var line = 0 ; line < numberOfLines ; line++)
         {
@@ -105,5 +96,58 @@ export function start()
         }
 
     Enemy.findLeftRight();
+
+    setMysteryLimit();
+    }
+
+
+function setMysteryLimit()
+    {
+    MYSTERY_LIMIT = Utilities.getRandomInt( 8000, 15000 );
+    }
+
+
+export function tick( event )
+    {
+    TEMPO_COUNT += event.delta;
+    MYSTERY_COUNT += event.delta;
+
+        // deal with the movement of the player
+    if ( MOVE_LEFT )
+        {
+        PLAYER.moveLeft( event );
+        }
+
+    else if ( MOVE_RIGHT )
+        {
+        PLAYER.moveRight( event );
+        }
+
+        // move the enemy ships according to the current tempo
+    if ( TEMPO_COUNT > TEMPO_LIMIT )
+        {
+        TEMPO_COUNT = 0;
+
+        Enemy.tick( event );
+        }
+
+        // the mystery ship is moved normally every tick
+    MysteryShip.tick( event );
+
+        // spawn a new mystery ship
+    if ( MYSTERY_COUNT > MYSTERY_LIMIT )
+        {
+        MYSTERY_COUNT = 0;
+
+        new MysteryShip();
+
+            // new random limit for the next one
+        setMysteryLimit();
+        }
+
+    PLAYER.tick( event );
+    Bullet.tick( event );
+
+    G.STAGE.update();
     }
 }
