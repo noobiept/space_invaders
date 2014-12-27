@@ -13,6 +13,7 @@
 // Library documentation : http://www.createjs.com/Docs/SoundJS/modules/SoundJS.html
 
 /// <reference path="../createjs-lib/createjs-lib.d.ts" />
+/// <reference path="../webaudioapi/waa.d.ts" />
 
 declare module createjs {
 
@@ -24,10 +25,10 @@ declare module createjs {
         isPreloadComplete(src: string): boolean;
         isPreloadStarted(src: string): boolean;
         isSupported(): boolean;
-        preload(loader);
+        preload(loader: Object): void;
         register(loadItem: string, instances: number): Object;
-        removeAllSounds(src: string);
-        removeSound(src: string);
+        removeAllSounds(src: string): void;
+        removeSound(src: string): void;
         setMute(value: boolean): boolean;
         setVolume(value: number): boolean;
         }
@@ -50,7 +51,7 @@ declare module createjs {
         volume: number;
 
         // methods
-        destroy();
+        destroy(): void;
         getDuration(): number;
         getLoop(): number;
         getMute(): boolean;
@@ -61,7 +62,7 @@ declare module createjs {
         play(interrupt?: string, delay?: number, offset?: number, loop?: number, volume?: number, pan?: number): AbstractSoundInstance;
         play(interrupt?: Object, delay?: number, offset?: number, loop?: number, volume?: number, pan?: number): AbstractSoundInstance;
         setDuration(value: number): AbstractSoundInstance;
-        setLoop(value: number);
+        setLoop(value: number): void;
         setMute(value: boolean): AbstractSoundInstance;
         setPan(value: number): AbstractSoundInstance;
         setPlayback(value: Object): AbstractSoundInstance;
@@ -76,7 +77,7 @@ declare module createjs {
         flashId: string;
 
         // methods
-        setFlash(flash: Object);
+        setFlash(flash: Object): void;
         }
 
     export class FlashAudioPlugin extends AbstractPlugin
@@ -222,7 +223,7 @@ declare module createjs {
 
     export class WebAudioLoader
         {
-        static context; // AudioContext;
+        static context: AudioContext;
         }
 
     export class WebAudioPlugin extends AbstractPlugin
@@ -230,13 +231,14 @@ declare module createjs {
         constructor();
         
         // properties
-        context: any;
-        dynamicsCompressorNode: any;
-        gainNode: any;
+        static context: AudioContext;
+        context: AudioContext;
+        dynamicsCompressorNode: DynamicsCompressorNode;
+        gainNode: GainNode;
         
         // methods
         static isSupported(): boolean;
-        static playEmptySound();
+        static playEmptySound(): void;
         }
 
     export class WebAudioSoundInstance extends AbstractSoundInstance
@@ -244,10 +246,10 @@ declare module createjs {
         constructor(src: string, startTime: number, duration: number, playbackResource: Object);
 
         // properties
-        static context;     // AudioContext;
-        static destinationNode; // AudioNode;
-        gainNode;   // AudioGainNode;
-        panNode;    // AudioPannerNode;
-        sourceNode; // AudioNode;
+        static context: AudioContext;
+        static destinationNode: AudioNode;
+        gainNode: GainNode;
+        panNode: PannerNode;
+        sourceNode: AudioNode;
         }
 }

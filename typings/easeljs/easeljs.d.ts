@@ -59,12 +59,7 @@ declare module createjs {
         setTransform(x?: number, y?: number, scaleX?: number, scaleY?: number, rotation?: number, skewX?: number, skewY?: number, regX?: number, regY?: number): Bitmap;
     }
     
-    /**
-     * @deprecated renamed to Sprite, here for backwards compatibility
-     */
-    export class BitmapAnimation extends Sprite {
-    }
-    
+
     export class BitmapText extends DisplayObject {
         constructor(text?:string, spriteSheet?:SpriteSheet);
 
@@ -76,10 +71,6 @@ declare module createjs {
         spaceWidth: number;
         spriteSheet: SpriteSheet;
         text: string;
-
-        // methods
-        set(props: Object): BitmapText;
-        setTransform(x?: number, y?: number, scaleX?: number, scaleY?: number, rotation?: number, skewX?: number, skewY?: number, regX?: number, regY?: number): BitmapText;
     }
     
     export class BlurFilter extends Filter {
@@ -159,12 +150,7 @@ declare module createjs {
         clone(): ColorMatrixFilter;
     }
     
-    export class Command {
-        // methods
-        constructor(f: any, params: any, path?: any);
-        exec(scope: any): void;
-    }
-    
+
     export class Container extends DisplayObject {
         constructor();
 
@@ -355,7 +341,7 @@ declare module createjs {
         /**
          * @deprecated - use the instructions property instead
          */
-        getInstructions();
+        getInstructions(): Object[];
         static getRGB(r: number, g: number, b: number, alpha?: number): string;
         inject(callback: (data: any) => any,  data: any): Graphics; // deprecated
         isEmpty(): boolean;
@@ -684,7 +670,7 @@ declare module createjs {
         static version: string;
 
         // methods
-        advance(time?: number);
+        advance(time?: number): void;
         clone(): MovieClip; // not supported
         /**
          * @deprecated - use 'currentLabel' property instead
@@ -898,8 +884,8 @@ declare module createjs {
         static POINTS_PER_BOX: number;
 
         // methods
-        clearImageTexture(image);
-        updateViewport(width: number, height: number);
+        clearImageTexture(image: Object): void;
+        updateViewport(width: number, height: number): void;
         }
 
     export class Stage extends Container {
@@ -929,7 +915,7 @@ declare module createjs {
         clone(): Stage;
         enableDOMEvents(enable?: boolean): void;
         enableMouseOver(frequency?: number): void;
-        tick(props?: Object);
+        tick(props?: Object): void;
         toDataURL(backgroundColor: string, mimeType: string): string;
         update(...arg: any[]): void;
         
