@@ -6,13 +6,10 @@ var Game;
     var PLAYER;
     // the tempo of the song/game (the movement of the enemies follow the tempo as well)
     var TEMPO_COUNT = 0;
-    var TEMPO_LIMIT = 600;
-    // when to spawn a mystery ship, the limit is a random value assigned later
+    // when to spawn a mystery ship, the count is a random value assigned later
     var MYSTERY_COUNT = 0;
-    var MYSTERY_LIMIT = 0;
     // time until a random ship fires a bullet
-    var FIRE_COUNT = 0;
-    var FIRE_LIMIT = 0; // its assigned randomly
+    var FIRE_COUNT = 0; // its assigned randomly
     function init() {
         document.body.addEventListener('keydown', function (event) {
             var key = event.keyCode;
@@ -63,24 +60,26 @@ var Game;
             y += Ship.height + spaceBetween;
         }
         Ship.findLeftRight();
+        setTempoLimit();
         setMysteryLimit();
         setFireLimit();
     }
     Game.start = start;
     function setMysteryLimit() {
-        MYSTERY_COUNT = 0;
-        MYSTERY_LIMIT = Utilities.getRandomInt(8000, 15000);
+        MYSTERY_COUNT = Utilities.getRandomInt(8000, 15000);
     }
     function setFireLimit() {
-        FIRE_COUNT = 0;
-        FIRE_LIMIT = Utilities.getRandomInt(1000, 5000);
+        FIRE_COUNT = Utilities.getRandomInt(1000, 5000);
+    }
+    function setTempoLimit() {
+        TEMPO_COUNT = 600;
     }
     function tick(event) {
         // update the counters
         var delta = event.delta;
-        TEMPO_COUNT += delta;
-        MYSTERY_COUNT += delta;
-        FIRE_COUNT += delta;
+        TEMPO_COUNT -= delta;
+        MYSTERY_COUNT -= delta;
+        FIRE_COUNT -= delta;
         // deal with the movement of the player
         if (MOVE_LEFT) {
             PLAYER.moveLeft(event);
@@ -89,20 +88,20 @@ var Game;
             PLAYER.moveRight(event);
         }
         // move the enemy ships according to the current tempo
-        if (TEMPO_COUNT > TEMPO_LIMIT) {
-            TEMPO_COUNT = 0;
+        if (TEMPO_COUNT < 0) {
+            setTempoLimit();
             Ship.tick(event);
         }
         // the mystery ship is moved normally every tick
         MysteryShip.tick(event);
         // spawn a new mystery ship
-        if (MYSTERY_COUNT > MYSTERY_LIMIT) {
+        if (MYSTERY_COUNT < 0) {
             new MysteryShip();
             // new random limit for the next one
             setMysteryLimit();
         }
         // a random ship fires a bullet
-        if (FIRE_COUNT > FIRE_LIMIT) {
+        if (FIRE_COUNT < 0) {
             // get a random ship
             var position = Utilities.getRandomInt(0, Ship.all.length - 1);
             Ship.all[position].fire();
