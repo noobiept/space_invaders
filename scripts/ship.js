@@ -23,7 +23,13 @@ var Ship = (function () {
     Ship.prototype.fire = function () {
         var bulletX = this.shape.x + Ship.width / 2 - Bullet.width / 2;
         var bulletY = this.shape.y + Ship.height / 2 - Bullet.height / 2;
-        new Bullet(bulletX, bulletY, 1 /* bottom */);
+        new Bullet(bulletX, bulletY, false);
+    };
+    Ship.prototype.getX = function () {
+        return this.shape.x;
+    };
+    Ship.prototype.getY = function () {
+        return this.shape.y;
     };
     Ship.prototype.tick = function (tickMove) {
         if (Ship.moving_right) {

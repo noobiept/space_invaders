@@ -5,11 +5,13 @@ class Bullet
 static width = 2;
 static height = 6;
 static _container: createjs.Container;
-static all: Bullet[] = [];
+static all_player: Bullet[] = [];   // all the bullets fired by the player
+static all_ship: Bullet[] = [];     // all the bullets fired by an enemy ship
 static movement_speed = 100;
 
 shape: createjs.Shape;
 direction: BulletDirection;
+from_player: boolean;
 
 static init( stage )
     {
@@ -18,7 +20,7 @@ static init( stage )
     stage.addChild( Bullet._container );
     }
 
-constructor( x: number, y: number, direction: BulletDirection )
+constructor( x: number, y: number, fromPlayer: boolean )
     {
     var shape = new createjs.Shape();
 
@@ -31,22 +33,59 @@ constructor( x: number, y: number, direction: BulletDirection )
     shape.x = x;
     shape.y = y;
 
-    this.direction = direction;
     this.shape = shape;
+    this.from_player = fromPlayer;
 
     Bullet._container.addChild( shape );
 
-    Bullet.all.push( this );
+    if ( fromPlayer === true )
+        {
+        this.direction = BulletDirection.top;
+
+        Bullet.all_player.push( this );
+        }
+
+    else
+        {
+        this.direction = BulletDirection.bottom;
+
+        Bullet.all_ship.push( this );
+        }
     }
 
 remove()
     {
-    var index = Bullet.all.indexOf( this );
+    var all;
 
-    Bullet.all.splice( index, 1 );
+    if ( this.from_player === true )
+        {
+        all = Bullet.all_player;
+        }
+
+    else
+        {
+        all = Bullet.all_ship;
+        }
+
+    var index = all.indexOf( this );
+
+    all.splice( index, 1 );
 
     Bullet._container.removeChild( this.shape );
     }
+
+
+getX()
+    {
+    return this.shape.x;
+    }
+
+
+getY()
+    {
+    return this.shape.y;
+    }
+
 
 tick( tickMove )
     {
@@ -76,10 +115,16 @@ static tick( event )
     {
         // how much each bullet moves per tick
     var tickMove = Bullet.movement_speed * event.delta / 1000;
+    var a;
 
-    for (var a = Bullet.all.length - 1 ; a >= 0 ; a--)
+    for (a = Bullet.all_player.length - 1 ; a >= 0 ; a--)
         {
-        Bullet.all[ a ].tick( tickMove );
+        Bullet.all_player[ a ].tick( tickMove );
+        }
+
+    for (a = Bullet.all_ship.length - 1 ; a >= 0 ; a--)
+        {
+        Bullet.all_ship[ a ].tick( tickMove );
         }
     }
 }

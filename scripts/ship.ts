@@ -53,7 +53,19 @@ fire()
     var bulletX = this.shape.x + Ship.width / 2 - Bullet.width / 2;
     var bulletY = this.shape.y + Ship.height / 2 - Bullet.height / 2;
 
-    new Bullet( bulletX, bulletY, BulletDirection.bottom );
+    new Bullet( bulletX, bulletY, false );
+    }
+
+
+getX()
+    {
+    return this.shape.x;
+    }
+
+
+getY()
+    {
+    return this.shape.y;
     }
 
 

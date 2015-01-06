@@ -34,7 +34,7 @@ var Game;
             if (button === Utilities.MOUSE_CODE.left) {
                 var bulletX = PLAYER.getCenterX() - Bullet.width / 2;
                 var bulletY = PLAYER.getCenterY() - Bullet.height / 2;
-                new Bullet(bulletX, bulletY, 0 /* top */);
+                new Bullet(bulletX, bulletY, true);
             }
         });
         PLAYER = new Player();
@@ -74,6 +74,35 @@ var Game;
     function setTempoLimit() {
         TEMPO_COUNT = 600;
     }
+    /*
+        player bullets can collide with:
+            - ships
+            - mystery ships
+    
+        ships bullets can collide with:
+            - player
+     */
+    function collisionDetection() {
+        var a;
+        var b;
+        var ship;
+        var bullet;
+        var bulletX;
+        var bulletY;
+        for (a = Bullet.all_player.length - 1; a >= 0; a--) {
+            bullet = Bullet.all_player[a];
+            bulletX = bullet.getX();
+            bulletY = bullet.getY();
+            for (b = Ship.all.length - 1; b >= 0; b--) {
+                ship = Ship.all[b];
+                if (Utilities.boxBoxCollision(bulletX, bulletY, Bullet.width, Bullet.height, ship.getX(), ship.getY(), Ship.width, Ship.height)) {
+                    bullet.remove();
+                    ship.remove();
+                    break;
+                }
+            }
+        }
+    }
     function tick(event) {
         // update the counters
         var delta = event.delta;
@@ -109,6 +138,8 @@ var Game;
         }
         PLAYER.tick(event);
         Bullet.tick(event);
+        // collision detection after all the rest of the state has been updated
+        collisionDetection();
         G.STAGE.update();
     }
     Game.tick = tick;

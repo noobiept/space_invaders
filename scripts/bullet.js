@@ -4,7 +4,7 @@ var BulletDirection;
     BulletDirection[BulletDirection["bottom"] = 1] = "bottom";
 })(BulletDirection || (BulletDirection = {}));
 var Bullet = (function () {
-    function Bullet(x, y, direction) {
+    function Bullet(x, y, fromPlayer) {
         var shape = new createjs.Shape();
         var g = shape.graphics;
         g.beginFill('blue');
@@ -12,19 +12,39 @@ var Bullet = (function () {
         g.endFill();
         shape.x = x;
         shape.y = y;
-        this.direction = direction;
         this.shape = shape;
+        this.from_player = fromPlayer;
         Bullet._container.addChild(shape);
-        Bullet.all.push(this);
+        if (fromPlayer === true) {
+            this.direction = 0 /* top */;
+            Bullet.all_player.push(this);
+        }
+        else {
+            this.direction = 1 /* bottom */;
+            Bullet.all_ship.push(this);
+        }
     }
     Bullet.init = function (stage) {
         Bullet._container = new createjs.Container();
         stage.addChild(Bullet._container);
     };
     Bullet.prototype.remove = function () {
-        var index = Bullet.all.indexOf(this);
-        Bullet.all.splice(index, 1);
+        var all;
+        if (this.from_player === true) {
+            all = Bullet.all_player;
+        }
+        else {
+            all = Bullet.all_ship;
+        }
+        var index = all.indexOf(this);
+        all.splice(index, 1);
         Bullet._container.removeChild(this.shape);
+    };
+    Bullet.prototype.getX = function () {
+        return this.shape.x;
+    };
+    Bullet.prototype.getY = function () {
+        return this.shape.y;
     };
     Bullet.prototype.tick = function (tickMove) {
         if (this.direction === 0 /* top */) {
@@ -43,13 +63,18 @@ var Bullet = (function () {
     Bullet.tick = function (event) {
         // how much each bullet moves per tick
         var tickMove = Bullet.movement_speed * event.delta / 1000;
-        for (var a = Bullet.all.length - 1; a >= 0; a--) {
-            Bullet.all[a].tick(tickMove);
+        var a;
+        for (a = Bullet.all_player.length - 1; a >= 0; a--) {
+            Bullet.all_player[a].tick(tickMove);
+        }
+        for (a = Bullet.all_ship.length - 1; a >= 0; a--) {
+            Bullet.all_ship[a].tick(tickMove);
         }
     };
     Bullet.width = 2;
     Bullet.height = 6;
-    Bullet.all = [];
+    Bullet.all_player = []; // all the bullets fired by the player
+    Bullet.all_ship = []; // all the bullets fired by an enemy ship
     Bullet.movement_speed = 100;
     return Bullet;
 })();
