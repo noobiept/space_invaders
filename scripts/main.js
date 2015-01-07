@@ -5,6 +5,7 @@
 /// <reference path="bullet.ts" />
 /// <reference path="ship.ts" />
 /// <reference path="mystery_ship.ts" />
+/// <reference path="bunker.ts" />
 var G = {
     CANVAS_WIDTH: 0,
     CANVAS_HEIGHT: 0,
@@ -20,6 +21,7 @@ window.onload = function () {
     Bullet.init(G.STAGE);
     Ship.init(G.STAGE);
     MysteryShip.init(G.STAGE);
+    Bunker.init(G.STAGE);
     Player.init(G.STAGE);
     Game.start();
 };

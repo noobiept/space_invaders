@@ -11,10 +11,11 @@ var Game;
     // time until a random ship fires a bullet
     var FIRE_COUNT = 0; // its assigned randomly
     function start() {
+        // :::: add the enemy ships :::: //
         var numberOfLines = 5;
         var numberOfColumns = 11;
         var spaceBetween = 10;
-        var canvasWidth = G.STAGE.canvas.width;
+        var canvasWidth = G.CANVAS_WIDTH;
         var enemiesSpace = numberOfColumns * Ship.width + (numberOfColumns - 1) * spaceBetween;
         // start position
         var startX = canvasWidth / 2 - enemiesSpace / 2;
@@ -29,10 +30,36 @@ var Game;
             y += Ship.height + spaceBetween;
         }
         Ship.findLeftRight();
+        // :::: add the bunkers :::: //
+        // 4 groups of bunkers
+        var groupLength = 4;
+        var margin = 50; // margin between the extremes of the canvas, and the nearby bunker
+        var availableWidth = canvasWidth - 2 * margin;
+        var groupWidth = 4 * Bunker.width; // 4 columns per bunker group
+        var spaceBetweenBunkers = Math.round((availableWidth - 4 * groupWidth) / 3);
+        var startingHeight = G.CANVAS_HEIGHT - 70;
+        var addBunkerColumn = function (x, y, length) {
+            for (var b = 0; b < length; b++) {
+                new Bunker(x, y + b * Bunker.height);
+            }
+        };
+        for (var a = 0; a < groupLength; a++) {
+            var currentX = margin + a * (groupWidth + spaceBetweenBunkers);
+            // each bunker group has this format (each 1 is an individual Bunker)
+            // 1111
+            // 1111
+            // 1  1
+            addBunkerColumn(currentX, startingHeight, 3);
+            addBunkerColumn(currentX + Bunker.width, startingHeight, 2);
+            addBunkerColumn(currentX + 2 * Bunker.width, startingHeight, 2);
+            addBunkerColumn(currentX + 3 * Bunker.width, startingHeight, 3);
+        }
+        // :::: add the player :::: //
+        PLAYER = new Player();
+        // :::: other configuration :::: //
         setTempoLimit();
         setMysteryLimit();
         setFireLimit();
-        PLAYER = new Player();
         // set the events
         document.body.addEventListener('keydown', keyDownEvent);
         document.body.addEventListener('keyup', keyUpEvent);
@@ -54,6 +81,7 @@ var Game;
         MysteryShip.clear();
         PLAYER.remove();
         Bullet.clear();
+        Bunker.clear();
         MOVE_LEFT = false;
         MOVE_RIGHT = false;
     }
