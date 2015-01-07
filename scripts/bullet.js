@@ -71,6 +71,15 @@ var Bullet = (function () {
             Bullet.all_ship[a].tick(tickMove);
         }
     };
+    Bullet.clear = function () {
+        var a;
+        for (a = Bullet.all_player.length - 1; a >= 0; a--) {
+            Bullet.all_player[a].remove();
+        }
+        for (a = Bullet.all_ship.length - 1; a >= 0; a--) {
+            Bullet.all_ship[a].remove();
+        }
+    };
     Bullet.width = 2;
     Bullet.height = 6;
     Bullet.all_player = []; // all the bullets fired by the player

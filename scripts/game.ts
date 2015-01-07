@@ -15,60 +15,6 @@ var MYSTERY_COUNT = 0;
     // time until a random ship fires a bullet
 var FIRE_COUNT = 0; // its assigned randomly
 
-export function init()
-    {
-    document.body.addEventListener( 'keydown', function( event: KeyboardEvent )
-        {
-        var key = event.keyCode;
-
-        if ( key === Utilities.KEY_CODE.leftArrow ||
-             key === Utilities.KEY_CODE.a )
-            {
-            MOVE_LEFT = true;
-            }
-
-        else if ( key === Utilities.KEY_CODE.rightArrow ||
-                  key === Utilities.KEY_CODE.d )
-            {
-            MOVE_RIGHT = true;
-            }
-        });
-
-    document.body.addEventListener( 'keyup', function( event: KeyboardEvent )
-        {
-        var key = event.keyCode;
-
-        if ( key === Utilities.KEY_CODE.leftArrow ||
-             key === Utilities.KEY_CODE.a )
-            {
-            MOVE_LEFT = false;
-            }
-
-        else if ( key === Utilities.KEY_CODE.rightArrow ||
-                  key === Utilities.KEY_CODE.d )
-            {
-            MOVE_RIGHT = false;
-            }
-        });
-
-    document.body.addEventListener( 'click', function( event )
-        {
-        var button = event.button;
-
-        if ( button === Utilities.MOUSE_CODE.left )
-            {
-            var bulletX = PLAYER.getCenterX() - Bullet.width / 2;
-            var bulletY = PLAYER.getCenterY() - Bullet.height / 2;
-
-            new Bullet( bulletX, bulletY, true );
-            }
-        });
-
-
-    PLAYER = new Player();
-
-    createjs.Ticker.addEventListener( 'tick', Game.tick );
-    }
 
 export function start()
     {
@@ -101,6 +47,85 @@ export function start()
     setTempoLimit();
     setMysteryLimit();
     setFireLimit();
+
+    PLAYER = new Player();
+
+        // set the events
+    document.body.addEventListener( 'keydown', keyDownEvent );
+    document.body.addEventListener( 'keyup', keyUpEvent );
+    document.body.addEventListener( 'click', clickEvent );
+    createjs.Ticker.addEventListener( 'tick', Game.tick );
+    }
+
+
+export function restart()
+    {
+    clear();
+    start();
+    }
+
+
+function clear()
+    {
+    createjs.Ticker.removeEventListener( 'tick', Game.tick );
+    document.body.removeEventListener( 'keydown', keyDownEvent );
+    document.body.removeEventListener( 'keyup', keyUpEvent );
+    document.body.removeEventListener( 'click', clickEvent );
+
+    Ship.clear();
+    MysteryShip.clear();
+    PLAYER.remove();
+    Bullet.clear();
+
+    MOVE_LEFT = false;
+    MOVE_RIGHT = false;
+    }
+
+
+function keyDownEvent( event )
+    {
+    var key = event.keyCode;
+
+    if ( key === Utilities.KEY_CODE.leftArrow ||
+         key === Utilities.KEY_CODE.a )
+        {
+        MOVE_LEFT = true;
+        }
+
+    else if ( key === Utilities.KEY_CODE.rightArrow ||
+              key === Utilities.KEY_CODE.d )
+        {
+        MOVE_RIGHT = true;
+        }
+    }
+
+
+function keyUpEvent( event )
+    {
+    var key = event.keyCode;
+
+    if ( key === Utilities.KEY_CODE.leftArrow ||
+         key === Utilities.KEY_CODE.a )
+        {
+        MOVE_LEFT = false;
+        }
+
+    else if ( key === Utilities.KEY_CODE.rightArrow ||
+              key === Utilities.KEY_CODE.d )
+        {
+        MOVE_RIGHT = false;
+        }
+    }
+
+
+function clickEvent( event )
+    {
+    var button = event.button;
+
+    if ( button === Utilities.MOUSE_CODE.left )
+        {
+        PLAYER.fire();
+        }
     }
 
 

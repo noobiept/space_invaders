@@ -29,6 +29,5 @@ Ship.init( G.STAGE );
 MysteryShip.init( G.STAGE );
 Player.init( G.STAGE );
 
-Game.init();
 Game.start();
 };

@@ -127,4 +127,20 @@ static tick( event )
         Bullet.all_ship[ a ].tick( tickMove );
         }
     }
+
+
+static clear()
+    {
+    var a;
+
+    for (a = Bullet.all_player.length - 1 ; a >= 0 ; a--)
+        {
+        Bullet.all_player[ a ].remove();
+        }
+
+    for (a = Bullet.all_ship.length - 1 ; a >= 0 ; a--)
+        {
+        Bullet.all_ship[ a ].remove();
+        }
+    }
 }

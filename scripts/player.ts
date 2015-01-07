@@ -7,12 +7,14 @@ static movement_speed = 80;
 
 shape: createjs.Shape;
 
+
 static init( stage )
     {
     Player._container = new createjs.Container();
 
     stage.addChild( Player._container );
     }
+
 
 constructor()
     {
@@ -34,10 +36,21 @@ constructor()
     this.shape = shape;
     }
 
+
 remove()
     {
     Player._container.removeChild( this.shape );
     }
+
+
+fire()
+    {
+    var bulletX = this.getCenterX() - Bullet.width / 2;
+    var bulletY = this.getCenterY() - Bullet.height / 2;
+
+    new Bullet( bulletX, bulletY, true );
+    }
+
 
 moveLeft( event )
     {

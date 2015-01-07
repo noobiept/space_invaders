@@ -119,9 +119,29 @@ static findLeftRight()
 
 static moveOneLineDown()
     {
+    var highestY = 0;
+    var y = 0;
+    var ship;
+
     for (var a = Ship.all.length - 1 ; a >= 0 ; a--)
         {
-        Ship.all[ a ].shape.y += Ship.height;
+        ship = Ship.all[ a ];
+
+        y = ship.shape.y + Ship.height;
+
+        ship.shape.y = y;
+
+        if ( y > highestY )
+            {
+            highestY = y;
+            }
+        }
+
+        // determine if the alien invasion is successful (reached the player)
+    if ( highestY > G.CANVAS_HEIGHT - 100 )
+        {
+        console.log( 'Game Over!' );
+        Game.restart();
         }
     }
 
@@ -158,5 +178,16 @@ static tick( event )
         {
         Ship.all[ a ].tick( tickMove );
         }
+    }
+
+
+static clear()
+    {
+    for (var a = Ship.all.length - 1 ; a >= 0 ; a--)
+        {
+        Ship.all[ a ].remove();
+        }
+
+    Ship.moving_right = true;
     }
 }

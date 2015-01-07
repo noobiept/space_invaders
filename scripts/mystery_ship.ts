@@ -79,4 +79,13 @@ static tick( event )
         MysteryShip.all[ a ].tick( tickMove );
         }
     }
+
+
+static clear()
+    {
+    for (var a = MysteryShip.all.length - 1 ; a >= 0 ; a--)
+        {
+        MysteryShip.all[ a ].remove();
+        }
+    }
 }

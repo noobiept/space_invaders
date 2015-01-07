@@ -18,6 +18,11 @@ var Player = (function () {
     Player.prototype.remove = function () {
         Player._container.removeChild(this.shape);
     };
+    Player.prototype.fire = function () {
+        var bulletX = this.getCenterX() - Bullet.width / 2;
+        var bulletY = this.getCenterY() - Bullet.height / 2;
+        new Bullet(bulletX, bulletY, true);
+    };
     Player.prototype.moveLeft = function (event) {
         var nextX = this.shape.x - Player.movement_speed * event.delta / 1000;
         if (nextX < 0) {

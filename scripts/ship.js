@@ -63,8 +63,21 @@ var Ship = (function () {
         Moves all ships one line down (called when we reach an extremity of the canvas)
      */
     Ship.moveOneLineDown = function () {
+        var highestY = 0;
+        var y = 0;
+        var ship;
         for (var a = Ship.all.length - 1; a >= 0; a--) {
-            Ship.all[a].shape.y += Ship.height;
+            ship = Ship.all[a];
+            y = ship.shape.y + Ship.height;
+            ship.shape.y = y;
+            if (y > highestY) {
+                highestY = y;
+            }
+        }
+        // determine if the alien invasion is successful (reached the player)
+        if (highestY > G.CANVAS_HEIGHT - 100) {
+            console.log('Game Over!');
+            Game.restart();
         }
     };
     Ship.tick = function (event) {
@@ -88,6 +101,12 @@ var Ship = (function () {
         for (var a = Ship.all.length - 1; a >= 0; a--) {
             Ship.all[a].tick(tickMove);
         }
+    };
+    Ship.clear = function () {
+        for (var a = Ship.all.length - 1; a >= 0; a--) {
+            Ship.all[a].remove();
+        }
+        Ship.moving_right = true;
     };
     Ship.width = 20;
     Ship.height = 20;

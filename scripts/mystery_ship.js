@@ -40,6 +40,11 @@ var MysteryShip = (function () {
             MysteryShip.all[a].tick(tickMove);
         }
     };
+    MysteryShip.clear = function () {
+        for (var a = MysteryShip.all.length - 1; a >= 0; a--) {
+            MysteryShip.all[a].remove();
+        }
+    };
     MysteryShip.width = 40;
     MysteryShip.height = 20;
     MysteryShip.all = [];
