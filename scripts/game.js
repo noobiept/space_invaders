@@ -83,23 +83,36 @@ var Game;
             - player
      */
     function collisionDetection() {
-        var a;
-        var b;
-        var ship;
-        var bullet;
-        var bulletX;
-        var bulletY;
-        for (a = Bullet.all_player.length - 1; a >= 0; a--) {
-            bullet = Bullet.all_player[a];
-            bulletX = bullet.getX();
-            bulletY = bullet.getY();
-            for (b = Ship.all.length - 1; b >= 0; b--) {
-                ship = Ship.all[b];
-                if (Utilities.boxBoxCollision(bulletX, bulletY, Bullet.width, Bullet.height, ship.getX(), ship.getY(), Ship.width, Ship.height)) {
-                    bullet.remove();
-                    ship.remove();
-                    break;
+        var detectCollisions = function (groupOne, groupTwo) {
+            var a, b;
+            var one, two;
+            var oneX, oneY, oneWidth, oneHeight;
+            for (a = groupOne.length - 1; a >= 0; a--) {
+                one = groupOne[a];
+                oneX = one.getX();
+                oneY = one.getY();
+                oneWidth = one.constructor.width;
+                oneHeight = one.constructor.height;
+                for (b = groupTwo.length - 1; b >= 0; b--) {
+                    two = groupTwo[b];
+                    if (Utilities.boxBoxCollision(oneX, oneY, oneWidth, oneHeight, two.getX(), two.getY(), two.constructor.width, two.constructor.height)) {
+                        one.remove();
+                        two.remove();
+                        return true;
+                    }
                 }
+            }
+            return false;
+        };
+        detectCollisions(Bullet.all_player, Ship.all);
+        detectCollisions(Bullet.all_player, MysteryShip.all);
+        for (var a = Bullet.all_ship.length - 1; a >= 0; a--) {
+            var bullet = Bullet.all_ship[a];
+            var playerX = PLAYER.getX();
+            var playerY = PLAYER.getY();
+            if (Utilities.boxBoxCollision(playerX, playerY, Player.width, Player.height, bullet.getX(), bullet.getY(), Bullet.width, Bullet.height)) {
+                bullet.remove();
+                console.log('Took damage!');
             }
         }
     }

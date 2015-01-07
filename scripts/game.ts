@@ -132,33 +132,56 @@ function setTempoLimit()
 
 function collisionDetection()
     {
-    var a;
-    var b;
-    var ship;
-    var bullet;
-    var bulletX;
-    var bulletY;
-
-        // player bullets
-    for (a = Bullet.all_player.length - 1 ; a >= 0 ; a--)
+    var detectCollisions = function( groupOne, groupTwo )
         {
-        bullet = Bullet.all_player[ a ];
-        bulletX = bullet.getX();
-        bulletY = bullet.getY();
+        var a, b;
+        var one, two;
+        var oneX, oneY, oneWidth, oneHeight;
 
-        for (b = Ship.all.length - 1 ; b >= 0 ; b--)
+        for (a = groupOne.length - 1 ; a >= 0 ; a--)
             {
-            ship = Ship.all[ b ];
+            one = groupOne[ a ];
+            oneX = one.getX();
+            oneY = one.getY();
+            oneWidth = one.constructor.width;
+            oneHeight = one.constructor.height;
 
-            if ( Utilities.boxBoxCollision(
-                bulletX,     bulletY,     Bullet.width, Bullet.height,
-                ship.getX(), ship.getY(), Ship.width,   Ship.height
-                    ))
+            for (b = groupTwo.length - 1 ; b >= 0 ; b--)
                 {
-                bullet.remove();
-                ship.remove();
-                break;
+                two = groupTwo[ b ];
+
+                if ( Utilities.boxBoxCollision(
+                    oneX, oneY, oneWidth, oneHeight,
+                    two.getX(), two.getY(), two.constructor.width, two.constructor.height
+                        ))
+                    {
+                    one.remove();
+                    two.remove();
+                    return true;
+                    }
                 }
+            }
+
+        return false;
+        };
+
+    detectCollisions( Bullet.all_player, Ship.all );
+    detectCollisions( Bullet.all_player, MysteryShip.all );
+
+        // enemy bullets with the player
+    for (var a = Bullet.all_ship.length - 1 ; a >= 0 ; a--)
+        {
+        var bullet = Bullet.all_ship[ a ];
+        var playerX = PLAYER.getX();
+        var playerY = PLAYER.getY();
+
+        if ( Utilities.boxBoxCollision(
+            playerX, playerY, Player.width, Player.height,
+            bullet.getX(), bullet.getY(), Bullet.width, Bullet.height
+                ))
+            {
+            bullet.remove();
+            console.log( 'Took damage!' );
             }
         }
     }

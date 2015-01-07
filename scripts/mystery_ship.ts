@@ -45,6 +45,19 @@ remove()
     MysteryShip._container.removeChild( this.shape );
     }
 
+
+getX()
+    {
+    return this.shape.x;
+    }
+
+
+getY()
+    {
+    return this.shape.y;
+    }
+
+
 tick( tickMove )
     {
     var nextX = this.shape.x + tickMove;

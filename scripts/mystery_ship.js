@@ -21,6 +21,12 @@ var MysteryShip = (function () {
         MysteryShip.all.splice(index, 1);
         MysteryShip._container.removeChild(this.shape);
     };
+    MysteryShip.prototype.getX = function () {
+        return this.shape.x;
+    };
+    MysteryShip.prototype.getY = function () {
+        return this.shape.y;
+    };
     MysteryShip.prototype.tick = function (tickMove) {
         var nextX = this.shape.x + tickMove;
         this.shape.x = nextX;
