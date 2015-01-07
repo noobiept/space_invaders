@@ -38,6 +38,13 @@ constructor( x: number, y: number )
     Ship.all.push( this );
     }
 
+
+tookDamage()
+    {
+    this.remove();
+    }
+
+
 remove()
     {
     var index = Ship.all.indexOf( this );

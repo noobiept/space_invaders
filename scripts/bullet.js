@@ -28,6 +28,9 @@ var Bullet = (function () {
         Bullet._container = new createjs.Container();
         stage.addChild(Bullet._container);
     };
+    Bullet.prototype.tookDamage = function () {
+        this.remove();
+    };
     Bullet.prototype.remove = function () {
         var all;
         if (this.from_player === true) {

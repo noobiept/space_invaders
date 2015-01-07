@@ -16,6 +16,9 @@ var MysteryShip = (function () {
         MysteryShip._container = new createjs.Container();
         stage.addChild(MysteryShip._container);
     };
+    MysteryShip.prototype.tookDamage = function () {
+        this.remove();
+    };
     MysteryShip.prototype.remove = function () {
         var index = MysteryShip.all.indexOf(this);
         MysteryShip.all.splice(index, 1);

@@ -53,6 +53,13 @@ constructor( x: number, y: number, fromPlayer: boolean )
         }
     }
 
+
+tookDamage()
+    {
+    this.remove();
+    }
+
+
 remove()
     {
     var all;

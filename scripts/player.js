@@ -15,6 +15,9 @@ var Player = (function () {
         Player._container = new createjs.Container();
         stage.addChild(Player._container);
     };
+    Player.prototype.tookDamage = function () {
+        console.log('Took damage!');
+    };
     Player.prototype.remove = function () {
         Player._container.removeChild(this.shape);
     };

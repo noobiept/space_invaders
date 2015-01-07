@@ -37,6 +37,12 @@ constructor()
     }
 
 
+tookDamage()
+    {
+    console.log( 'Took damage!' );
+    }
+
+
 remove()
     {
     Player._container.removeChild( this.shape );

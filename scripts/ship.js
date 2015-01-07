@@ -15,6 +15,9 @@ var Ship = (function () {
         Ship._container = new createjs.Container();
         stage.addChild(Ship._container);
     };
+    Ship.prototype.tookDamage = function () {
+        this.remove();
+    };
     Ship.prototype.remove = function () {
         var index = Ship.all.indexOf(this);
         Ship.all.splice(index, 1);

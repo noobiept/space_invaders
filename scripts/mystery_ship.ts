@@ -36,6 +36,13 @@ constructor()
     MysteryShip.all.push( this );
     }
 
+
+tookDamage()
+    {
+    this.remove();
+    }
+
+
 remove()
     {
     var index = MysteryShip.all.indexOf( this );

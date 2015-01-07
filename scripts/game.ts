@@ -179,7 +179,7 @@ function setMysteryLimit()
 
 function setFireLimit()
     {
-    FIRE_COUNT = Utilities.getRandomInt( 1000, 5000 );
+    FIRE_COUNT = Utilities.getRandomInt( 1000, 3000 );
     }
 
 function setTempoLimit()
@@ -192,9 +192,11 @@ function setTempoLimit()
     player bullets can collide with:
         - ships
         - mystery ships
+        - bunkers
 
     ships bullets can collide with:
         - player
+        - bunkers
  */
 
 function collisionDetection()
@@ -222,8 +224,8 @@ function collisionDetection()
                     two.getX(), two.getY(), two.constructor.width, two.constructor.height
                         ))
                     {
-                    one.remove();
-                    two.remove();
+                    one.tookDamage();
+                    two.tookDamage();
                     return true;
                     }
                 }
@@ -234,6 +236,9 @@ function collisionDetection()
 
     detectCollisions( Bullet.all_player, Ship.all );
     detectCollisions( Bullet.all_player, MysteryShip.all );
+    detectCollisions( Bullet.all_player, Bunker.all );
+    detectCollisions( Bullet.all_ship, Bunker.all );
+
 
         // enemy bullets with the player
     for (var a = Bullet.all_ship.length - 1 ; a >= 0 ; a--)
@@ -247,8 +252,8 @@ function collisionDetection()
             bullet.getX(), bullet.getY(), Bullet.width, Bullet.height
                 ))
             {
-            bullet.remove();
-            console.log( 'Took damage!' );
+            bullet.tookDamage();
+            PLAYER.tookDamage();
             }
         }
     }
