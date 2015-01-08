@@ -28,7 +28,7 @@ constructor( x: number, y: number, type: ShipType )
 
     var g = shape.graphics;
 
-    g.beginFill( 'red' );
+    g.beginFill( 'green' );
     g.drawRect( 0, 0, Ship.width, Ship.height );
     g.endFill();
 

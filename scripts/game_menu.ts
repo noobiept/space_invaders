@@ -4,6 +4,7 @@ module GameMenu
 var GAME_MENU;
 var SCORE;
 var LIVES;
+var TIMER: Utilities.Timer;
 
 export function init()
     {
@@ -16,8 +17,41 @@ export function init()
         Game.restart();
         };
 
+    var timer = GAME_MENU.querySelector( '#Timer' );
+
+    TIMER = new Utilities.Timer( timer );
+
     SCORE = GAME_MENU.querySelector( '#Score' );
     LIVES = GAME_MENU.querySelector( '#Lives' );
+    }
+
+
+export function startTimer( startTime? )
+    {
+    if ( typeof startTime === 'undefined' )
+        {
+        startTime = 0;
+        }
+
+    TIMER.start({
+            startValue: startTime,
+            tickCallback: function()
+                {
+                Game.addScore( -1 );
+                }
+        });
+    }
+
+
+export function stopTimer()
+    {
+    TIMER.stop();
+    }
+
+
+export function getCurrentTime()
+    {
+    return TIMER.getTimeMilliseconds();
     }
 
 

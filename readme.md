@@ -1,3 +1,13 @@
+Info
+====
+
+Based on the classic space invaders, with some changes.
+
+Finishing the game, allows you continue in the next game with the previous score/lives.
+Firing bullets reduces your overall score.
+One point is reduced from your score every second.
+
+
 Libraries
 =========
 

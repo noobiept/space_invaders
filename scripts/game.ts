@@ -26,7 +26,7 @@ var FIRE_COUNT = 0; // its assigned randomly
     Otherwise, start from 0 score.
  */
 
-export function start( initialScore?: number, initialLives?: number )
+export function start( initialScore?: number, initialLives?: number, initialTime?: number )
     {
         // :::: add the enemy ships :::: //
     var numberOfLines = 5;
@@ -133,6 +133,14 @@ export function start( initialScore?: number, initialLives?: number )
 
     GameMenu.updateScore( SCORE );
 
+
+    if ( typeof initialTime === 'undefined' )
+        {
+        initialTime = 0;
+        }
+
+    GameMenu.startTimer( initialTime );
+
     TEMPO_LIMIT = TEMPO_START;
 
     setTempoLimit();
@@ -158,13 +166,14 @@ export function victory()
     {
     var previousScore = SCORE;
     var previousLives = PLAYER.lives;
+    var previousTime = GameMenu.getCurrentTime();
 
     clear();
     HighScore.add( previousScore );
 
     Message.show( 'Victory!\nScore: ' + previousScore, 2000, function()
         {
-        start( previousScore, previousLives );
+        start( previousScore, previousLives, previousTime );
         });
     }
 
@@ -194,6 +203,7 @@ function clear()
     Bullet.clear();
     Bunker.clear();
     Message.hide();
+    GameMenu.stopTimer();
 
     MOVE_LEFT = false;
     MOVE_RIGHT = false;

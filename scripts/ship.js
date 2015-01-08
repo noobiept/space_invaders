@@ -8,7 +8,7 @@ var Ship = (function () {
     function Ship(x, y, type) {
         var shape = new createjs.Shape();
         var g = shape.graphics;
-        g.beginFill('red');
+        g.beginFill('green');
         g.drawRect(0, 0, Ship.width, Ship.height);
         g.endFill();
         shape.x = x;

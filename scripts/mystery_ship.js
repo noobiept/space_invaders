@@ -2,7 +2,7 @@ var MysteryShip = (function () {
     function MysteryShip() {
         var shape = new createjs.Shape();
         var g = shape.graphics;
-        g.beginFill('orange');
+        g.beginFill('red');
         g.drawRect(0, 0, MysteryShip.width, MysteryShip.height);
         g.endFill();
         // starts outside the left side of the canvas, and moves towards the right side

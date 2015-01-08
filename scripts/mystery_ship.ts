@@ -22,7 +22,7 @@ constructor()
 
     var g = shape.graphics;
 
-    g.beginFill( 'orange' );
+    g.beginFill( 'red' );
     g.drawRect( 0, 0, MysteryShip.width, MysteryShip.height );
     g.endFill();
 
