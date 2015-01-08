@@ -7,6 +7,7 @@ static all: MysteryShip[] = [];
 static movement_speed = 70;
 
 shape: createjs.Shape;
+score: number;
 
 static init( stage )
     {
@@ -30,6 +31,7 @@ constructor()
     shape.y = MysteryShip.height;
 
     this.shape = shape;
+    this.score = 100;
 
     MysteryShip._container.addChild( shape );
 
@@ -40,6 +42,8 @@ constructor()
 tookDamage()
     {
     this.remove();
+
+    Game.addScore( this.score );
     }
 
 

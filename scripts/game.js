@@ -4,6 +4,7 @@ var Game;
     var MOVE_LEFT = false;
     var MOVE_RIGHT = false;
     var PLAYER;
+    var SCORE;
     // the tempo of the song/game (the movement of the enemies follow the tempo as well)
     // the ships move every 'TEMPO_LIMIT' milliseconds
     var TEMPO_COUNT = 0;
@@ -59,7 +60,10 @@ var Game;
         }
         // :::: add the player :::: //
         PLAYER = new Player();
+        GameMenu.updateLives(PLAYER.lives);
         // :::: other configuration :::: //
+        SCORE = 0;
+        GameMenu.updateScore(SCORE);
         TEMPO_LIMIT = TEMPO_START;
         setTempoLimit();
         setMysteryLimit();
@@ -136,6 +140,11 @@ var Game;
         TEMPO_LIMIT -= 10;
     }
     Game.increaseTempo = increaseTempo;
+    function addScore(score) {
+        SCORE += score;
+        GameMenu.updateScore(SCORE);
+    }
+    Game.addScore = addScore;
     /*
         player bullets can collide with:
             - ships

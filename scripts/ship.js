@@ -8,6 +8,7 @@ var Ship = (function () {
         shape.x = x;
         shape.y = y;
         this.shape = shape;
+        this.score = 10;
         Ship._container.addChild(shape);
         Ship.all.push(this);
     }
@@ -18,6 +19,7 @@ var Ship = (function () {
     Ship.prototype.tookDamage = function () {
         this.remove();
         Game.increaseTempo();
+        Game.addScore(this.score);
         Ship.findLeftRight();
         if (Ship.all.length === 0) {
             Game.victory();

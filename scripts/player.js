@@ -18,6 +18,7 @@ var Player = (function () {
     };
     Player.prototype.tookDamage = function () {
         this.lives--;
+        GameMenu.updateLives(this.lives);
         if (this.lives <= 0) {
             Game.defeat();
         }

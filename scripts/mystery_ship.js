@@ -9,6 +9,7 @@ var MysteryShip = (function () {
         shape.x = -MysteryShip.width;
         shape.y = MysteryShip.height;
         this.shape = shape;
+        this.score = 100;
         MysteryShip._container.addChild(shape);
         MysteryShip.all.push(this);
     }
@@ -18,6 +19,7 @@ var MysteryShip = (function () {
     };
     MysteryShip.prototype.tookDamage = function () {
         this.remove();
+        Game.addScore(this.score);
     };
     MysteryShip.prototype.remove = function () {
         var index = MysteryShip.all.indexOf(this);

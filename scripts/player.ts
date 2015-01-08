@@ -43,6 +43,8 @@ tookDamage()
     {
     this.lives--;
 
+    GameMenu.updateLives( this.lives );
+
     if ( this.lives <= 0 )
         {
         Game.defeat();

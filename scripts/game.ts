@@ -5,6 +5,7 @@ var MOVE_LEFT = false;
 var MOVE_RIGHT = false;
 
 var PLAYER: Player;
+var SCORE: number;
 
     // the tempo of the song/game (the movement of the enemies follow the tempo as well)
     // the ships move every 'TEMPO_LIMIT' milliseconds
@@ -87,8 +88,13 @@ export function start()
 
     PLAYER = new Player();
 
+    GameMenu.updateLives( PLAYER.lives );
+
 
         // :::: other configuration :::: //
+
+    SCORE = 0;
+    GameMenu.updateScore( SCORE );
 
     TEMPO_LIMIT = TEMPO_START;
 
@@ -210,6 +216,14 @@ function setTempoLimit()
 export function increaseTempo()
     {
     TEMPO_LIMIT -= 10;
+    }
+
+
+export function addScore( score )
+    {
+    SCORE += score;
+
+    GameMenu.updateScore( SCORE );
     }
 
 

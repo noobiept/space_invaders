@@ -10,6 +10,7 @@ static furthest_right: Ship;
 static moving_right = true;
 
 shape: createjs.Shape;
+score: number;
 
 static init( stage )
     {
@@ -32,6 +33,7 @@ constructor( x: number, y: number )
     shape.y = y;
 
     this.shape = shape;
+    this.score = 10;
 
     Ship._container.addChild( shape );
 
@@ -44,6 +46,8 @@ tookDamage()
     this.remove();
 
     Game.increaseTempo();
+    Game.addScore( this.score );
+
     Ship.findLeftRight();
 
     if ( Ship.all.length === 0 )
