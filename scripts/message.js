@@ -16,12 +16,14 @@ var Message;
     function show(text, timeout, callback) {
         TEXT.text = text;
         TEXT.visible = true;
-        TIMEOUT.start(function () {
-            TEXT.visible = false;
-            if (callback) {
-                callback();
-            }
-        }, timeout);
+        if (Utilities.isNumber(timeout)) {
+            TIMEOUT.start(function () {
+                TEXT.visible = false;
+                if (callback) {
+                    callback();
+                }
+            }, timeout);
+        }
     }
     Message.show = show;
     function hide() {

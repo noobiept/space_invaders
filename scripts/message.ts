@@ -18,21 +18,24 @@ export function init( stage )
     }
 
 
-export function show( text: string, timeout: number, callback? )
+export function show( text: string, timeout?: number, callback? )
     {
     TEXT.text = text;
     TEXT.visible = true;
 
-    TIMEOUT.start( function()
+    if ( Utilities.isNumber( timeout ) )
         {
-        TEXT.visible = false;
-
-        if ( callback )
+        TIMEOUT.start( function()
             {
-            callback();
-            }
+            TEXT.visible = false;
 
-        }, timeout );
+            if ( callback )
+                {
+                callback();
+                }
+
+            }, timeout );
+        }
     }
 
 

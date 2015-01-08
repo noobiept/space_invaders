@@ -3,7 +3,7 @@ enum ShipType { one, two, three }
 class Ship
 {
 static width = 20;
-static height = 20;
+static height = 16;
 static _container: createjs.Container;
 static all: Ship[] = [];
 static movement_speed = 100;
@@ -11,8 +11,10 @@ static furthest_left: Ship;
 static furthest_right: Ship;
 static moving_right = true;
 
-shape: createjs.Shape;
+shape: createjs.Bitmap;
 score: number;
+images: HTMLImageElement[];
+current_image: number;  // position in the images array
 
 
 static init( stage )
@@ -24,35 +26,43 @@ static init( stage )
 
 constructor( x: number, y: number, type: ShipType )
     {
-    var shape = new createjs.Shape();
-
-    var g = shape.graphics;
-
-    g.beginFill( 'green' );
-    g.drawRect( 0, 0, Ship.width, Ship.height );
-    g.endFill();
-
-    shape.x = x;
-    shape.y = y;
-
-    this.shape = shape;
+    var image1, image2;
 
     if ( type === ShipType.one )
         {
         this.score = 40;
+
+        image1 = G.PRELOAD.getResult( 'ship_one_1' );
+        image2 = G.PRELOAD.getResult( 'ship_one_2' );
         }
 
     else if ( type === ShipType.two )
         {
         this.score = 20;
+
+        image1 = G.PRELOAD.getResult( 'ship_two_1' );
+        image2 = G.PRELOAD.getResult( 'ship_two_2' );
         }
 
         // type three
     else
         {
         this.score = 10;
+
+        image1 = G.PRELOAD.getResult( 'ship_three_1' );
+        image2 = G.PRELOAD.getResult( 'ship_three_2' );
         }
 
+
+    this.images = [ image1, image2 ];
+    this.current_image = 0;
+
+    var shape = new createjs.Bitmap( this.images[ this.current_image ] );
+
+    shape.x = x;
+    shape.y = y;
+
+    this.shape = shape;
 
     Ship._container.addChild( shape );
 
@@ -118,6 +128,15 @@ tick( tickMove )
         {
         this.shape.x -= tickMove;
         }
+
+    this.current_image++;
+
+    if ( this.current_image >= this.images.length )
+        {
+        this.current_image = 0;
+        }
+
+    this.shape.image = this.images[ this.current_image ];
     }
 
 /*

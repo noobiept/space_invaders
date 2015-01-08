@@ -12,8 +12,10 @@
 var G = {
     CANVAS_WIDTH: 0,
     CANVAS_HEIGHT: 0,
-    STAGE: null
+    STAGE: null,
+    PRELOAD: null
 };
+var BASE_URL = '';
 window.onload = function () {
     var canvas = document.querySelector('#MainCanvas');
     canvas.width = G.CANVAS_WIDTH = 400;
@@ -29,6 +31,26 @@ window.onload = function () {
     Bunker.init(G.STAGE);
     Player.init(G.STAGE);
     Message.init(G.STAGE);
-    GameMenu.show();
-    Game.start();
+    var manifest = {
+        path: BASE_URL + 'images/',
+        manifest: [
+            { id: 'ship_one_1', src: 'ship_one_1.png' },
+            { id: 'ship_one_2', src: 'ship_one_2.png' },
+            { id: 'ship_two_1', src: 'ship_two_1.png' },
+            { id: 'ship_two_2', src: 'ship_two_2.png' },
+            { id: 'ship_three_1', src: 'ship_three_1.png' },
+            { id: 'ship_three_2', src: 'ship_three_2.png' }
+        ]
+    };
+    G.PRELOAD = new createjs.LoadQueue();
+    G.PRELOAD.on('progress', function (event) {
+        Message.show('Loading.. ' + (event.progress * 100 | 0) + '%');
+        G.STAGE.update();
+    });
+    G.PRELOAD.on('complete', function () {
+        Message.hide();
+        GameMenu.show();
+        Game.start();
+    });
+    G.PRELOAD.loadManifest(manifest);
 };

@@ -6,23 +6,28 @@ var ShipType;
 })(ShipType || (ShipType = {}));
 var Ship = (function () {
     function Ship(x, y, type) {
-        var shape = new createjs.Shape();
-        var g = shape.graphics;
-        g.beginFill('green');
-        g.drawRect(0, 0, Ship.width, Ship.height);
-        g.endFill();
-        shape.x = x;
-        shape.y = y;
-        this.shape = shape;
+        var image1, image2;
         if (type === 0 /* one */) {
             this.score = 40;
+            image1 = G.PRELOAD.getResult('ship_one_1');
+            image2 = G.PRELOAD.getResult('ship_one_2');
         }
         else if (type === 1 /* two */) {
             this.score = 20;
+            image1 = G.PRELOAD.getResult('ship_two_1');
+            image2 = G.PRELOAD.getResult('ship_two_2');
         }
         else {
             this.score = 10;
+            image1 = G.PRELOAD.getResult('ship_three_1');
+            image2 = G.PRELOAD.getResult('ship_three_2');
         }
+        this.images = [image1, image2];
+        this.current_image = 0;
+        var shape = new createjs.Bitmap(this.images[this.current_image]);
+        shape.x = x;
+        shape.y = y;
+        this.shape = shape;
         Ship._container.addChild(shape);
         Ship.all.push(this);
     }
@@ -62,6 +67,11 @@ var Ship = (function () {
         else {
             this.shape.x -= tickMove;
         }
+        this.current_image++;
+        if (this.current_image >= this.images.length) {
+            this.current_image = 0;
+        }
+        this.shape.image = this.images[this.current_image];
     };
     /*
         Find the enemy that is most to the right, and the one that is most to the left
@@ -132,7 +142,7 @@ var Ship = (function () {
         Ship.moving_right = true;
     };
     Ship.width = 20;
-    Ship.height = 20;
+    Ship.height = 16;
     Ship.all = [];
     Ship.movement_speed = 100;
     Ship.moving_right = true;
