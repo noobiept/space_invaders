@@ -7,7 +7,10 @@ var MOVE_RIGHT = false;
 var PLAYER: Player;
 
     // the tempo of the song/game (the movement of the enemies follow the tempo as well)
+    // the ships move every 'TEMPO_LIMIT' milliseconds
 var TEMPO_COUNT = 0;
+var TEMPO_LIMIT = 0;
+var TEMPO_START = 600;  // value of tempo limit when the game starts (it gets changed during gameplay, as the ships are destroyed)
 
     // when to spawn a mystery ship, the count is a random value assigned later
 var MYSTERY_COUNT = 0;
@@ -87,6 +90,8 @@ export function start()
 
         // :::: other configuration :::: //
 
+    TEMPO_LIMIT = TEMPO_START;
+
     setTempoLimit();
     setMysteryLimit();
     setFireLimit();
@@ -103,6 +108,20 @@ export function restart()
     {
     clear();
     start();
+    }
+
+
+export function victory()
+    {
+    console.log( 'Victory!' );
+    Game.restart();
+    }
+
+
+export function defeat()
+    {
+    console.log( 'Defeat!' );
+    Game.restart();
     }
 
 
@@ -184,7 +203,13 @@ function setFireLimit()
 
 function setTempoLimit()
     {
-    TEMPO_COUNT = 600;
+    TEMPO_COUNT = TEMPO_LIMIT;
+    }
+
+
+export function increaseTempo()
+    {
+    TEMPO_LIMIT -= 10;
     }
 
 

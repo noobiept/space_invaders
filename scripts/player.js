@@ -10,12 +10,17 @@ var Player = (function () {
         shape.y = canvas.height - Player.height;
         Player._container.addChild(shape);
         this.shape = shape;
+        this.lives = 3;
     }
     Player.init = function (stage) {
         Player._container = new createjs.Container();
         stage.addChild(Player._container);
     };
     Player.prototype.tookDamage = function () {
+        this.lives--;
+        if (this.lives <= 0) {
+            Game.defeat();
+        }
         console.log('Took damage!');
     };
     Player.prototype.remove = function () {

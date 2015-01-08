@@ -6,6 +6,7 @@ static _container: createjs.Container;
 static movement_speed = 80;
 
 shape: createjs.Shape;
+lives: number;
 
 
 static init( stage )
@@ -34,11 +35,19 @@ constructor()
     Player._container.addChild( shape );
 
     this.shape = shape;
+    this.lives = 3;
     }
 
 
 tookDamage()
     {
+    this.lives--;
+
+    if ( this.lives <= 0 )
+        {
+        Game.defeat();
+        }
+
     console.log( 'Took damage!' );
     }
 

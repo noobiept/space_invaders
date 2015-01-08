@@ -5,7 +5,10 @@ var Game;
     var MOVE_RIGHT = false;
     var PLAYER;
     // the tempo of the song/game (the movement of the enemies follow the tempo as well)
+    // the ships move every 'TEMPO_LIMIT' milliseconds
     var TEMPO_COUNT = 0;
+    var TEMPO_LIMIT = 0;
+    var TEMPO_START = 600; // value of tempo limit when the game starts (it gets changed during gameplay, as the ships are destroyed)
     // when to spawn a mystery ship, the count is a random value assigned later
     var MYSTERY_COUNT = 0;
     // time until a random ship fires a bullet
@@ -57,6 +60,7 @@ var Game;
         // :::: add the player :::: //
         PLAYER = new Player();
         // :::: other configuration :::: //
+        TEMPO_LIMIT = TEMPO_START;
         setTempoLimit();
         setMysteryLimit();
         setFireLimit();
@@ -72,6 +76,16 @@ var Game;
         start();
     }
     Game.restart = restart;
+    function victory() {
+        console.log('Victory!');
+        Game.restart();
+    }
+    Game.victory = victory;
+    function defeat() {
+        console.log('Defeat!');
+        Game.restart();
+    }
+    Game.defeat = defeat;
     function clear() {
         createjs.Ticker.removeEventListener('tick', Game.tick);
         document.body.removeEventListener('keydown', keyDownEvent);
@@ -116,8 +130,12 @@ var Game;
         FIRE_COUNT = Utilities.getRandomInt(1000, 3000);
     }
     function setTempoLimit() {
-        TEMPO_COUNT = 600;
+        TEMPO_COUNT = TEMPO_LIMIT;
     }
+    function increaseTempo() {
+        TEMPO_LIMIT -= 10;
+    }
+    Game.increaseTempo = increaseTempo;
     /*
         player bullets can collide with:
             - ships

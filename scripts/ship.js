@@ -17,6 +17,11 @@ var Ship = (function () {
     };
     Ship.prototype.tookDamage = function () {
         this.remove();
+        Game.increaseTempo();
+        Ship.findLeftRight();
+        if (Ship.all.length === 0) {
+            Game.victory();
+        }
     };
     Ship.prototype.remove = function () {
         var index = Ship.all.indexOf(this);
@@ -79,8 +84,7 @@ var Ship = (function () {
         }
         // determine if the alien invasion is successful (reached the player)
         if (highestY > G.CANVAS_HEIGHT - 100) {
-            console.log('Game Over!');
-            Game.restart();
+            Game.defeat();
         }
     };
     Ship.tick = function (event) {

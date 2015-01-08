@@ -42,6 +42,14 @@ constructor( x: number, y: number )
 tookDamage()
     {
     this.remove();
+
+    Game.increaseTempo();
+    Ship.findLeftRight();
+
+    if ( Ship.all.length === 0 )
+        {
+        Game.victory();
+        }
     }
 
 
@@ -147,8 +155,7 @@ static moveOneLineDown()
         // determine if the alien invasion is successful (reached the player)
     if ( highestY > G.CANVAS_HEIGHT - 100 )
         {
-        console.log( 'Game Over!' );
-        Game.restart();
+        Game.defeat();
         }
     }
 
