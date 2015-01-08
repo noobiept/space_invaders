@@ -1,3 +1,5 @@
+enum ShipType { one, two, three }
+
 class Ship
 {
 static width = 20;
@@ -12,6 +14,7 @@ static moving_right = true;
 shape: createjs.Shape;
 score: number;
 
+
 static init( stage )
     {
     Ship._container = new createjs.Container();
@@ -19,7 +22,7 @@ static init( stage )
     stage.addChild( Ship._container );
     }
 
-constructor( x: number, y: number )
+constructor( x: number, y: number, type: ShipType )
     {
     var shape = new createjs.Shape();
 
@@ -33,7 +36,23 @@ constructor( x: number, y: number )
     shape.y = y;
 
     this.shape = shape;
-    this.score = 10;
+
+    if ( type === ShipType.one )
+        {
+        this.score = 40;
+        }
+
+    else if ( type === ShipType.two )
+        {
+        this.score = 20;
+        }
+
+        // type three
+    else
+        {
+        this.score = 10;
+        }
+
 
     Ship._container.addChild( shape );
 

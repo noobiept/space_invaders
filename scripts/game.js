@@ -14,7 +14,13 @@ var Game;
     var MYSTERY_COUNT = 0;
     // time until a random ship fires a bullet
     var FIRE_COUNT = 0; // its assigned randomly
-    function start() {
+    /*
+        Starts a new game.
+    
+        The score/lives of a previously played game can be pass on to the next game (in case the previous one was won).
+        Otherwise, start from 0 score.
+     */
+    function start(initialScore, initialLives) {
         // :::: add the enemy ships :::: //
         var numberOfLines = 5;
         var numberOfColumns = 11;
@@ -26,8 +32,18 @@ var Game;
         var x = startX;
         var y = MysteryShip.height * 3;
         for (var line = 0; line < numberOfLines; line++) {
+            var type;
+            if (line === 0) {
+                type = 0 /* one */;
+            }
+            else if (line <= 2) {
+                type = 1 /* two */;
+            }
+            else {
+                type = 2 /* three */;
+            }
             for (var column = 0; column < numberOfColumns; column++) {
-                new Ship(x, y);
+                new Ship(x, y, type);
                 x += Ship.width + spaceBetween;
             }
             x = startX;
@@ -60,9 +76,17 @@ var Game;
         }
         // :::: add the player :::: //
         PLAYER = new Player();
+        if (typeof initialLives !== 'undefined') {
+            PLAYER.lives = initialLives;
+        }
         GameMenu.updateLives(PLAYER.lives);
         // :::: other configuration :::: //
-        SCORE = 0;
+        if (typeof initialScore !== 'undefined') {
+            SCORE = initialScore;
+        }
+        else {
+            SCORE = 0;
+        }
         GameMenu.updateScore(SCORE);
         TEMPO_LIMIT = TEMPO_START;
         setTempoLimit();
@@ -81,14 +105,18 @@ var Game;
     }
     Game.restart = restart;
     function victory() {
+        var previousScore = SCORE;
+        var previousLives = PLAYER.lives;
         clear();
-        Message.show('Victory!\nScore: ' + SCORE, 2000, function () {
-            start();
+        HighScore.add(previousScore);
+        Message.show('Victory!\nScore: ' + previousScore, 2000, function () {
+            start(previousScore, previousLives);
         });
     }
     Game.victory = victory;
     function defeat() {
         clear();
+        HighScore.add(SCORE);
         Message.show('Defeat!\nScore: ' + SCORE, 2000, function () {
             start();
         });

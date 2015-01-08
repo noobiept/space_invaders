@@ -1,5 +1,11 @@
+var ShipType;
+(function (ShipType) {
+    ShipType[ShipType["one"] = 0] = "one";
+    ShipType[ShipType["two"] = 1] = "two";
+    ShipType[ShipType["three"] = 2] = "three";
+})(ShipType || (ShipType = {}));
 var Ship = (function () {
-    function Ship(x, y) {
+    function Ship(x, y, type) {
         var shape = new createjs.Shape();
         var g = shape.graphics;
         g.beginFill('red');
@@ -8,7 +14,15 @@ var Ship = (function () {
         shape.x = x;
         shape.y = y;
         this.shape = shape;
-        this.score = 10;
+        if (type === 0 /* one */) {
+            this.score = 40;
+        }
+        else if (type === 1 /* two */) {
+            this.score = 20;
+        }
+        else {
+            this.score = 10;
+        }
         Ship._container.addChild(shape);
         Ship.all.push(this);
     }

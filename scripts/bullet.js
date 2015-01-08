@@ -18,6 +18,7 @@ var Bullet = (function () {
         if (fromPlayer === true) {
             this.direction = 0 /* top */;
             Bullet.all_player.push(this);
+            Game.addScore(-1);
         }
         else {
             this.direction = 1 /* bottom */;

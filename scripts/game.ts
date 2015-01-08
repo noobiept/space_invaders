@@ -19,8 +19,14 @@ var MYSTERY_COUNT = 0;
     // time until a random ship fires a bullet
 var FIRE_COUNT = 0; // its assigned randomly
 
+/*
+    Starts a new game.
 
-export function start()
+    The score/lives of a previously played game can be pass on to the next game (in case the previous one was won).
+    Otherwise, start from 0 score.
+ */
+
+export function start( initialScore?: number, initialLives?: number )
     {
         // :::: add the enemy ships :::: //
     var numberOfLines = 5;
@@ -36,9 +42,26 @@ export function start()
 
     for (var line = 0 ; line < numberOfLines ; line++)
         {
+        var type;
+
+        if ( line === 0 )
+            {
+            type = ShipType.one;
+            }
+
+        else if ( line <= 2 )
+            {
+            type = ShipType.two;
+            }
+
+        else
+            {
+            type = ShipType.three;
+            }
+
         for (var column = 0 ; column < numberOfColumns ; column++)
             {
-            new Ship( x, y );
+            new Ship( x, y, type );
 
             x += Ship.width + spaceBetween;
             }
@@ -88,12 +111,26 @@ export function start()
 
     PLAYER = new Player();
 
+    if ( typeof initialLives !== 'undefined' )
+        {
+        PLAYER.lives = initialLives;
+        }
+
     GameMenu.updateLives( PLAYER.lives );
 
 
         // :::: other configuration :::: //
 
-    SCORE = 0;
+    if ( typeof initialScore !== 'undefined' )
+        {
+        SCORE = initialScore;
+        }
+
+    else
+        {
+        SCORE = 0;
+        }
+
     GameMenu.updateScore( SCORE );
 
     TEMPO_LIMIT = TEMPO_START;
@@ -119,11 +156,15 @@ export function restart()
 
 export function victory()
     {
-    clear();
+    var previousScore = SCORE;
+    var previousLives = PLAYER.lives;
 
-    Message.show( 'Victory!\nScore: ' + SCORE, 2000, function()
+    clear();
+    HighScore.add( previousScore );
+
+    Message.show( 'Victory!\nScore: ' + previousScore, 2000, function()
         {
-        start();
+        start( previousScore, previousLives );
         });
     }
 
@@ -131,6 +172,7 @@ export function victory()
 export function defeat()
     {
     clear();
+    HighScore.add( SCORE );
 
     Message.show( 'Defeat!\nScore: ' + SCORE, 2000, function()
         {

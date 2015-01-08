@@ -43,6 +43,8 @@ constructor( x: number, y: number, fromPlayer: boolean )
         this.direction = BulletDirection.top;
 
         Bullet.all_player.push( this );
+
+        Game.addScore( -1 );
         }
 
     else

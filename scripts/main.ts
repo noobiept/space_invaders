@@ -8,6 +8,7 @@
 /// <reference path="bunker.ts" />
 /// <reference path="game_menu.ts" />
 /// <reference path="message.ts" />
+/// <reference path="high_score.ts" />
 
 var G = {
     CANVAS_WIDTH: 0,
@@ -27,7 +28,7 @@ G.STAGE = new createjs.Stage( canvas );
 createjs.Ticker.framerate = 50;
 
 GameMenu.init();
-
+HighScore.init();
 
     // the order matters for the z-index (player is going to appear on top of the bullets for example)
 Bullet.init( G.STAGE );
