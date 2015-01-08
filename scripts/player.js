@@ -22,7 +22,9 @@ var Player = (function () {
         if (this.lives <= 0) {
             Game.defeat();
         }
-        console.log('Took damage!');
+        else {
+            Message.show('Took damage!', 1000);
+        }
     };
     Player.prototype.remove = function () {
         Player._container.removeChild(this.shape);

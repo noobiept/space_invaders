@@ -119,15 +119,23 @@ export function restart()
 
 export function victory()
     {
-    console.log( 'Victory!' );
-    Game.restart();
+    clear();
+
+    Message.show( 'Victory!\nScore: ' + SCORE, 2000, function()
+        {
+        start();
+        });
     }
 
 
 export function defeat()
     {
-    console.log( 'Defeat!' );
-    Game.restart();
+    clear();
+
+    Message.show( 'Defeat!\nScore: ' + SCORE, 2000, function()
+        {
+        start();
+        });
     }
 
 
@@ -143,6 +151,7 @@ function clear()
     PLAYER.remove();
     Bullet.clear();
     Bunker.clear();
+    Message.hide();
 
     MOVE_LEFT = false;
     MOVE_RIGHT = false;

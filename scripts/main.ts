@@ -7,6 +7,7 @@
 /// <reference path="mystery_ship.ts" />
 /// <reference path="bunker.ts" />
 /// <reference path="game_menu.ts" />
+/// <reference path="message.ts" />
 
 var G = {
     CANVAS_WIDTH: 0,
@@ -27,12 +28,14 @@ createjs.Ticker.framerate = 50;
 
 GameMenu.init();
 
+
     // the order matters for the z-index (player is going to appear on top of the bullets for example)
 Bullet.init( G.STAGE );
 Ship.init( G.STAGE );
 MysteryShip.init( G.STAGE );
 Bunker.init( G.STAGE );
 Player.init( G.STAGE );
+Message.init( G.STAGE );
 
 GameMenu.show();
 Game.start();

@@ -7,6 +7,7 @@
 /// <reference path="mystery_ship.ts" />
 /// <reference path="bunker.ts" />
 /// <reference path="game_menu.ts" />
+/// <reference path="message.ts" />
 var G = {
     CANVAS_WIDTH: 0,
     CANVAS_HEIGHT: 0,
@@ -25,6 +26,7 @@ window.onload = function () {
     MysteryShip.init(G.STAGE);
     Bunker.init(G.STAGE);
     Player.init(G.STAGE);
+    Message.init(G.STAGE);
     GameMenu.show();
     Game.start();
 };

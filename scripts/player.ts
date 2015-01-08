@@ -50,7 +50,10 @@ tookDamage()
         Game.defeat();
         }
 
-    console.log( 'Took damage!' );
+    else
+        {
+        Message.show( 'Took damage!', 1000 );
+        }
     }
 
 
