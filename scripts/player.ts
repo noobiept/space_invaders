@@ -1,11 +1,11 @@
 class Player
 {
-static width = 20;
-static height = 10;
+static width = 30;
+static height = 16;
 static _container: createjs.Container;
 static movement_speed = 80;
 
-shape: createjs.Shape;
+shape: createjs.Bitmap;
 lives: number;
 
 
@@ -19,18 +19,10 @@ static init( stage )
 
 constructor()
     {
-    var shape = new createjs.Shape();
+    var shape = new createjs.Bitmap( G.PRELOAD.getResult( 'cannon' ) );
 
-    var g = shape.graphics;
-
-    g.beginFill( 'green' );
-    g.drawRect( 0, 0, Player.width, Player.height );
-    g.endFill();
-
-    var canvas = G.STAGE.canvas;
-
-    shape.x = canvas.width / 2 - Player.width / 2;
-    shape.y = canvas.height - Player.height;
+    shape.x = G.CANVAS_WIDTH / 2 - Player.width / 2;
+    shape.y = G.CANVAS_HEIGHT - Player.height;
 
     Player._container.addChild( shape );
 

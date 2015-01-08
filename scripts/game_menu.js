@@ -8,7 +8,7 @@ var GameMenu;
     function init() {
         GAME_MENU = document.querySelector('#GameMenu');
         var restart = GAME_MENU.querySelector('#Restart');
-        restart.onclick = function () {
+        restart.onclick = function (event) {
             Game.restart();
         };
         var timer = GAME_MENU.querySelector('#Timer');

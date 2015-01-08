@@ -39,7 +39,9 @@ window.onload = function () {
             { id: 'ship_two_1', src: 'ship_two_1.png' },
             { id: 'ship_two_2', src: 'ship_two_2.png' },
             { id: 'ship_three_1', src: 'ship_three_1.png' },
-            { id: 'ship_three_2', src: 'ship_three_2.png' }
+            { id: 'ship_three_2', src: 'ship_three_2.png' },
+            { id: 'mystery_ship', src: 'mystery_ship.png' },
+            { id: 'cannon', src: 'cannon.png' }
         ]
     };
     G.PRELOAD = new createjs.LoadQueue();

@@ -12,7 +12,7 @@ export function init()
 
     var restart = GAME_MENU.querySelector( '#Restart' );
 
-    restart.onclick = function()
+    restart.onclick = function( event )
         {
         Game.restart();
         };

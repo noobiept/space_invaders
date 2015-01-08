@@ -1,12 +1,12 @@
 class MysteryShip
 {
-static width = 40;
-static height = 20;
+static width = 32;
+static height = 14;
 static _container: createjs.Container;
 static all: MysteryShip[] = [];
 static movement_speed = 70;
 
-shape: createjs.Shape;
+shape: createjs.Bitmap;
 score: number;
 
 static init( stage )
@@ -18,13 +18,7 @@ static init( stage )
 
 constructor()
     {
-    var shape = new createjs.Shape();
-
-    var g = shape.graphics;
-
-    g.beginFill( 'red' );
-    g.drawRect( 0, 0, MysteryShip.width, MysteryShip.height );
-    g.endFill();
+    var shape = new createjs.Bitmap( G.PRELOAD.getResult( 'mystery_ship' ) );
 
         // starts outside the left side of the canvas, and moves towards the right side
     shape.x = -MysteryShip.width;

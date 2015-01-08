@@ -1,10 +1,6 @@
 var MysteryShip = (function () {
     function MysteryShip() {
-        var shape = new createjs.Shape();
-        var g = shape.graphics;
-        g.beginFill('red');
-        g.drawRect(0, 0, MysteryShip.width, MysteryShip.height);
-        g.endFill();
+        var shape = new createjs.Bitmap(G.PRELOAD.getResult('mystery_ship'));
         // starts outside the left side of the canvas, and moves towards the right side
         shape.x = -MysteryShip.width;
         shape.y = MysteryShip.height;
@@ -50,8 +46,8 @@ var MysteryShip = (function () {
             MysteryShip.all[a].remove();
         }
     };
-    MysteryShip.width = 40;
-    MysteryShip.height = 20;
+    MysteryShip.width = 32;
+    MysteryShip.height = 14;
     MysteryShip.all = [];
     MysteryShip.movement_speed = 70;
     return MysteryShip;

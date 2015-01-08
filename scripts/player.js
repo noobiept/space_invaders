@@ -1,13 +1,8 @@
 var Player = (function () {
     function Player() {
-        var shape = new createjs.Shape();
-        var g = shape.graphics;
-        g.beginFill('green');
-        g.drawRect(0, 0, Player.width, Player.height);
-        g.endFill();
-        var canvas = G.STAGE.canvas;
-        shape.x = canvas.width / 2 - Player.width / 2;
-        shape.y = canvas.height - Player.height;
+        var shape = new createjs.Bitmap(G.PRELOAD.getResult('cannon'));
+        shape.x = G.CANVAS_WIDTH / 2 - Player.width / 2;
+        shape.y = G.CANVAS_HEIGHT - Player.height;
         Player._container.addChild(shape);
         this.shape = shape;
         this.lives = 3;
@@ -70,8 +65,8 @@ var Player = (function () {
     };
     Player.prototype.tick = function (event) {
     };
-    Player.width = 20;
-    Player.height = 10;
+    Player.width = 30;
+    Player.height = 16;
     Player.movement_speed = 80;
     return Player;
 })();
