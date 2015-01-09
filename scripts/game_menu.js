@@ -10,6 +10,7 @@ var GameMenu;
         var restart = GAME_MENU.querySelector('#Restart');
         restart.onclick = function (event) {
             Game.restart();
+            event.stopPropagation();
         };
         var timer = GAME_MENU.querySelector('#Timer');
         TIMER = new Utilities.Timer(timer);

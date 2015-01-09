@@ -15,6 +15,7 @@ export function init()
     restart.onclick = function( event )
         {
         Game.restart();
+        event.stopPropagation();
         };
 
     var timer = GAME_MENU.querySelector( '#Timer' );
