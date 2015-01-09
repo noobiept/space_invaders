@@ -1,14 +1,10 @@
 var Bunker = (function () {
     function Bunker(x, y) {
-        var shape = new createjs.Shape();
-        var g = shape.graphics;
-        g.beginFill('green');
-        g.drawRect(0, 0, Bunker.width, Bunker.height);
-        g.endFill();
+        this.health = 4;
+        var shape = new createjs.Bitmap(G.PRELOAD.getResult('bunker_' + this.health));
         shape.x = x;
         shape.y = y;
         this.shape = shape;
-        this.health = 4;
         Bunker._container.addChild(shape);
         Bunker.all.push(this);
     }
@@ -20,6 +16,9 @@ var Bunker = (function () {
         this.health -= 1;
         if (this.health <= 0) {
             this.remove();
+        }
+        else {
+            this.shape.image = G.PRELOAD.getResult('bunker_' + this.health);
         }
     };
     Bunker.prototype.remove = function () {
@@ -44,8 +43,8 @@ var Bunker = (function () {
             Bunker.all[a].remove();
         }
     };
-    Bunker.width = 10;
-    Bunker.height = 10;
+    Bunker.width = 12;
+    Bunker.height = 12;
     Bunker.all = [];
     return Bunker;
 })();

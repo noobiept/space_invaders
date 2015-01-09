@@ -1,11 +1,11 @@
 class Bunker
 {
-static width = 10;
-static height = 10;
+static width = 12;
+static height = 12;
 static _container: createjs.Container;
 static all: Bunker[] = [];
 
-shape: createjs.Shape;
+shape: createjs.Bitmap;
 health: number;
 
 
@@ -19,19 +19,14 @@ static init( stage )
 
 constructor( x, y )
     {
-    var shape = new createjs.Shape();
+    this.health = 4;
 
-    var g = shape.graphics;
-
-    g.beginFill( 'green' );
-    g.drawRect( 0, 0, Bunker.width, Bunker.height );
-    g.endFill();
+    var shape = new createjs.Bitmap( G.PRELOAD.getResult( 'bunker_' + this.health ) );
 
     shape.x = x;
     shape.y = y;
 
     this.shape = shape;
-    this.health = 4;
 
     Bunker._container.addChild( shape );
     Bunker.all.push( this );
@@ -45,6 +40,11 @@ tookDamage()
     if ( this.health <= 0 )
         {
         this.remove();
+        }
+
+    else
+        {
+        this.shape.image = G.PRELOAD.getResult( 'bunker_' + this.health );
         }
     }
 
