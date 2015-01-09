@@ -2,20 +2,35 @@ enum ShipType { one, two, three }
 
 class Ship
 {
-static width = 20;
-static height = 16;
 static _container: createjs.Container;
 static all: Ship[] = [];
 static movement_speed = 100;
 static furthest_left: Ship;
 static furthest_right: Ship;
 static moving_right = true;
+static types = {
+        one: {
+            score: 40,
+            width: 16
+        },
+        two: {
+            score: 20,
+            width: 22
+        },
+        three: {
+            score: 10,
+            width: 24
+        }
+    };
+
+static highest_width = 24;  // the width is different for all ship types, this has the highest
+static height = 16; // height is the same for all the ships, but not width
 
 shape: createjs.Bitmap;
 score: number;
 images: HTMLImageElement[];
 current_image: number;  // position in the images array
-
+width: number;
 
 static init( stage )
     {
@@ -26,35 +41,16 @@ static init( stage )
 
 constructor( x: number, y: number, type: ShipType )
     {
-    var image1, image2;
+    var typeName = ShipType[ type ];
+    var typeInfo = Ship.types[ typeName ];
 
-    if ( type === ShipType.one )
-        {
-        this.score = 40;
+    this.width = typeInfo.width;
+    this.score = typeInfo.score;
+    this.images = [
+        G.PRELOAD.getResult( 'ship_' + typeName + '_1' ),
+        G.PRELOAD.getResult( 'ship_' + typeName + '_2' )
+    ];
 
-        image1 = G.PRELOAD.getResult( 'ship_one_1' );
-        image2 = G.PRELOAD.getResult( 'ship_one_2' );
-        }
-
-    else if ( type === ShipType.two )
-        {
-        this.score = 20;
-
-        image1 = G.PRELOAD.getResult( 'ship_two_1' );
-        image2 = G.PRELOAD.getResult( 'ship_two_2' );
-        }
-
-        // type three
-    else
-        {
-        this.score = 10;
-
-        image1 = G.PRELOAD.getResult( 'ship_three_1' );
-        image2 = G.PRELOAD.getResult( 'ship_three_2' );
-        }
-
-
-    this.images = [ image1, image2 ];
     this.current_image = 0;
 
     var shape = new createjs.Bitmap( this.images[ this.current_image ] );
@@ -98,7 +94,7 @@ remove()
 
 fire()
     {
-    var bulletX = this.shape.x + Ship.width / 2 - Bullet.width / 2;
+    var bulletX = this.shape.x + this.width / 2 - Bullet.width / 2;
     var bulletY = this.shape.y + Ship.height / 2 - Bullet.height / 2;
 
     new Bullet( bulletX, bulletY, false );
@@ -114,6 +110,18 @@ getX()
 getY()
     {
     return this.shape.y;
+    }
+
+
+getWidth()
+    {
+    return this.width;
+    }
+
+
+getHeight()
+    {
+    return Ship.height;
     }
 
 
@@ -209,7 +217,7 @@ static tick( event )
 
     if ( Ship.moving_right )
         {
-        if ( Ship.furthest_right.shape.x > G.CANVAS_WIDTH - Ship.width - limit )
+        if ( Ship.furthest_right.shape.x > G.CANVAS_WIDTH - Ship.highest_width - limit )
             {
             Ship.moving_right = false;
             Ship.moveOneLineDown();

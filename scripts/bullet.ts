@@ -96,6 +96,18 @@ getY()
     }
 
 
+getWidth()
+    {
+    return Bullet.width;
+    }
+
+
+getHeight()
+    {
+    return Bullet.height;
+    }
+
+
 tick( tickMove )
     {
     if ( this.direction === BulletDirection.top )

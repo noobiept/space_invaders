@@ -6,23 +6,14 @@ var ShipType;
 })(ShipType || (ShipType = {}));
 var Ship = (function () {
     function Ship(x, y, type) {
-        var image1, image2;
-        if (type === 0 /* one */) {
-            this.score = 40;
-            image1 = G.PRELOAD.getResult('ship_one_1');
-            image2 = G.PRELOAD.getResult('ship_one_2');
-        }
-        else if (type === 1 /* two */) {
-            this.score = 20;
-            image1 = G.PRELOAD.getResult('ship_two_1');
-            image2 = G.PRELOAD.getResult('ship_two_2');
-        }
-        else {
-            this.score = 10;
-            image1 = G.PRELOAD.getResult('ship_three_1');
-            image2 = G.PRELOAD.getResult('ship_three_2');
-        }
-        this.images = [image1, image2];
+        var typeName = ShipType[type];
+        var typeInfo = Ship.types[typeName];
+        this.width = typeInfo.width;
+        this.score = typeInfo.score;
+        this.images = [
+            G.PRELOAD.getResult('ship_' + typeName + '_1'),
+            G.PRELOAD.getResult('ship_' + typeName + '_2')
+        ];
         this.current_image = 0;
         var shape = new createjs.Bitmap(this.images[this.current_image]);
         shape.x = x;
@@ -50,7 +41,7 @@ var Ship = (function () {
         Ship._container.removeChild(this.shape);
     };
     Ship.prototype.fire = function () {
-        var bulletX = this.shape.x + Ship.width / 2 - Bullet.width / 2;
+        var bulletX = this.shape.x + this.width / 2 - Bullet.width / 2;
         var bulletY = this.shape.y + Ship.height / 2 - Bullet.height / 2;
         new Bullet(bulletX, bulletY, false);
     };
@@ -59,6 +50,12 @@ var Ship = (function () {
     };
     Ship.prototype.getY = function () {
         return this.shape.y;
+    };
+    Ship.prototype.getWidth = function () {
+        return this.width;
+    };
+    Ship.prototype.getHeight = function () {
+        return Ship.height;
     };
     Ship.prototype.tick = function (tickMove) {
         if (Ship.moving_right) {
@@ -117,7 +114,7 @@ var Ship = (function () {
         // determine if we reach the extremes of the canvas, and if so, need to change direction
         var limit = 10;
         if (Ship.moving_right) {
-            if (Ship.furthest_right.shape.x > G.CANVAS_WIDTH - Ship.width - limit) {
+            if (Ship.furthest_right.shape.x > G.CANVAS_WIDTH - Ship.highest_width - limit) {
                 Ship.moving_right = false;
                 Ship.moveOneLineDown();
                 return;
@@ -141,10 +138,24 @@ var Ship = (function () {
         }
         Ship.moving_right = true;
     };
-    Ship.width = 20;
-    Ship.height = 16;
     Ship.all = [];
     Ship.movement_speed = 100;
     Ship.moving_right = true;
+    Ship.types = {
+        one: {
+            score: 40,
+            width: 16
+        },
+        two: {
+            score: 20,
+            width: 22
+        },
+        three: {
+            score: 10,
+            width: 24
+        }
+    };
+    Ship.highest_width = 24; // the width is different for all ship types, this has the highest
+    Ship.height = 16; // height is the same for all the ships, but not width
     return Ship;
 })();

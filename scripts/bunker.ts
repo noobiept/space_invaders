@@ -70,6 +70,18 @@ getY()
     }
 
 
+getWidth()
+    {
+    return Bunker.width;
+    }
+
+
+getHeight()
+    {
+    return Bunker.height;
+    }
+
+
 static clear()
     {
     for (var a = Bunker.all.length - 1 ; a >= 0 ; a--)

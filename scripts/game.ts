@@ -33,7 +33,7 @@ export function start( initialScore?: number, initialLives?: number, initialTime
     var numberOfColumns = 11;
     var spaceBetween = 10;
     var canvasWidth = G.CANVAS_WIDTH;
-    var enemiesSpace = numberOfColumns * Ship.width + (numberOfColumns - 1) * spaceBetween;
+    var enemiesSpace = numberOfColumns * Ship.highest_width + (numberOfColumns - 1) * spaceBetween;
 
         // start position
     var startX = canvasWidth / 2 - enemiesSpace / 2;
@@ -59,11 +59,13 @@ export function start( initialScore?: number, initialLives?: number, initialTime
             type = ShipType.three;
             }
 
+        var typeInfo = Ship.types[ ShipType[ type ] ];
+
         for (var column = 0 ; column < numberOfColumns ; column++)
             {
-            new Ship( x, y, type );
+            new Ship( x + (Ship.highest_width - typeInfo.width) / 2, y, type );
 
-            x += Ship.width + spaceBetween;
+            x += Ship.highest_width + spaceBetween;
             }
 
         x = startX;
@@ -312,16 +314,16 @@ function collisionDetection()
             one = groupOne[ a ];
             oneX = one.getX();
             oneY = one.getY();
-            oneWidth = one.constructor.width;
-            oneHeight = one.constructor.height;
+            oneWidth = one.getWidth();
+            oneHeight = one.getHeight();
 
             for (b = groupTwo.length - 1 ; b >= 0 ; b--)
                 {
                 two = groupTwo[ b ];
 
                 if ( Utilities.boxBoxCollision(
-                    oneX, oneY, oneWidth, oneHeight,
-                    two.getX(), two.getY(), two.constructor.width, two.constructor.height
+                    oneX,       oneY,       oneWidth,       oneHeight,
+                    two.getX(), two.getY(), two.getWidth(), two.getHeight()
                         ))
                     {
                     one.tookDamage();

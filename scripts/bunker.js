@@ -33,6 +33,12 @@ var Bunker = (function () {
     Bunker.prototype.getY = function () {
         return this.shape.y;
     };
+    Bunker.prototype.getWidth = function () {
+        return Bunker.width;
+    };
+    Bunker.prototype.getHeight = function () {
+        return Bunker.height;
+    };
     Bunker.clear = function () {
         for (var a = Bunker.all.length - 1; a >= 0; a--) {
             Bunker.all[a].remove();

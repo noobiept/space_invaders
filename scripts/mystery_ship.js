@@ -28,6 +28,12 @@ var MysteryShip = (function () {
     MysteryShip.prototype.getY = function () {
         return this.shape.y;
     };
+    MysteryShip.prototype.getWidth = function () {
+        return MysteryShip.width;
+    };
+    MysteryShip.prototype.getHeight = function () {
+        return MysteryShip.height;
+    };
     MysteryShip.prototype.tick = function (tickMove) {
         var nextX = this.shape.x + tickMove;
         this.shape.x = nextX;

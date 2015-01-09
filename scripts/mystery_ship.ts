@@ -63,6 +63,18 @@ getY()
     }
 
 
+getWidth()
+    {
+    return MysteryShip.width;
+    }
+
+
+getHeight()
+    {
+    return MysteryShip.height;
+    }
+
+
 tick( tickMove )
     {
     var nextX = this.shape.x + tickMove;

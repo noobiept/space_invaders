@@ -50,6 +50,12 @@ var Bullet = (function () {
     Bullet.prototype.getY = function () {
         return this.shape.y;
     };
+    Bullet.prototype.getWidth = function () {
+        return Bullet.width;
+    };
+    Bullet.prototype.getHeight = function () {
+        return Bullet.height;
+    };
     Bullet.prototype.tick = function (tickMove) {
         if (this.direction === 0 /* top */) {
             this.shape.y -= tickMove;
