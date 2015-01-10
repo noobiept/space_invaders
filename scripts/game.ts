@@ -11,13 +11,15 @@ var SCORE: number;
     // the ships move every 'TEMPO_LIMIT' milliseconds
 var TEMPO_COUNT = 0;
 var TEMPO_LIMIT = 0;
-var TEMPO_START = 600;  // value of tempo limit when the game starts (it gets changed during gameplay, as the ships are destroyed)
+var INITIAL_TEMPO = 100; // initial tempo of the game (before any ship is destroyed)
+var CURRENT_TEMPO = 0;
 
     // when to spawn a mystery ship, the count is a random value assigned later
 var MYSTERY_COUNT = 0;
 
     // time until a random ship fires a bullet
 var FIRE_COUNT = 0; // its assigned randomly
+
 
 /*
     Starts a new game.
@@ -143,11 +145,13 @@ export function start( initialScore?: number, initialLives?: number, initialTime
 
     GameMenu.startTimer( initialTime );
 
-    TEMPO_LIMIT = TEMPO_START;
+    setTempo( INITIAL_TEMPO );
 
     setTempoLimit();
     setMysteryLimit();
     setFireLimit();
+
+    GameAudio.playSong( INITIAL_TEMPO );
 
         // set the events
     document.body.addEventListener( 'keydown', keyDownEvent );
@@ -207,6 +211,7 @@ function clear()
     Message.hide();
     GameMenu.stopTimer();
 
+    GameAudio.stop();
     MOVE_LEFT = false;
     MOVE_RIGHT = false;
     }
@@ -276,9 +281,20 @@ function setTempoLimit()
     }
 
 
+export function setTempo( tempo )
+    {
+    CURRENT_TEMPO = tempo;
+
+    TEMPO_LIMIT = 60 / CURRENT_TEMPO * 1000;
+    }
+
+
 export function increaseTempo()
     {
-    TEMPO_LIMIT -= 10;
+    CURRENT_TEMPO += 2;
+
+    setTempo( CURRENT_TEMPO );
+    GameAudio.setTempo( CURRENT_TEMPO );
     }
 
 
