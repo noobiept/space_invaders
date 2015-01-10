@@ -8,6 +8,14 @@ Firing bullets reduces your overall score.
 One point is reduced from your score every second.
 
 
+Controls
+========
+
+- move left - *a* or *left arrow*
+- move right - *d* or *right arrow*
+- fire - *left click* or *space*
+
+
 Libraries
 =========
 

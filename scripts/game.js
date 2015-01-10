@@ -163,6 +163,9 @@ var Game;
         else if (key === Utilities.KEY_CODE.rightArrow || key === Utilities.KEY_CODE.d) {
             MOVE_RIGHT = false;
         }
+        else if (key === Utilities.KEY_CODE.space) {
+            PLAYER.fire();
+        }
     }
     function clickEvent(event) {
         var button = event.button;

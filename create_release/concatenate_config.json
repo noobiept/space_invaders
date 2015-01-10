@@ -1,0 +1,15 @@
+{
+    "C:\\Users\\drk\\Dropbox\\projects\\space_invaders": [
+        "scripts/player.js",
+        "scripts/ship.js",
+        "scripts/bullet.js",
+        "scripts/bunker.js",
+        "scripts/mystery_ship.js",
+        "scripts/game_audio.js",
+        "scripts/game_menu.js",
+        "scripts/game.js",
+        "scripts/message.js",
+        "scripts/high_score.js",
+        "scripts/main.js"
+    ]
+}

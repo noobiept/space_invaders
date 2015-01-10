@@ -1,0 +1,21 @@
+{
+    "basePath": "..",
+    "files":
+        [
+            "audio/",
+            "css/",
+            "images/",
+            "libraries/"
+        ],
+    "exclude":
+        [
+            "images/other/"
+        ],
+    "extensions":
+        [
+            ".ogg",
+            ".css",
+            ".png",
+            ".js"
+        ]
+}

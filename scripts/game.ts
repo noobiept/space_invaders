@@ -250,6 +250,11 @@ function keyUpEvent( event )
         {
         MOVE_RIGHT = false;
         }
+
+    else if ( key === Utilities.KEY_CODE.space )
+        {
+        PLAYER.fire();
+        }
     }
 
 
