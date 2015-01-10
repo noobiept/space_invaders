@@ -44,7 +44,7 @@ constructor( x: number, y: number, fromPlayer: boolean )
 
         Bullet.all_player.push( this );
 
-        Game.addScore( -1 );
+        Game.addScore( -5 );
         }
 
     else

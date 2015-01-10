@@ -106,7 +106,7 @@ var Ship = (function () {
             }
         }
         // determine if the alien invasion is successful (reached the player)
-        if (highestY > G.CANVAS_HEIGHT - 100) {
+        if (highestY > G.CANVAS_HEIGHT - 90) {
             Game.defeat();
         }
     };

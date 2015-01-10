@@ -14,6 +14,11 @@ body
     cursor: pointer;
     }
 
+.button:hover
+    {
+    text-decoration: underline;
+    }
+
 #GameMenu
     {
     color: white;
@@ -28,4 +33,9 @@ body
     {
     display: inline-block;
     margin: 0 10px;
+    }
+
+#GameMenu .value
+    {
+    color: rgb(0, 128, 0);
     }

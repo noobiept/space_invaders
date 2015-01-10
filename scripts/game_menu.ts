@@ -18,6 +18,30 @@ export function init()
         event.stopPropagation();
         };
 
+
+    var mute = GAME_MENU.querySelector( '#Mute' );
+    var muted = false;
+
+    mute.onclick = function( event )
+        {
+        muted = !muted;
+
+        if ( muted === true )
+            {
+            GameAudio.setGain( 0 );
+            mute.innerHTML = 'Un-mute';
+            }
+
+        else
+            {
+            GameAudio.setGain( 1 );
+            mute.innerHTML = 'Mute';
+            }
+
+        event.stopPropagation();
+        };
+
+
     var timer = GAME_MENU.querySelector( '#Timer' );
 
     TIMER = new Utilities.Timer( timer );
