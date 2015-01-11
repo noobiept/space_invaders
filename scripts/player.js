@@ -67,6 +67,6 @@ var Player = (function () {
     };
     Player.width = 30;
     Player.height = 16;
-    Player.movement_speed = 80;
+    Player.movement_speed = 90;
     return Player;
 })();

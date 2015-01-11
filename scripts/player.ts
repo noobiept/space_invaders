@@ -3,7 +3,7 @@ class Player
 static width = 30;
 static height = 16;
 static _container: createjs.Container;
-static movement_speed = 80;
+static movement_speed = 90;
 
 shape: createjs.Bitmap;
 lives: number;

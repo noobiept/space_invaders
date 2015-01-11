@@ -7,7 +7,7 @@ static height = 6;
 static _container: createjs.Container;
 static all_player: Bullet[] = [];   // all the bullets fired by the player
 static all_ship: Bullet[] = [];     // all the bullets fired by an enemy ship
-static movement_speed = 150;
+static movement_speed = 170;
 
 shape: createjs.Shape;
 direction: BulletDirection;
