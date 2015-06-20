@@ -7,11 +7,19 @@ var GameAudio;
     var SONG_TEMPO = 100; // tempo of the song (before changing the playback rate)
     var GAIN_VALUE = 1;
     function init() {
-        AUDIO_CONTEXT = new AudioContext();
+        try {
+            AUDIO_CONTEXT = new AudioContext();
+        }
+        catch (error) {
+            AUDIO_CONTEXT = null;
+        }
         BUFFER = G.PRELOAD.getResult('music');
     }
     GameAudio.init = init;
     function playSong(tempo) {
+        if (!AUDIO_CONTEXT) {
+            return;
+        }
         stop();
         SOURCE = AUDIO_CONTEXT.createBufferSource();
         SOURCE.buffer = BUFFER;
@@ -25,18 +33,21 @@ var GameAudio;
     }
     GameAudio.playSong = playSong;
     function setTempo(tempo) {
+        if (!AUDIO_CONTEXT) {
+            return;
+        }
         SOURCE.playbackRate.value = tempo / SONG_TEMPO;
     }
     GameAudio.setTempo = setTempo;
     function setGain(gain) {
-        if (GAIN !== null) {
+        if (AUDIO_CONTEXT !== null && GAIN !== null) {
             GAIN_VALUE = gain;
             GAIN.gain.value = gain;
         }
     }
     GameAudio.setGain = setGain;
     function stop() {
-        if (SOURCE !== null) {
+        if (AUDIO_CONTEXT !== null && SOURCE !== null) {
             SOURCE.stop();
             SOURCE = null;
             GAIN = null;

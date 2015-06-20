@@ -28,13 +28,18 @@
 <body>
     <canvas id="MainCanvas"></canvas>
 
-    <ul id="GameMenu">
-        <li id="Restart" class="button">Restart</li>
-        <li id="Mute" class="button">Mute</li>
-        <li>Score: <span id="Score" class="value"></span></li>
-        <li>Lives: <span id="Lives" class="value"></span></li>
-        <li>High-score: <span id="HighScore" class="value"></span></li>
-        <li id="Timer"></li>
-    </ul>
+    <div id="GameMenu">
+        <ul id="GameMenu-first">
+            <li id="Restart" class="button">Restart</li>
+            <li id="Mute" class="button">Mute</li>
+            <li>Score: <span id="Score" class="value"></span></li>
+            <li>Lives: <span id="Lives" class="value"></span></li>
+        </ul>
+        <ul id="GameMenu-second">
+            <li>High-score: <span id="HighScore" class="value"></span></li>
+            <li id="Timer"></li>
+        </ul>
+    </div>
+
 </body>
 </html>

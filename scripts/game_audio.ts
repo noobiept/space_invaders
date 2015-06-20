@@ -7,15 +7,27 @@ var GAIN = null;
 var SONG_TEMPO = 100;   // tempo of the song (before changing the playback rate)
 var GAIN_VALUE = 1;
 
+
 export function init()
     {
-    AUDIO_CONTEXT = new AudioContext();
+    try {
+        AUDIO_CONTEXT = new AudioContext();
+    }
+    catch( error ) {
+        AUDIO_CONTEXT = null;
+    }
+
     BUFFER = G.PRELOAD.getResult( 'music' );
     }
 
 
 export function playSong( tempo )
     {
+    if ( !AUDIO_CONTEXT )
+        {
+        return;
+        }
+
     stop();
 
     SOURCE = AUDIO_CONTEXT.createBufferSource();
@@ -34,13 +46,18 @@ export function playSong( tempo )
 
 export function setTempo( tempo )
     {
+    if ( !AUDIO_CONTEXT )
+        {
+        return;
+        }
+
     SOURCE.playbackRate.value = tempo / SONG_TEMPO;
     }
 
 
 export function setGain( gain )
     {
-    if ( GAIN !== null )
+    if ( AUDIO_CONTEXT !== null && GAIN !== null )
         {
         GAIN_VALUE = gain;
         GAIN.gain.value = gain;
@@ -50,7 +67,7 @@ export function setGain( gain )
 
 export function stop()
     {
-    if ( SOURCE !== null )
+    if ( AUDIO_CONTEXT !== null && SOURCE !== null )
         {
         SOURCE.stop();
         SOURCE = null;
