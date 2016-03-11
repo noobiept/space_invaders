@@ -3,6 +3,7 @@
         ".hg",
         "release",
         "libraries",
-        "typings"
+        "typings",
+        "build"
     ]
 }

@@ -1,14 +1,16 @@
 module HighScore
 {
-var HTML_ELEMENT: HTMLElement;
-var BEST_SCORE: number;
+export type HighScoreData = number;
 
-export function init()
+var HTML_ELEMENT: HTMLElement;
+var BEST_SCORE: HighScoreData;
+
+export function init( data: HighScoreData )
     {
     HTML_ELEMENT = <HTMLElement> document.querySelector( '#HighScore' );
     BEST_SCORE = 0;
 
-    load();
+    load( data );
     updateHtmlElement();
     }
 
@@ -25,11 +27,9 @@ export function add( score )
     }
 
 
-function load()
+function load( score: HighScoreData )
     {
-    var score = Utilities.getObject( 'space_invaders_high_score' );
-
-    if ( score !== null )
+    if ( score )
         {
         BEST_SCORE = score;
         }
@@ -38,7 +38,7 @@ function load()
 
 function save()
     {
-    Utilities.saveObject( 'space_invaders_high_score', BEST_SCORE );
+    AppStorage.setData({ space_invaders_high_score: BEST_SCORE });
     }
 
 

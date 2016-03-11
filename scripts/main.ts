@@ -20,7 +20,19 @@ var G = {
 
 var BASE_URL = '';
 
+interface Data {
+    space_invaders_high_score: HighScore.HighScoreData;
+    space_invaders_options: Options.OptionsData
+}
+
+
 window.onload = function()
+{
+AppStorage.getData( [ 'space_invaders_high_score', 'space_invaders_options' ], initApp );
+};
+
+
+function initApp( data: Data )
 {
 var canvas = <HTMLCanvasElement> document.querySelector( '#MainCanvas' );
 
@@ -31,8 +43,9 @@ G.STAGE = new createjs.Stage( canvas );
 
 createjs.Ticker.framerate = 50;
 
+Options.init( data[ 'space_invaders_options' ] );
+HighScore.init( data[ 'space_invaders_high_score' ] );
 GameMenu.init();
-HighScore.init();
 
     // the order matters for the z-index (player is going to appear on top of the bullets for example)
 Bullet.init( G.STAGE );
@@ -77,4 +90,4 @@ G.PRELOAD.on( 'complete', function()
     Game.start();
     });
 G.PRELOAD.loadManifest( manifest );
-};
+}

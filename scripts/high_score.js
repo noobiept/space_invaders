@@ -2,10 +2,10 @@ var HighScore;
 (function (HighScore) {
     var HTML_ELEMENT;
     var BEST_SCORE;
-    function init() {
+    function init(data) {
         HTML_ELEMENT = document.querySelector('#HighScore');
         BEST_SCORE = 0;
-        load();
+        load(data);
         updateHtmlElement();
     }
     HighScore.init = init;
@@ -17,14 +17,13 @@ var HighScore;
         updateHtmlElement();
     }
     HighScore.add = add;
-    function load() {
-        var score = Utilities.getObject('space_invaders_high_score');
-        if (score !== null) {
+    function load(score) {
+        if (score) {
             BEST_SCORE = score;
         }
     }
     function save() {
-        Utilities.saveObject('space_invaders_high_score', BEST_SCORE);
+        AppStorage.setData({ space_invaders_high_score: BEST_SCORE });
     }
     function updateHtmlElement() {
         HTML_ELEMENT.innerHTML = BEST_SCORE.toString();
