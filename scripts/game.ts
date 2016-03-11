@@ -426,11 +426,14 @@ export function tick( event )
     if ( FIRE_COUNT < 0 )
         {
             // get a random ship
-        var position = Utilities.getRandomInt( 0, Ship.all.length - 1 );
+        if ( Ship.all.length > 0 )
+            {
+            var position = Utilities.getRandomInt( 0, Ship.all.length - 1 );
 
-        Ship.all[ position ].fire();
+            Ship.all[ position ].fire();
 
-        setFireLimit();
+            setFireLimit();
+            }
         }
 
     PLAYER.tick( event );

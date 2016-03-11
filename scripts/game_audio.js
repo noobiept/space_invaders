@@ -40,8 +40,8 @@ var GameAudio;
     }
     GameAudio.setTempo = setTempo;
     function setGain(gain) {
+        GAIN_VALUE = gain;
         if (AUDIO_CONTEXT !== null && GAIN !== null) {
-            GAIN_VALUE = gain;
             GAIN.gain.value = gain;
         }
     }

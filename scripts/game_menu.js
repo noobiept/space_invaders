@@ -5,6 +5,7 @@ var GameMenu;
     var SCORE;
     var LIVES;
     var TIMER;
+    var MUTE;
     function init() {
         GAME_MENU = document.querySelector('#GameMenu');
         var restart = GAME_MENU.querySelector('#Restart');
@@ -12,20 +13,14 @@ var GameMenu;
             Game.restart();
             event.stopPropagation();
         };
-        var mute = GAME_MENU.querySelector('#Mute');
-        var muted = false;
-        mute.onclick = function (event) {
+        var muted = Options.get('muted');
+        MUTE = GAME_MENU.querySelector('#Mute');
+        MUTE.onclick = function (event) {
             muted = !muted;
-            if (muted === true) {
-                GameAudio.setGain(0);
-                mute.innerHTML = 'Un-mute';
-            }
-            else {
-                GameAudio.setGain(1);
-                mute.innerHTML = 'Mute';
-            }
+            setMuted(muted);
             event.stopPropagation();
         };
+        setMuted(muted, false);
         var timer = GAME_MENU.querySelector('#Timer');
         TIMER = new Utilities.Timer(timer);
         SCORE = GAME_MENU.querySelector('#Score');
@@ -68,4 +63,18 @@ var GameMenu;
         GAME_MENU.style.visibility = 'hidden';
     }
     GameMenu.hide = hide;
+    function setMuted(muted, save) {
+        if (save === void 0) { save = true; }
+        if (muted === true) {
+            GameAudio.setGain(0);
+            MUTE.innerHTML = 'Un-mute';
+        }
+        else {
+            GameAudio.setGain(1);
+            MUTE.innerHTML = 'Mute';
+        }
+        if (save !== false) {
+            Options.set('muted', muted);
+        }
+    }
 })(GameMenu || (GameMenu = {}));

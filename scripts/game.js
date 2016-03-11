@@ -278,9 +278,11 @@ var Game;
         // a random ship fires a bullet
         if (FIRE_COUNT < 0) {
             // get a random ship
-            var position = Utilities.getRandomInt(0, Ship.all.length - 1);
-            Ship.all[position].fire();
-            setFireLimit();
+            if (Ship.all.length > 0) {
+                var position = Utilities.getRandomInt(0, Ship.all.length - 1);
+                Ship.all[position].fire();
+                setFireLimit();
+            }
         }
         PLAYER.tick(event);
         Bullet.tick(event);
