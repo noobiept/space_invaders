@@ -69,4 +69,4 @@ var Player = (function () {
     Player.height = 16;
     Player.movement_speed = 90;
     return Player;
-})();
+}());

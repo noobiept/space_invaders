@@ -1,0 +1,8 @@
+{
+    "exclude": [
+        ".hg",
+        "release",
+        "libraries",
+        "typings"
+    ]
+}

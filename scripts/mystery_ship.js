@@ -57,4 +57,4 @@ var MysteryShip = (function () {
     MysteryShip.all = [];
     MysteryShip.movement_speed = 70;
     return MysteryShip;
-})();
+}());

@@ -1,5 +1,5 @@
-/// <reference path="../typings/tsd.d.ts" />
-/// <reference path="../typings/utilities-1.5.d.ts" />
+/// <reference path="../typings/browser.d.ts" />
+/// <reference path="../typings/utilities.1.8.0.d.ts" />
 /// <reference path="game.ts" />
 /// <reference path="player.ts" />
 /// <reference path="bullet.ts" />

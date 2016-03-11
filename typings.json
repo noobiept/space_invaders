@@ -1,0 +1,10 @@
+{
+  "ambientDependencies": {
+    "createjs": "registry:dt/createjs#0.4.1+20140414154755",
+    "createjs-lib": "registry:dt/createjs-lib#0.4.1+20140414154755",
+    "easeljs": "registry:dt/easeljs#0.8.0+20160112150308",
+    "preloadjs": "registry:dt/preloadjs#0.6.0+20160215162030",
+    "soundjs": "registry:dt/soundjs#0.6.0+20160215162030",
+    "tweenjs": "registry:dt/tweenjs#0.6.0+20160215162030"
+  }
+}

@@ -35,13 +35,13 @@ var Game;
         for (var line = 0; line < numberOfLines; line++) {
             var type;
             if (line === 0) {
-                type = 0 /* one */;
+                type = ShipType.one;
             }
             else if (line <= 2) {
-                type = 1 /* two */;
+                type = ShipType.two;
             }
             else {
-                type = 2 /* three */;
+                type = ShipType.three;
             }
             var typeInfo = Ship.types[ShipType[type]];
             for (var column = 0; column < numberOfColumns; column++) {
@@ -148,19 +148,23 @@ var Game;
     }
     function keyDownEvent(event) {
         var key = event.keyCode;
-        if (key === Utilities.KEY_CODE.leftArrow || key === Utilities.KEY_CODE.a) {
+        if (key === Utilities.KEY_CODE.leftArrow ||
+            key === Utilities.KEY_CODE.a) {
             MOVE_LEFT = true;
         }
-        else if (key === Utilities.KEY_CODE.rightArrow || key === Utilities.KEY_CODE.d) {
+        else if (key === Utilities.KEY_CODE.rightArrow ||
+            key === Utilities.KEY_CODE.d) {
             MOVE_RIGHT = true;
         }
     }
     function keyUpEvent(event) {
         var key = event.keyCode;
-        if (key === Utilities.KEY_CODE.leftArrow || key === Utilities.KEY_CODE.a) {
+        if (key === Utilities.KEY_CODE.leftArrow ||
+            key === Utilities.KEY_CODE.a) {
             MOVE_LEFT = false;
         }
-        else if (key === Utilities.KEY_CODE.rightArrow || key === Utilities.KEY_CODE.d) {
+        else if (key === Utilities.KEY_CODE.rightArrow ||
+            key === Utilities.KEY_CODE.d) {
             MOVE_RIGHT = false;
         }
         else if (key === Utilities.KEY_CODE.space) {
@@ -234,6 +238,7 @@ var Game;
         detectCollisions(Bullet.all_player, MysteryShip.all);
         detectCollisions(Bullet.all_player, Bunker.all);
         detectCollisions(Bullet.all_ship, Bunker.all);
+        // enemy bullets with the player
         for (var a = Bullet.all_ship.length - 1; a >= 0; a--) {
             var bullet = Bullet.all_ship[a];
             var playerX = PLAYER.getX();

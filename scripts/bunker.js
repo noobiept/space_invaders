@@ -47,4 +47,4 @@ var Bunker = (function () {
     Bunker.height = 12;
     Bunker.all = [];
     return Bunker;
-})();
+}());

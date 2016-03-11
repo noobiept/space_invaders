@@ -7,7 +7,7 @@ The goal is to defeat the invading alien ships and save earth!
 
 When you finish a level, the score/lives you had is carried on to the next level, allowing you to improve your score.
 
-Firing bullets reduces your overall score (also is reduced as time passes), so its important to use as less bullets as possible, and finish the level fast, to get a higher score. 
+Firing bullets reduces your overall score (also is reduced as time passes), so its important to use as less bullets as possible, and finish the level fast, to get a higher score.
 
 
 [Try it out here](http://nbpt.eu/games/space_invaders/)
@@ -40,12 +40,13 @@ Controls
 - fire - *left click* or *space*
 
 
-Libraries
-=========
+Dependencies
+============
 
+- typescript : 1.8
 - createjs
     - easeljs   : 0.8
     - preloadjs : 0.6
     - soundjs   : 0.6
     - tweenjs   : 0.6
-- utilities : 1.5
+- utilities : 1.8

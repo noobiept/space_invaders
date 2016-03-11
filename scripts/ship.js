@@ -158,4 +158,4 @@ var Ship = (function () {
     Ship.highest_width = 24; // the width is different for all ship types, this has the highest
     Ship.height = 16; // height is the same for all the ships, but not width
     return Ship;
-})();
+}());

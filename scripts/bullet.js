@@ -16,12 +16,12 @@ var Bullet = (function () {
         this.from_player = fromPlayer;
         Bullet._container.addChild(shape);
         if (fromPlayer === true) {
-            this.direction = 0 /* top */;
+            this.direction = BulletDirection.top;
             Bullet.all_player.push(this);
             Game.addScore(-5);
         }
         else {
-            this.direction = 1 /* bottom */;
+            this.direction = BulletDirection.bottom;
             Bullet.all_ship.push(this);
         }
     }
@@ -57,7 +57,7 @@ var Bullet = (function () {
         return Bullet.height;
     };
     Bullet.prototype.tick = function (tickMove) {
-        if (this.direction === 0 /* top */) {
+        if (this.direction === BulletDirection.top) {
             this.shape.y -= tickMove;
             if (this.shape.y < 0) {
                 this.remove();
@@ -96,4 +96,4 @@ var Bullet = (function () {
     Bullet.all_ship = []; // all the bullets fired by an enemy ship
     Bullet.movement_speed = 170;
     return Bullet;
-})();
+}());
