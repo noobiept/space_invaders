@@ -41,7 +41,7 @@ canvas.height = G.CANVAS_HEIGHT = 400;
 
 G.STAGE = new createjs.Stage( canvas );
 
-createjs.Ticker.framerate = 50;
+createjs.Ticker.timingMode = createjs.Ticker.RAF;
 
 Options.init( data[ 'space_invaders_options' ] );
 HighScore.init( data[ 'space_invaders_high_score' ] );
