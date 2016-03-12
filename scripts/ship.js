@@ -128,7 +128,7 @@ var Ship = (function () {
             }
         }
         var length = Ship.all.length;
-        var tickMove = (Ship.max_movement_speed - length * Ship.speed_decrease) * event.delta / 1000;
+        var tickMove = (Ship.current_max_speed - length * Ship.speed_decrease) * event.delta / 1000;
         for (var a = length - 1; a >= 0; a--) {
             Ship.all[a].tick(tickMove);
         }
@@ -140,8 +140,10 @@ var Ship = (function () {
         Ship.moving_right = true;
     };
     Ship.all = [];
-    Ship.max_movement_speed = 1000;
-    Ship.speed_decrease = 15; // per ship in the game
+    Ship.initial_max_speed = 1000;
+    Ship.speed_increase_per_level = 100;
+    Ship.current_max_speed = Ship.initial_max_speed; // the speed will increase the higher the game level
+    Ship.speed_decrease = 15; // per ship in the current level
     Ship.moving_right = true;
     Ship.types = {
         one: {

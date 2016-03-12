@@ -21,7 +21,7 @@ var Game;
         The score/lives of a previously played game can be pass on to the next game (in case the previous one was won).
         Otherwise, start from 0 score.
      */
-    function start(initialScore, initialLives, initialTime) {
+    function start(initialScore, initialLives, initialTime, maxShipSpeed) {
         // :::: add the enemy ships :::: //
         var numberOfLines = 5;
         var numberOfColumns = 11;
@@ -32,6 +32,12 @@ var Game;
         var startX = canvasWidth / 2 - enemiesSpace / 2;
         var x = startX;
         var y = MysteryShip.height * 3;
+        if (typeof maxShipSpeed === 'undefined') {
+            Ship.current_max_speed = Ship.initial_max_speed;
+        }
+        else {
+            Ship.current_max_speed = maxShipSpeed;
+        }
         for (var line = 0; line < numberOfLines; line++) {
             var type;
             if (line === 0) {
@@ -118,7 +124,7 @@ var Game;
         clear();
         HighScore.add(previousScore);
         Message.show('Victory!\nScore: ' + previousScore, 2000, function () {
-            start(previousScore, previousLives, previousTime);
+            start(previousScore, previousLives, previousTime, Ship.current_max_speed + Ship.speed_increase_per_level);
         });
     }
     Game.victory = victory;

@@ -28,7 +28,7 @@ var FIRE_COUNT = 0; // its assigned randomly
     Otherwise, start from 0 score.
  */
 
-export function start( initialScore?: number, initialLives?: number, initialTime?: number )
+export function start( initialScore?: number, initialLives?: number, initialTime?: number, maxShipSpeed?: number )
     {
         // :::: add the enemy ships :::: //
     var numberOfLines = 5;
@@ -41,6 +41,16 @@ export function start( initialScore?: number, initialLives?: number, initialTime
     var startX = canvasWidth / 2 - enemiesSpace / 2;
     var x = startX;
     var y = MysteryShip.height * 3;
+
+    if ( typeof maxShipSpeed === 'undefined' )
+        {
+        Ship.current_max_speed = Ship.initial_max_speed;
+        }
+
+    else
+        {
+        Ship.current_max_speed = maxShipSpeed;
+        }
 
     for (var line = 0 ; line < numberOfLines ; line++)
         {
@@ -179,7 +189,7 @@ export function victory()
 
     Message.show( 'Victory!\nScore: ' + previousScore, 2000, function()
         {
-        start( previousScore, previousLives, previousTime );
+        start( previousScore, previousLives, previousTime, Ship.current_max_speed + Ship.speed_increase_per_level );
         });
     }
 
