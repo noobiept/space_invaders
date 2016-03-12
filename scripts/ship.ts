@@ -4,7 +4,8 @@ class Ship
 {
 static _container: createjs.Container;
 static all: Ship[] = [];
-static movement_speed = 100;
+static max_movement_speed = 1000;
+static speed_decrease = 15;     // per ship in the game
 static furthest_left: Ship;
 static furthest_right: Ship;
 static moving_right = true;
@@ -235,10 +236,10 @@ static tick( event )
             }
         }
 
+    var length = Ship.all.length;
+    var tickMove = (Ship.max_movement_speed - length * Ship.speed_decrease) * event.delta / 1000;
 
-     var tickMove = Ship.movement_speed * event.delta / 1000;
-
-    for (var a = Ship.all.length - 1 ; a >= 0 ; a--)
+    for (var a = length - 1 ; a >= 0 ; a--)
         {
         Ship.all[ a ].tick( tickMove );
         }

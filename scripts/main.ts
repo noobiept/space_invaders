@@ -36,7 +36,7 @@ function initApp( data: Data )
 {
 var canvas = <HTMLCanvasElement> document.querySelector( '#MainCanvas' );
 
-canvas.width = G.CANVAS_WIDTH = 430;
+canvas.width = G.CANVAS_WIDTH = 500;
 canvas.height = G.CANVAS_HEIGHT = 400;
 
 G.STAGE = new createjs.Stage( canvas );

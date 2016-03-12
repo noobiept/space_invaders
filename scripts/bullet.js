@@ -94,6 +94,6 @@ var Bullet = (function () {
     Bullet.height = 6;
     Bullet.all_player = []; // all the bullets fired by the player
     Bullet.all_ship = []; // all the bullets fired by an enemy ship
-    Bullet.movement_speed = 170;
+    Bullet.movement_speed = 200;
     return Bullet;
 }());

@@ -127,8 +127,9 @@ var Ship = (function () {
                 return;
             }
         }
-        var tickMove = Ship.movement_speed * event.delta / 1000;
-        for (var a = Ship.all.length - 1; a >= 0; a--) {
+        var length = Ship.all.length;
+        var tickMove = (Ship.max_movement_speed - length * Ship.speed_decrease) * event.delta / 1000;
+        for (var a = length - 1; a >= 0; a--) {
             Ship.all[a].tick(tickMove);
         }
     };
@@ -139,7 +140,8 @@ var Ship = (function () {
         Ship.moving_right = true;
     };
     Ship.all = [];
-    Ship.movement_speed = 100;
+    Ship.max_movement_speed = 1000;
+    Ship.speed_decrease = 15; // per ship in the game
     Ship.moving_right = true;
     Ship.types = {
         one: {

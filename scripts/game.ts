@@ -277,7 +277,7 @@ function setMysteryLimit()
 
 function setFireLimit()
     {
-    FIRE_COUNT = Utilities.getRandomInt( 1000, 3000 );
+    FIRE_COUNT = Utilities.getRandomInt( 1000, 2500 );
     }
 
 function setTempoLimit()

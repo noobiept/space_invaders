@@ -181,7 +181,7 @@ var Game;
         MYSTERY_COUNT = Utilities.getRandomInt(8000, 15000);
     }
     function setFireLimit() {
-        FIRE_COUNT = Utilities.getRandomInt(1000, 3000);
+        FIRE_COUNT = Utilities.getRandomInt(1000, 2500);
     }
     function setTempoLimit() {
         TEMPO_COUNT = TEMPO_LIMIT;
