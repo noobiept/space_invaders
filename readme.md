@@ -17,7 +17,7 @@ Gameplay
 ========
 
 - you control a laser cannon on the bottom of the screen
-- can be move horizontally
+- can be moved horizontally
 - can fire any number of bullets
 - the goal is to defeat 5 rows of 11 aliens
 - the alien ships move horizontally as a group back and forth, and move down as it reaches an extreme of the canvas (changing the direction after)
@@ -29,7 +29,7 @@ Gameplay
 - the laser cannon is partially protected by several bunkers, which can be destroyed by either the enemy ships or the laser cannon
 - each bunker can take 4 hits before its destroyed
 - you gain score by destroying the enemy ships
-- you loose score as time passes by, and for each bullet fired
+- you lose score as time passes by, and for each bullet fired
 
 
 Controls

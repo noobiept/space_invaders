@@ -1,7 +1,8 @@
 {
     "name": "space_invaders",
     "version": "1.2.0",
-    "description": "Based on the classic space invaders game. Has some differences such has being able to fire any number of bullets (but each bullet reduces your overall score).",
+    "description": "Based on the classic space invaders game. Has some differences such has being able to fire any number of bullets.",
+    "icons": { "128": "images/icon128.png" },
     "app": { "background": { "scripts": [ "background.js" ] } },
     "permissions": [ "storage" ],
     "manifest_version": 2
