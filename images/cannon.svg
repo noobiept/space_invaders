@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="30" height="16" viewBox="0 0 30 16" shape-rendering="crispEdges" version="1.1">
+  <title>cannon</title>
+  <g inkscape:groupmode="layer" inkscape:label="#008000" fill="#008000">
+    <rect x="14" y="0" width="2" height="16"/>
+    <rect x="12" y="2" width="2" height="14"/>
+    <rect x="16" y="2" width="2" height="14"/>
+    <rect x="2" y="6" width="10" height="10"/>
+    <rect x="18" y="6" width="10" height="10"/>
+    <rect x="0" y="8" width="2" height="8"/>
+    <rect x="28" y="8" width="2" height="8"/>
+  </g>
+</svg>
