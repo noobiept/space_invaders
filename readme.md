@@ -65,6 +65,9 @@ The node/pnpm versions are pinned in `.tool-versions` (managed with [mise](https
     pnpm format        # format with prettier
     pnpm format:check  # check the formatting without writing
 
+`art/` holds the source artwork (the `.svg` files the sprites are exported from, and
+the old store promotion images). It is kept out of `public/`, so it isn't deployed.
+
 The game rules live in `scripts/logic/`, kept free of any engine/dom access so they
 can be unit tested directly. The tests sit next to them as `*.test.ts`.
 
