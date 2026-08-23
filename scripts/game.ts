@@ -7,9 +7,12 @@ import * as GameMenu from "./game_menu";
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from "./globals";
 import * as HighScore from "./high_score";
 import * as Message from "./message";
+import { bunkerGroups, shipGrid } from "./logic/layout";
+import { nextLevelSpeed } from "./logic/scoring";
+import { INITIAL_TEMPO, nextTempo, tempoLimitMs } from "./logic/tempo";
 import { MysteryShip } from "./mystery_ship";
 import { Player } from "./player";
-import { Ship, ShipType } from "./ship";
+import { Ship } from "./ship";
 
 /**
  * Anything that can collide with something else.
@@ -33,7 +36,6 @@ let SCORE = 0;
 // the ships move every 'TEMPO_LIMIT' milliseconds
 let TEMPO_COUNT = 0;
 let TEMPO_LIMIT = 0;
-const INITIAL_TEMPO = 100; // initial tempo of the game (before any ship is destroyed)
 let CURRENT_TEMPO = 0;
 
 // when to spawn a mystery ship, the count is a random value assigned later
@@ -56,17 +58,6 @@ export function start(
     maxShipSpeed?: number,
 ) {
     // :::: add the enemy ships :::: //
-    const numberOfLines = 5;
-    const numberOfColumns = 11;
-    const spaceBetween = 10;
-    const canvasWidth = CANVAS_WIDTH;
-    const enemiesSpace =
-        numberOfColumns * Ship.highest_width + (numberOfColumns - 1) * spaceBetween;
-
-    // start position (top/left of the enemies block)
-    const startX = canvasWidth / 2 - enemiesSpace / 2;
-    let x = startX;
-    let y = MysteryShip.height * 3;
 
     if (typeof maxShipSpeed === "undefined") {
         Ship.current_max_speed = Ship.initial_max_speed;
@@ -74,57 +65,41 @@ export function start(
         Ship.current_max_speed = maxShipSpeed;
     }
 
-    for (let line = 0; line < numberOfLines; line++) {
-        let type: ShipType;
+    const ships = shipGrid({
+        lines: 5,
+        columns: 11,
+        spaceBetween: 10,
+        canvasWidth: CANVAS_WIDTH,
+        shipWidth: Ship.highest_width,
+        shipHeight: Ship.height,
+        startY: MysteryShip.height * 3,
+    });
 
-        if (line === 0) {
-            type = ShipType.one;
-        } else if (line <= 2) {
-            type = ShipType.two;
-        } else {
-            type = ShipType.three;
-        }
-
-        for (let column = 0; column < numberOfColumns; column++) {
-            // the ships are centered within the widest ship's width
-            new Ship(x + Ship.highest_width / 2, y + Ship.height / 2, type);
-
-            x += Ship.highest_width + spaceBetween;
-        }
-
-        x = startX;
-        y += Ship.height + spaceBetween;
+    for (const placement of ships) {
+        new Ship(placement.x, placement.y, placement.type);
     }
 
     Ship.findLeftRight();
 
     // :::: add the bunkers :::: //
 
-    // 4 groups of bunkers
-    const groupLength = 4;
-    const margin = 50; // margin between the extremes of the canvas, and the nearby bunker
-    const availableWidth = canvasWidth - 2 * margin;
-    const groupWidth = 4 * Bunker.width; // 4 columns per bunker group
-    const spaceBetweenBunkers = Math.round((availableWidth - 4 * groupWidth) / 3);
-    const startingHeight = CANVAS_HEIGHT - 70;
-
-    const addBunkerColumn = function (columnX: number, columnY: number, length: number) {
-        for (let b = 0; b < length; b++) {
-            new Bunker(columnX + Bunker.width / 2, columnY + b * Bunker.height + Bunker.height / 2);
-        }
-    };
-
-    for (let a = 0; a < groupLength; a++) {
-        const currentX = margin + a * (groupWidth + spaceBetweenBunkers);
+    const bunkers = bunkerGroups({
+        groups: 4,
+        margin: 50, // margin between the extremes of the canvas, and the nearby bunker
+        canvasWidth: CANVAS_WIDTH,
+        bunkerWidth: Bunker.width,
+        bunkerHeight: Bunker.height,
+        startY: CANVAS_HEIGHT - 70,
 
         // each bunker group has this format (each 1 is an individual Bunker)
         // 1111
         // 1111
         // 1  1
-        addBunkerColumn(currentX, startingHeight, 3);
-        addBunkerColumn(currentX + Bunker.width, startingHeight, 2);
-        addBunkerColumn(currentX + 2 * Bunker.width, startingHeight, 2);
-        addBunkerColumn(currentX + 3 * Bunker.width, startingHeight, 3);
+        columnHeights: [3, 2, 2, 3],
+    });
+
+    for (const placement of bunkers) {
+        new Bunker(placement.x, placement.y);
     }
 
     // :::: add the player :::: //
@@ -186,7 +161,7 @@ export function victory() {
             previousScore,
             previousLives,
             previousTime,
-            Ship.current_max_speed + Ship.speed_increase_per_level,
+            nextLevelSpeed(Ship.current_max_speed, Ship.speed_increase_per_level),
         );
     });
 }
@@ -262,13 +237,11 @@ function setTempoLimit() {
 export function setTempo(tempo: number) {
     CURRENT_TEMPO = tempo;
 
-    TEMPO_LIMIT = (60 / CURRENT_TEMPO) * 1000;
+    TEMPO_LIMIT = tempoLimitMs(CURRENT_TEMPO);
 }
 
 export function increaseTempo() {
-    CURRENT_TEMPO += 2;
-
-    setTempo(CURRENT_TEMPO);
+    setTempo(nextTempo(CURRENT_TEMPO));
     GameAudio.setTempo(CURRENT_TEMPO);
 }
 

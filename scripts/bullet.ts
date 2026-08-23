@@ -1,6 +1,8 @@
 import * as Engine from "@drk4/game-engine";
 import * as Game from "./game";
 import { CANVAS_HEIGHT } from "./globals";
+import { isAboveCanvas, isBelowCanvas, travel } from "./logic/movement";
+import { BULLET_COST } from "./logic/scoring";
 
 export enum BulletDirection {
     top,
@@ -47,7 +49,7 @@ export class Bullet {
 
             Bullet.all_player.push(this);
 
-            Game.addScore(-5);
+            Game.addScore(BULLET_COST);
         } else {
             this.direction = BulletDirection.bottom;
 
@@ -88,7 +90,7 @@ export class Bullet {
         if (this.direction === BulletDirection.top) {
             this.shape.y -= tickMove;
 
-            if (this.shape.top < 0) {
+            if (isAboveCanvas(this.shape.top)) {
                 this.remove();
             }
         }
@@ -97,7 +99,7 @@ export class Bullet {
         else {
             this.shape.y += tickMove;
 
-            if (this.shape.top > CANVAS_HEIGHT) {
+            if (isBelowCanvas(this.shape.top, CANVAS_HEIGHT)) {
                 this.remove();
             }
         }
@@ -105,7 +107,7 @@ export class Bullet {
 
     static tick(deltaTime: number) {
         // how much each bullet moves per tick
-        const tickMove = Bullet.movement_speed * deltaTime;
+        const tickMove = travel(Bullet.movement_speed, deltaTime);
         let a;
 
         for (a = Bullet.all_player.length - 1; a >= 0; a--) {

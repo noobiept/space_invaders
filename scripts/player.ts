@@ -3,6 +3,7 @@ import { Bullet } from "./bullet";
 import * as Game from "./game";
 import * as GameMenu from "./game_menu";
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from "./globals";
+import { clampPlayerX, travel } from "./logic/movement";
 import * as Message from "./message";
 
 export class Player {
@@ -55,25 +56,15 @@ export class Player {
     }
 
     moveLeft(deltaTime: number) {
-        let nextX = this.shape.x - Player.movement_speed * deltaTime;
-        const limit = Player.width / 2;
+        const nextX = this.shape.x - travel(Player.movement_speed, deltaTime);
 
-        if (nextX < limit) {
-            nextX = limit;
-        }
-
-        this.shape.x = nextX;
+        this.shape.x = clampPlayerX(nextX, Player.width, CANVAS_WIDTH);
     }
 
     moveRight(deltaTime: number) {
-        let nextX = this.shape.x + Player.movement_speed * deltaTime;
-        const limit = CANVAS_WIDTH - Player.width / 2;
+        const nextX = this.shape.x + travel(Player.movement_speed, deltaTime);
 
-        if (nextX > limit) {
-            nextX = limit;
-        }
-
-        this.shape.x = nextX;
+        this.shape.x = clampPlayerX(nextX, Player.width, CANVAS_WIDTH);
     }
 
     /*

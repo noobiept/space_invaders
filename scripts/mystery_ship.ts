@@ -1,6 +1,8 @@
 import * as Engine from "@drk4/game-engine";
 import * as Game from "./game";
 import { CANVAS_WIDTH } from "./globals";
+import { isPastRightEdge, travel } from "./logic/movement";
+import { MYSTERY_SHIP_SCORE } from "./logic/scoring";
 
 export class MysteryShip {
     static width = 32;
@@ -27,7 +29,7 @@ export class MysteryShip {
         });
 
         this.shape = shape;
-        this.score = 100;
+        this.score = MYSTERY_SHIP_SCORE;
 
         MysteryShip._container.addChild(shape);
 
@@ -67,13 +69,13 @@ export class MysteryShip {
     tick(tickMove: number) {
         this.shape.x += tickMove;
 
-        if (this.shape.left > CANVAS_WIDTH) {
+        if (isPastRightEdge(this.shape.left, CANVAS_WIDTH)) {
             this.remove();
         }
     }
 
     static tick(deltaTime: number) {
-        const tickMove = MysteryShip.movement_speed * deltaTime;
+        const tickMove = travel(MysteryShip.movement_speed, deltaTime);
 
         for (let a = MysteryShip.all.length - 1; a >= 0; a--) {
             MysteryShip.all[a]!.tick(tickMove);

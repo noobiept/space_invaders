@@ -2,19 +2,17 @@ import * as Engine from "@drk4/game-engine";
 import { Bullet } from "./bullet";
 import * as Game from "./game";
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from "./globals";
-
-export enum ShipType {
-    one,
-    two,
-    three,
-}
-
-export type ShipTypeName = "one" | "two" | "three";
-
-export interface ShipTypeInfo {
-    score: number;
-    width: number;
-}
+import { hasReachedPlayer, shipTickMove, shouldReverse } from "./logic/movement";
+import {
+    SHIP_HEIGHT,
+    SHIP_HIGHEST_WIDTH,
+    SHIP_TYPES,
+    type ShipType,
+    type ShipTypeInfo,
+    type ShipTypeName,
+    shipTypeInfo,
+    shipTypeName,
+} from "./logic/ship_types";
 
 export class Ship {
     static all: Ship[] = [];
@@ -25,23 +23,10 @@ export class Ship {
     static furthest_left: Ship;
     static furthest_right: Ship;
     static moving_right = true;
-    static types: Record<ShipTypeName, ShipTypeInfo> = {
-        one: {
-            score: 40,
-            width: 16,
-        },
-        two: {
-            score: 20,
-            width: 22,
-        },
-        three: {
-            score: 10,
-            width: 24,
-        },
-    };
+    static types: Record<ShipTypeName, ShipTypeInfo> = SHIP_TYPES;
 
-    static highest_width = 24; // the width is different for all ship types, this has the highest
-    static height = 16; // height is the same for all the ships, but not width
+    static highest_width = SHIP_HIGHEST_WIDTH; // the width is different for all ship types, this has the highest
+    static height = SHIP_HEIGHT; // height is the same for all the ships, but not width
     private static _container: Engine.Container;
 
     shape: Engine.Bitmap;
@@ -60,8 +45,8 @@ export class Ship {
      * The `x`/`y` position refers to the center of the ship.
      */
     constructor(x: number, y: number, type: ShipType) {
-        const typeName = ShipType[type] as ShipTypeName;
-        const typeInfo = Ship.types[typeName];
+        const typeName = shipTypeName(type);
+        const typeInfo = shipTypeInfo(type);
 
         this.width = typeInfo.width;
         this.score = typeInfo.score;
@@ -191,31 +176,34 @@ export class Ship {
         }
 
         // determine if the alien invasion is successful (reached the player)
-        if (highestY > CANVAS_HEIGHT - 90) {
+        if (hasReachedPlayer(highestY, CANVAS_HEIGHT)) {
             Game.defeat();
         }
     }
 
     static tick(deltaTime: number) {
         // determine if we reach the extremes of the canvas, and if so, need to change direction
-        const limit = 10;
+        const reverse = shouldReverse({
+            movingRight: Ship.moving_right,
+            furthestLeft: Ship.furthest_left.shape.left,
+            furthestRight: Ship.furthest_right.shape.left,
+            canvasWidth: CANVAS_WIDTH,
+            shipWidth: Ship.highest_width,
+        });
 
-        if (Ship.moving_right) {
-            if (Ship.furthest_right.shape.left > CANVAS_WIDTH - Ship.highest_width - limit) {
-                Ship.moving_right = false;
-                Ship.moveOneLineDown();
-                return;
-            }
-        } else {
-            if (Ship.furthest_left.shape.left < limit) {
-                Ship.moving_right = true;
-                Ship.moveOneLineDown();
-                return;
-            }
+        if (reverse) {
+            Ship.moving_right = !Ship.moving_right;
+            Ship.moveOneLineDown();
+            return;
         }
 
         const length = Ship.all.length;
-        const tickMove = (Ship.current_max_speed - length * Ship.speed_decrease) * deltaTime;
+        const tickMove = shipTickMove(
+            Ship.current_max_speed,
+            length,
+            Ship.speed_decrease,
+            deltaTime,
+        );
 
         for (let a = length - 1; a >= 0; a--) {
             Ship.all[a]!.tick(tickMove);

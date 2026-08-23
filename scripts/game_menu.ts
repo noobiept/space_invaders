@@ -1,6 +1,7 @@
 import { Timer } from "@drk4/utilities";
 import * as Game from "./game";
 import * as GameAudio from "./game_audio";
+import { TIME_DECAY_PER_TICK } from "./logic/scoring";
 import * as Options from "./options";
 
 // reference to html elements
@@ -43,7 +44,7 @@ export function startTimer(startTime = 0) {
     TIMER.start({
         startValue: startTime,
         onTick: function () {
-            Game.addScore(-1);
+            Game.addScore(TIME_DECAY_PER_TICK);
         },
     });
 }
