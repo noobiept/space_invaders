@@ -55,3 +55,13 @@ The node/pnpm versions are pinned in `.tool-versions` (managed with [mise](https
     pnpm build         # type-check and build to dist/
     pnpm preview       # serve the built files
     pnpm typecheck     # type-check only
+
+    pnpm lint          # lint with oxlint
+    pnpm lint:fix      # lint and apply the auto-fixes
+    pnpm format        # format with prettier
+    pnpm format:check  # check the formatting without writing
+
+`.git-blame-ignore-revs` lists the mechanical reformat commits. To have `git blame`
+skip them:
+
+    git config blame.ignoreRevsFile .git-blame-ignore-revs
