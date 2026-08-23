@@ -1,0 +1,43 @@
+name: CI
+
+on:
+    push:
+        branches: [master]
+    pull_request:
+        branches: [master]
+
+# cancel superseded runs on the same branch
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    check:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v5
+
+            # installs the node/pnpm versions pinned in `.tool-versions`,
+            # so that the CI matches the local setup
+            - uses: jdx/mise-action@v2
+              with:
+                  cache: true
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Type-check
+              run: pnpm typecheck
+
+            - name: Lint
+              run: pnpm lint
+
+            - name: Check formatting
+              run: pnpm format:check
+
+            - name: Test
+              run: pnpm test
+
+            - name: Build
+              run: pnpm build
