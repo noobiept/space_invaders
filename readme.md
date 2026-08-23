@@ -56,10 +56,17 @@ The node/pnpm versions are pinned in `.tool-versions` (managed with [mise](https
     pnpm preview       # serve the built files
     pnpm typecheck     # type-check only
 
+    pnpm test          # run the unit tests
+    pnpm test:watch    # run the unit tests in watch mode
+    pnpm test:coverage # run the unit tests with a coverage report
+
     pnpm lint          # lint with oxlint
     pnpm lint:fix      # lint and apply the auto-fixes
     pnpm format        # format with prettier
     pnpm format:check  # check the formatting without writing
+
+The game rules live in `scripts/logic/`, kept free of any engine/dom access so they
+can be unit tested directly. The tests sit next to them as `*.test.ts`.
 
 `.git-blame-ignore-revs` lists the mechanical reformat commits. To have `git blame`
 skip them:
