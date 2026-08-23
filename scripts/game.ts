@@ -211,9 +211,19 @@ function keyUpEvent(event: KeyboardEvent) {
         MOVE_LEFT = false;
     } else if (code === "ArrowRight" || code === "KeyD") {
         MOVE_RIGHT = false;
-    } else if (code === "Space") {
+    } else if (code === "Space" && !isMenuFocused()) {
         PLAYER.fire();
     }
+}
+
+/**
+ * Whether one of the menu buttons currently has the keyboard focus. `space` activates
+ * a focused button, so the player shouldn't fire off the same key press.
+ */
+function isMenuFocused(): boolean {
+    const active = document.activeElement;
+
+    return active instanceof HTMLElement && active.closest("#GameMenu") !== null;
 }
 
 function clickEvent(event: MouseEvent) {

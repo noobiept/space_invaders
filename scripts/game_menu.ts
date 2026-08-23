@@ -18,6 +18,7 @@ export function init() {
 
     restart.addEventListener("click", function (event) {
         Game.restart();
+        releaseAfterPointer(event);
         event.stopPropagation();
     });
 
@@ -28,6 +29,7 @@ export function init() {
         muted = !muted;
         setMuted(muted);
 
+        releaseAfterPointer(event);
         event.stopPropagation();
     });
     setMuted(muted, false);
@@ -71,6 +73,17 @@ export function show() {
 
 export function hide() {
     GAME_MENU.style.visibility = "hidden";
+}
+
+/**
+ * Give the focus back after a mouse click, so that `space` keeps firing instead of
+ * re-triggering the button that was just clicked. A keyboard activation (`detail`
+ * of 0) keeps the focus where it is, so tabbing through the menu still works.
+ */
+function releaseAfterPointer(event: MouseEvent) {
+    if (event.detail > 0) {
+        (event.currentTarget as HTMLElement).blur();
+    }
 }
 
 function setMuted(muted: boolean, save = true) {
