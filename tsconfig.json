@@ -1,9 +1,23 @@
 {
-    "exclude": [
-        ".hg",
-        "release",
-        "libraries",
-        "typings",
-        "build"
-    ]
+    "compilerOptions": {
+        "target": "ES2022",
+        "lib": [ "ES2022", "DOM", "DOM.Iterable" ],
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "types": [ "vite/client" ],
+
+        "strict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitOverride": true,
+
+        "isolatedModules": true,
+        "verbatimModuleSyntax": true,
+        "noEmit": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true
+    },
+    "include": [ "scripts", "vite.config.ts" ]
 }

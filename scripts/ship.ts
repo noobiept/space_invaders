@@ -1,8 +1,19 @@
-enum ShipType { one, two, three }
+import * as Engine from "@drk4/game-engine";
+import { Bullet } from "./bullet";
+import * as Game from "./game";
+import { CANVAS_HEIGHT, CANVAS_WIDTH } from "./globals";
 
-class Ship
+export enum ShipType { one, two, three }
+
+export type ShipTypeName = "one" | "two" | "three";
+
+export interface ShipTypeInfo {
+    score: number;
+    width: number;
+}
+
+export class Ship
 {
-static _container: createjs.Container;
 static all: Ship[] = [];
 static initial_max_speed = 1000;
 static speed_increase_per_level = 100;
@@ -11,7 +22,7 @@ static speed_decrease = 15;     // per ship in the current level
 static furthest_left: Ship;
 static furthest_right: Ship;
 static moving_right = true;
-static types = {
+static types: Record<ShipTypeName, ShipTypeInfo> = {
         one: {
             score: 40,
             width: 16
@@ -28,38 +39,45 @@ static types = {
 
 static highest_width = 24;  // the width is different for all ship types, this has the highest
 static height = 16; // height is the same for all the ships, but not width
+private static _container: Engine.Container;
 
-shape: createjs.Bitmap;
+shape: Engine.Bitmap;
 score: number;
 images: HTMLImageElement[];
 current_image: number;  // position in the images array
 width: number;
 
-static init( stage )
-    {
-    Ship._container = new createjs.Container();
 
-    stage.addChild( Ship._container );
+static init()
+    {
+    Ship._container = new Engine.Container();
+
+    Engine.addElement( Ship._container );
     }
 
+
+/**
+ * The `x`/`y` position refers to the center of the ship.
+ */
 constructor( x: number, y: number, type: ShipType )
     {
-    var typeName = ShipType[ type ];
-    var typeInfo = Ship.types[ typeName ];
+    const typeName = ShipType[ type ] as ShipTypeName;
+    const typeInfo = Ship.types[ typeName ];
 
     this.width = typeInfo.width;
     this.score = typeInfo.score;
     this.images = [
-        G.PRELOAD.getResult( 'ship_' + typeName + '_1' ),
-        G.PRELOAD.getResult( 'ship_' + typeName + '_2' )
+        Engine.Preload.get( "ship_" + typeName + "_1" ),
+        Engine.Preload.get( "ship_" + typeName + "_2" )
     ];
 
     this.current_image = 0;
 
-    var shape = new createjs.Bitmap( this.images[ this.current_image ] );
-
-    shape.x = x;
-    shape.y = y;
+    const shape = new Engine.Bitmap({
+            x: x,
+            y: y,
+            image: this.images[ this.current_image ]!,
+        });
 
     this.shape = shape;
 
@@ -87,7 +105,7 @@ tookDamage()
 
 remove()
     {
-    var index = Ship.all.indexOf( this );
+    const index = Ship.all.indexOf( this );
 
     Ship.all.splice( index, 1 );
 
@@ -97,22 +115,19 @@ remove()
 
 fire()
     {
-    var bulletX = this.shape.x + this.width / 2 - Bullet.width / 2;
-    var bulletY = this.shape.y + Ship.height / 2 - Bullet.height / 2;
-
-    new Bullet( bulletX, bulletY, false );
+    new Bullet( this.shape.x, this.shape.y, false );
     }
 
 
 getX()
     {
-    return this.shape.x;
+    return this.shape.left;
     }
 
 
 getY()
     {
-    return this.shape.y;
+    return this.shape.top;
     }
 
 
@@ -128,7 +143,7 @@ getHeight()
     }
 
 
-tick( tickMove )
+tick( tickMove: number )
     {
     if ( Ship.moving_right )
         {
@@ -147,7 +162,7 @@ tick( tickMove )
         this.current_image = 0;
         }
 
-    this.shape.image = this.images[ this.current_image ];
+    this.shape.image = this.images[ this.current_image ]!;
     }
 
 /*
@@ -156,28 +171,34 @@ tick( tickMove )
 
 static findLeftRight()
     {
-    var all = Ship.all;
-    var furthestLeft = all[ 0 ];
-    var furthestRight = furthestLeft;
-    var length = all.length;
+    const all = Ship.all;
 
-    for (var a = 1 ; a < length ; a++)
+    if ( all.length === 0 )
         {
-        var enemy = all[ a ];
+        return;
+        }
 
-        if ( enemy.shape.x < furthestLeft.shape.x )
+    let furthestLeft = all[ 0 ]!;
+    let furthestRight = furthestLeft;
+    const length = all.length;
+
+    for (let a = 1 ; a < length ; a++)
+        {
+        const enemy = all[ a ]!;
+
+        if ( enemy.shape.left < furthestLeft.shape.left )
             {
             furthestLeft = enemy;
             }
 
-        if ( enemy.shape.x > furthestRight.shape.x )
+        if ( enemy.shape.left > furthestRight.shape.left )
             {
             furthestRight = enemy;
             }
         }
 
     Ship.furthest_left = furthestLeft;
-    Ship.furthest_right = furthestRight
+    Ship.furthest_right = furthestRight;
     }
 
 
@@ -187,40 +208,36 @@ static findLeftRight()
 
 static moveOneLineDown()
     {
-    var highestY = 0;
-    var y = 0;
-    var ship;
+    let highestY = 0;
 
-    for (var a = Ship.all.length - 1 ; a >= 0 ; a--)
+    for (let a = Ship.all.length - 1 ; a >= 0 ; a--)
         {
-        ship = Ship.all[ a ];
+        const ship = Ship.all[ a ]!;
 
-        y = ship.shape.y + Ship.height;
+        ship.shape.y += Ship.height;
 
-        ship.shape.y = y;
-
-        if ( y > highestY )
+        if ( ship.shape.top > highestY )
             {
-            highestY = y;
+            highestY = ship.shape.top;
             }
         }
 
         // determine if the alien invasion is successful (reached the player)
-    if ( highestY > G.CANVAS_HEIGHT - 90 )
+    if ( highestY > CANVAS_HEIGHT - 90 )
         {
         Game.defeat();
         }
     }
 
 
-static tick( event )
+static tick( deltaTime: number )
     {
         // determine if we reach the extremes of the canvas, and if so, need to change direction
-    var limit = 10;
+    const limit = 10;
 
     if ( Ship.moving_right )
         {
-        if ( Ship.furthest_right.shape.x > G.CANVAS_WIDTH - Ship.highest_width - limit )
+        if ( Ship.furthest_right.shape.left > CANVAS_WIDTH - Ship.highest_width - limit )
             {
             Ship.moving_right = false;
             Ship.moveOneLineDown();
@@ -230,7 +247,7 @@ static tick( event )
 
     else
         {
-        if ( Ship.furthest_left.shape.x < limit )
+        if ( Ship.furthest_left.shape.left < limit )
             {
             Ship.moving_right = true;
             Ship.moveOneLineDown();
@@ -238,21 +255,21 @@ static tick( event )
             }
         }
 
-    var length = Ship.all.length;
-    var tickMove = (Ship.current_max_speed - length * Ship.speed_decrease) * event.delta / 1000;
+    const length = Ship.all.length;
+    const tickMove = (Ship.current_max_speed - length * Ship.speed_decrease) * deltaTime;
 
-    for (var a = length - 1 ; a >= 0 ; a--)
+    for (let a = length - 1 ; a >= 0 ; a--)
         {
-        Ship.all[ a ].tick( tickMove );
+        Ship.all[ a ]!.tick( tickMove );
         }
     }
 
 
 static clear()
     {
-    for (var a = Ship.all.length - 1 ; a >= 0 ; a--)
+    for (let a = Ship.all.length - 1 ; a >= 0 ; a--)
         {
-        Ship.all[ a ].remove();
+        Ship.all[ a ]!.remove();
         }
 
     Ship.moving_right = true;

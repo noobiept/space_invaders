@@ -1,34 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Space Invaders</title>
-
-        <link rel="stylesheet" href="css/style.css" />
-
-        <script type="text/javascript" src="libraries/easeljs-0.8.2.min.js"></script>
-        <script type="text/javascript" src="libraries/preloadjs-0.6.2.min.js"></script>
-        <script type="text/javascript" src="libraries/soundjs-0.6.2.min.js"></script>
-        <script type="text/javascript" src="libraries/utilities.1.8.0.min.js"></script>
-
-        <!-- build:js min.js -->
-        <script type="text/javascript" src="scripts/options.js"></script>
-        <script type="text/javascript" src="scripts/app_storage.js"></script>
-        <script type="text/javascript" src="scripts/player.js"></script>
-        <script type="text/javascript" src="scripts/ship.js"></script>
-        <script type="text/javascript" src="scripts/bullet.js"></script>
-        <script type="text/javascript" src="scripts/bunker.js"></script>
-        <script type="text/javascript" src="scripts/mystery_ship.js"></script>
-        <script type="text/javascript" src="scripts/game_audio.js"></script>
-        <script type="text/javascript" src="scripts/game_menu.js"></script>
-        <script type="text/javascript" src="scripts/game.js"></script>
-        <script type="text/javascript" src="scripts/message.js"></script>
-        <script type="text/javascript" src="scripts/high_score.js"></script>
-        <script type="text/javascript" src="scripts/main.js"></script>
-        <!-- /build -->
+        <link rel="icon" href="images/icon128.png" />
     </head>
 <body>
-    <canvas id="MainCanvas"></canvas>
+    <div id="GameContainer"></div>
 
     <div id="GameMenu">
         <ul id="GameMenu-first">
@@ -44,5 +23,6 @@
         <a id="DonateButton" class="button" href="http://nbpt.eu/donate/" target="_blank">Donate</a>
     </div>
 
+    <script type="module" src="/scripts/main.ts"></script>
 </body>
 </html>

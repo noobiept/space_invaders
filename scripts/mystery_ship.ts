@@ -1,28 +1,35 @@
-class MysteryShip
+import * as Engine from "@drk4/game-engine";
+import * as Game from "./game";
+import { CANVAS_WIDTH } from "./globals";
+
+export class MysteryShip
 {
 static width = 32;
 static height = 14;
-static _container: createjs.Container;
 static all: MysteryShip[] = [];
 static movement_speed = 70;
+private static _container: Engine.Container;
 
-shape: createjs.Bitmap;
+shape: Engine.Bitmap;
 score: number;
 
-static init( stage )
-    {
-    MysteryShip._container = new createjs.Container();
 
-    stage.addChild( MysteryShip._container );
+static init()
+    {
+    MysteryShip._container = new Engine.Container();
+
+    Engine.addElement( MysteryShip._container );
     }
+
 
 constructor()
     {
-    var shape = new createjs.Bitmap( G.PRELOAD.getResult( 'mystery_ship' ) );
-
         // starts outside the left side of the canvas, and moves towards the right side
-    shape.x = -MysteryShip.width;
-    shape.y = MysteryShip.height;
+    const shape = new Engine.Bitmap({
+            x: -MysteryShip.width / 2,
+            y: MysteryShip.height + MysteryShip.height / 2,
+            image: Engine.Preload.get( "mystery_ship" ),
+        });
 
     this.shape = shape;
     this.score = 100;
@@ -43,7 +50,7 @@ tookDamage()
 
 remove()
     {
-    var index = MysteryShip.all.indexOf( this );
+    const index = MysteryShip.all.indexOf( this );
 
     MysteryShip.all.splice( index, 1 );
 
@@ -53,13 +60,13 @@ remove()
 
 getX()
     {
-    return this.shape.x;
+    return this.shape.left;
     }
 
 
 getY()
     {
-    return this.shape.y;
+    return this.shape.top;
     }
 
 
@@ -75,34 +82,33 @@ getHeight()
     }
 
 
-tick( tickMove )
+tick( tickMove: number )
     {
-    var nextX = this.shape.x + tickMove;
+    this.shape.x += tickMove;
 
-    this.shape.x = nextX;
-
-    if ( nextX > G.CANVAS_WIDTH )
+    if ( this.shape.left > CANVAS_WIDTH )
         {
         this.remove();
         }
     }
 
-static tick( event )
-    {
-    var tickMove = MysteryShip.movement_speed * event.delta / 1000;
 
-    for (var a = MysteryShip.all.length - 1 ; a >= 0 ; a--)
+static tick( deltaTime: number )
+    {
+    const tickMove = MysteryShip.movement_speed * deltaTime;
+
+    for (let a = MysteryShip.all.length - 1 ; a >= 0 ; a--)
         {
-        MysteryShip.all[ a ].tick( tickMove );
+        MysteryShip.all[ a ]!.tick( tickMove );
         }
     }
 
 
 static clear()
     {
-    for (var a = MysteryShip.all.length - 1 ; a >= 0 ; a--)
+    for (let a = MysteryShip.all.length - 1 ; a >= 0 ; a--)
         {
-        MysteryShip.all[ a ].remove();
+        MysteryShip.all[ a ]!.remove();
         }
     }
 }

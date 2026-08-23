@@ -1,29 +1,37 @@
-module Message
-{
-var TEXT;
-var TIMEOUT;
+import * as Engine from "@drk4/game-engine";
+import { Timeout, isNumber } from "@drk4/utilities";
+import { CANVAS_HEIGHT, CANVAS_WIDTH } from "./globals";
 
-export function init( stage )
+let TEXT: Engine.Text;
+let TIMEOUT: Timeout;
+
+
+export function init()
     {
-    TIMEOUT = new Utilities.Timeout();
+    TIMEOUT = new Timeout();
 
-    TEXT = new createjs.Text( '', '30px monospace', 'white' );
-    TEXT.textAlign = 'center';
-    TEXT.textBaseline = 'middle';
-    TEXT.x = G.CANVAS_WIDTH / 2;
-    TEXT.y = G.CANVAS_HEIGHT / 2;
+    TEXT = new Engine.Text({
+            x: CANVAS_WIDTH / 2,
+            y: CANVAS_HEIGHT / 2,
+            text: "",
+            fontFamily: "monospace",
+            fontSize: 30,
+            color: "white",
+            textAlign: "center",
+            textBaseline: "middle",
+        });
     TEXT.visible = false;
 
-    stage.addChild( TEXT );
+    Engine.addElement( TEXT );
     }
 
 
-export function show( text: string, timeout?: number, callback? )
+export function show( text: string, timeout?: number, callback?: () => void )
     {
     TEXT.text = text;
     TEXT.visible = true;
 
-    if ( Utilities.isNumber( timeout ) )
+    if ( isNumber( timeout ) )
         {
         TIMEOUT.start( function()
             {
@@ -44,4 +52,3 @@ export function hide()
     TIMEOUT.clear();
     TEXT.visible = false;
     }
-}

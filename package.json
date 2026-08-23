@@ -1,0 +1,23 @@
+{
+    "name": "space_invaders",
+    "version": "1.2.3",
+    "description": "Based on the classic space invaders game. Has some differences such has being able to fire any number of bullets.",
+    "license": "MIT",
+    "type": "module",
+    "private": true,
+    "packageManager": "pnpm@11.22.0",
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc --noEmit && vite build",
+        "preview": "vite preview",
+        "typecheck": "tsc --noEmit"
+    },
+    "dependencies": {
+        "@drk4/game-engine": "^3.0.2",
+        "@drk4/utilities": "^7.0.1"
+    },
+    "devDependencies": {
+        "typescript": "^5.9.3",
+        "vite": "^7.1.9"
+    }
+}

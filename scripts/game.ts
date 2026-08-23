@@ -1,24 +1,46 @@
-module Game
-{
-    // tells if we need to move the player to the left or right (if the key is being pressed)
-var MOVE_LEFT = false;
-var MOVE_RIGHT = false;
+import * as Engine from "@drk4/game-engine";
+import { MouseButton, boxBoxCollision, getRandomInt } from "@drk4/utilities";
+import { Bullet } from "./bullet";
+import { Bunker } from "./bunker";
+import * as GameAudio from "./game_audio";
+import * as GameMenu from "./game_menu";
+import { CANVAS_HEIGHT, CANVAS_WIDTH } from "./globals";
+import * as HighScore from "./high_score";
+import * as Message from "./message";
+import { MysteryShip } from "./mystery_ship";
+import { Player } from "./player";
+import { Ship, ShipType } from "./ship";
 
-var PLAYER: Player;
-var SCORE: number;
+/**
+ * Anything that can collide with something else.
+ */
+interface Collidable {
+    getX(): number;
+    getY(): number;
+    getWidth(): number;
+    getHeight(): number;
+    tookDamage(): void;
+}
+
+    // tells if we need to move the player to the left or right (if the key is being pressed)
+let MOVE_LEFT = false;
+let MOVE_RIGHT = false;
+
+let PLAYER!: Player;
+let SCORE = 0;
 
     // the tempo of the song/game (the movement of the enemies follow the tempo as well)
     // the ships move every 'TEMPO_LIMIT' milliseconds
-var TEMPO_COUNT = 0;
-var TEMPO_LIMIT = 0;
-var INITIAL_TEMPO = 100; // initial tempo of the game (before any ship is destroyed)
-var CURRENT_TEMPO = 0;
+let TEMPO_COUNT = 0;
+let TEMPO_LIMIT = 0;
+const INITIAL_TEMPO = 100; // initial tempo of the game (before any ship is destroyed)
+let CURRENT_TEMPO = 0;
 
     // when to spawn a mystery ship, the count is a random value assigned later
-var MYSTERY_COUNT = 0;
+let MYSTERY_COUNT = 0;
 
     // time until a random ship fires a bullet
-var FIRE_COUNT = 0; // its assigned randomly
+let FIRE_COUNT = 0; // its assigned randomly
 
 
 /*
@@ -31,18 +53,18 @@ var FIRE_COUNT = 0; // its assigned randomly
 export function start( initialScore?: number, initialLives?: number, initialTime?: number, maxShipSpeed?: number )
     {
         // :::: add the enemy ships :::: //
-    var numberOfLines = 5;
-    var numberOfColumns = 11;
-    var spaceBetween = 10;
-    var canvasWidth = G.CANVAS_WIDTH;
-    var enemiesSpace = numberOfColumns * Ship.highest_width + (numberOfColumns - 1) * spaceBetween;
+    const numberOfLines = 5;
+    const numberOfColumns = 11;
+    const spaceBetween = 10;
+    const canvasWidth = CANVAS_WIDTH;
+    const enemiesSpace = numberOfColumns * Ship.highest_width + (numberOfColumns - 1) * spaceBetween;
 
-        // start position
-    var startX = canvasWidth / 2 - enemiesSpace / 2;
-    var x = startX;
-    var y = MysteryShip.height * 3;
+        // start position (top/left of the enemies block)
+    const startX = canvasWidth / 2 - enemiesSpace / 2;
+    let x = startX;
+    let y = MysteryShip.height * 3;
 
-    if ( typeof maxShipSpeed === 'undefined' )
+    if ( typeof maxShipSpeed === "undefined" )
         {
         Ship.current_max_speed = Ship.initial_max_speed;
         }
@@ -52,9 +74,9 @@ export function start( initialScore?: number, initialLives?: number, initialTime
         Ship.current_max_speed = maxShipSpeed;
         }
 
-    for (var line = 0 ; line < numberOfLines ; line++)
+    for (let line = 0 ; line < numberOfLines ; line++)
         {
-        var type;
+        let type: ShipType;
 
         if ( line === 0 )
             {
@@ -71,11 +93,10 @@ export function start( initialScore?: number, initialLives?: number, initialTime
             type = ShipType.three;
             }
 
-        var typeInfo = Ship.types[ ShipType[ type ] ];
-
-        for (var column = 0 ; column < numberOfColumns ; column++)
+        for (let column = 0 ; column < numberOfColumns ; column++)
             {
-            new Ship( x + (Ship.highest_width - typeInfo.width) / 2, y, type );
+                // the ships are centered within the widest ship's width
+            new Ship( x + Ship.highest_width / 2, y + Ship.height / 2, type );
 
             x += Ship.highest_width + spaceBetween;
             }
@@ -90,25 +111,25 @@ export function start( initialScore?: number, initialLives?: number, initialTime
         // :::: add the bunkers :::: //
 
         // 4 groups of bunkers
-    var groupLength = 4;
-    var margin = 50;    // margin between the extremes of the canvas, and the nearby bunker
-    var availableWidth = canvasWidth - 2 * margin;
-    var groupWidth = 4 * Bunker.width;  // 4 columns per bunker group
-    var spaceBetweenBunkers = Math.round( (availableWidth - 4 * groupWidth) / 3 );
-    var startingHeight = G.CANVAS_HEIGHT - 70;
+    const groupLength = 4;
+    const margin = 50;    // margin between the extremes of the canvas, and the nearby bunker
+    const availableWidth = canvasWidth - 2 * margin;
+    const groupWidth = 4 * Bunker.width;  // 4 columns per bunker group
+    const spaceBetweenBunkers = Math.round( (availableWidth - 4 * groupWidth) / 3 );
+    const startingHeight = CANVAS_HEIGHT - 70;
 
 
-    var addBunkerColumn = function( x, y, length )
+    const addBunkerColumn = function( columnX: number, columnY: number, length: number )
         {
-        for (var b = 0 ; b < length ; b++)
+        for (let b = 0 ; b < length ; b++)
             {
-            new Bunker( x, y + b * Bunker.height );
+            new Bunker( columnX + Bunker.width / 2, columnY + b * Bunker.height + Bunker.height / 2 );
             }
         };
 
-    for (var a = 0 ; a < groupLength ; a++)
+    for (let a = 0 ; a < groupLength ; a++)
         {
-        var currentX = margin + a * (groupWidth + spaceBetweenBunkers);
+        const currentX = margin + a * (groupWidth + spaceBetweenBunkers);
 
             // each bunker group has this format (each 1 is an individual Bunker)
             // 1111
@@ -125,7 +146,7 @@ export function start( initialScore?: number, initialLives?: number, initialTime
 
     PLAYER = new Player();
 
-    if ( typeof initialLives !== 'undefined' )
+    if ( typeof initialLives !== "undefined" )
         {
         PLAYER.lives = initialLives;
         }
@@ -135,7 +156,7 @@ export function start( initialScore?: number, initialLives?: number, initialTime
 
         // :::: other configuration :::: //
 
-    if ( typeof initialScore !== 'undefined' )
+    if ( typeof initialScore !== "undefined" )
         {
         SCORE = initialScore;
         }
@@ -148,7 +169,7 @@ export function start( initialScore?: number, initialLives?: number, initialTime
     GameMenu.updateScore( SCORE );
 
 
-    if ( typeof initialTime === 'undefined' )
+    if ( typeof initialTime === "undefined" )
         {
         initialTime = 0;
         }
@@ -164,10 +185,10 @@ export function start( initialScore?: number, initialLives?: number, initialTime
     GameAudio.playSong( INITIAL_TEMPO );
 
         // set the events
-    document.body.addEventListener( 'keydown', keyDownEvent );
-    document.body.addEventListener( 'keyup', keyUpEvent );
-    document.body.addEventListener( 'click', clickEvent );
-    createjs.Ticker.addEventListener( 'tick', Game.tick );
+    document.body.addEventListener( "keydown", keyDownEvent );
+    document.body.addEventListener( "keyup", keyUpEvent );
+    document.body.addEventListener( "click", clickEvent );
+    Engine.addToGameLoop( tick );
     }
 
 
@@ -180,14 +201,14 @@ export function restart()
 
 export function victory()
     {
-    var previousScore = SCORE;
-    var previousLives = PLAYER.lives;
-    var previousTime = GameMenu.getCurrentTime();
+    const previousScore = SCORE;
+    const previousLives = PLAYER.lives;
+    const previousTime = GameMenu.getCurrentTime();
 
     clear();
     HighScore.add( previousScore );
 
-    Message.show( 'Victory!\nScore: ' + previousScore, 2000, function()
+    Message.show( "Victory!\nScore: " + previousScore, 2000, function()
         {
         start( previousScore, previousLives, previousTime, Ship.current_max_speed + Ship.speed_increase_per_level );
         });
@@ -199,7 +220,7 @@ export function defeat()
     clear();
     HighScore.add( SCORE );
 
-    Message.show( 'Defeat!\nScore: ' + SCORE, 2000, function()
+    Message.show( "Defeat!\nScore: " + SCORE, 2000, function()
         {
         start();
         });
@@ -208,10 +229,10 @@ export function defeat()
 
 function clear()
     {
-    createjs.Ticker.removeEventListener( 'tick', Game.tick );
-    document.body.removeEventListener( 'keydown', keyDownEvent );
-    document.body.removeEventListener( 'keyup', keyUpEvent );
-    document.body.removeEventListener( 'click', clickEvent );
+    Engine.removeFromGameLoop( tick );
+    document.body.removeEventListener( "keydown", keyDownEvent );
+    document.body.removeEventListener( "keyup", keyUpEvent );
+    document.body.removeEventListener( "click", clickEvent );
 
     Ship.clear();
     MysteryShip.clear();
@@ -227,52 +248,46 @@ function clear()
     }
 
 
-function keyDownEvent( event )
+function keyDownEvent( event: KeyboardEvent )
     {
-    var key = event.keyCode;
+    const code = event.code;
 
-    if ( key === Utilities.KEY_CODE.leftArrow ||
-         key === Utilities.KEY_CODE.a )
+    if ( code === "ArrowLeft" || code === "KeyA" )
         {
         MOVE_LEFT = true;
         }
 
-    else if ( key === Utilities.KEY_CODE.rightArrow ||
-              key === Utilities.KEY_CODE.d )
+    else if ( code === "ArrowRight" || code === "KeyD" )
         {
         MOVE_RIGHT = true;
         }
     }
 
 
-function keyUpEvent( event )
+function keyUpEvent( event: KeyboardEvent )
     {
-    var key = event.keyCode;
+    const code = event.code;
 
-    if ( key === Utilities.KEY_CODE.leftArrow ||
-         key === Utilities.KEY_CODE.a )
+    if ( code === "ArrowLeft" || code === "KeyA" )
         {
         MOVE_LEFT = false;
         }
 
-    else if ( key === Utilities.KEY_CODE.rightArrow ||
-              key === Utilities.KEY_CODE.d )
+    else if ( code === "ArrowRight" || code === "KeyD" )
         {
         MOVE_RIGHT = false;
         }
 
-    else if ( key === Utilities.KEY_CODE.space )
+    else if ( code === "Space" )
         {
         PLAYER.fire();
         }
     }
 
 
-function clickEvent( event )
+function clickEvent( event: MouseEvent )
     {
-    var button = event.button;
-
-    if ( button === Utilities.MOUSE_CODE.left )
+    if ( event.button === MouseButton.left )
         {
         PLAYER.fire();
         }
@@ -281,14 +296,15 @@ function clickEvent( event )
 
 function setMysteryLimit()
     {
-    MYSTERY_COUNT = Utilities.getRandomInt( 8000, 15000 );
+    MYSTERY_COUNT = getRandomInt( 8000, 15000 );
     }
 
 
 function setFireLimit()
     {
-    FIRE_COUNT = Utilities.getRandomInt( 1000, 2500 );
+    FIRE_COUNT = getRandomInt( 1000, 2500 );
     }
+
 
 function setTempoLimit()
     {
@@ -296,7 +312,7 @@ function setTempoLimit()
     }
 
 
-export function setTempo( tempo )
+export function setTempo( tempo: number )
     {
     CURRENT_TEMPO = tempo;
 
@@ -313,7 +329,7 @@ export function increaseTempo()
     }
 
 
-export function addScore( score )
+export function addScore( score: number )
     {
     SCORE += score;
 
@@ -334,25 +350,21 @@ export function addScore( score )
 
 function collisionDetection()
     {
-    var detectCollisions = function( groupOne, groupTwo )
+    const detectCollisions = function( groupOne: Collidable[], groupTwo: Collidable[] )
         {
-        var a, b;
-        var one, two;
-        var oneX, oneY, oneWidth, oneHeight;
-
-        for (a = groupOne.length - 1 ; a >= 0 ; a--)
+        for (let a = groupOne.length - 1 ; a >= 0 ; a--)
             {
-            one = groupOne[ a ];
-            oneX = one.getX();
-            oneY = one.getY();
-            oneWidth = one.getWidth();
-            oneHeight = one.getHeight();
+            const one = groupOne[ a ]!;
+            const oneX = one.getX();
+            const oneY = one.getY();
+            const oneWidth = one.getWidth();
+            const oneHeight = one.getHeight();
 
-            for (b = groupTwo.length - 1 ; b >= 0 ; b--)
+            for (let b = groupTwo.length - 1 ; b >= 0 ; b--)
                 {
-                two = groupTwo[ b ];
+                const two = groupTwo[ b ]!;
 
-                if ( Utilities.boxBoxCollision(
+                if ( boxBoxCollision(
                     oneX,       oneY,       oneWidth,       oneHeight,
                     two.getX(), two.getY(), two.getWidth(), two.getHeight()
                         ))
@@ -374,13 +386,13 @@ function collisionDetection()
 
 
         // enemy bullets with the player
-    for (var a = Bullet.all_ship.length - 1 ; a >= 0 ; a--)
+    for (let a = Bullet.all_ship.length - 1 ; a >= 0 ; a--)
         {
-        var bullet = Bullet.all_ship[ a ];
-        var playerX = PLAYER.getX();
-        var playerY = PLAYER.getY();
+        const bullet = Bullet.all_ship[ a ]!;
+        const playerX = PLAYER.getX();
+        const playerY = PLAYER.getY();
 
-        if ( Utilities.boxBoxCollision(
+        if ( boxBoxCollision(
             playerX, playerY, Player.width, Player.height,
             bullet.getX(), bullet.getY(), Bullet.width, Bullet.height
                 ))
@@ -392,10 +404,13 @@ function collisionDetection()
     }
 
 
-export function tick( event )
+/**
+ * The engine's game loop gives the `deltaTime` in seconds, while the counters below are in milliseconds.
+ */
+export function tick( deltaTime: number )
     {
         // update the counters
-    var delta = event.delta;
+    const delta = deltaTime * 1000;
 
     TEMPO_COUNT -= delta;
     MYSTERY_COUNT -= delta;
@@ -404,12 +419,12 @@ export function tick( event )
         // deal with the movement of the player
     if ( MOVE_LEFT )
         {
-        PLAYER.moveLeft( event );
+        PLAYER.moveLeft( deltaTime );
         }
 
     else if ( MOVE_RIGHT )
         {
-        PLAYER.moveRight( event );
+        PLAYER.moveRight( deltaTime );
         }
 
         // move the enemy ships according to the current tempo
@@ -417,11 +432,11 @@ export function tick( event )
         {
         setTempoLimit();
 
-        Ship.tick( event );
+        Ship.tick( deltaTime );
         }
 
         // the mystery ship is moved normally every tick
-    MysteryShip.tick( event );
+    MysteryShip.tick( deltaTime );
 
         // spawn a new mystery ship
     if ( MYSTERY_COUNT < 0 )
@@ -438,20 +453,17 @@ export function tick( event )
             // get a random ship
         if ( Ship.all.length > 0 )
             {
-            var position = Utilities.getRandomInt( 0, Ship.all.length - 1 );
+            const position = getRandomInt( 0, Ship.all.length - 1 );
 
-            Ship.all[ position ].fire();
+            Ship.all[ position ]!.fire();
 
             setFireLimit();
             }
         }
 
-    PLAYER.tick( event );
-    Bullet.tick( event );
+    PLAYER.tick( deltaTime );
+    Bullet.tick( deltaTime );
 
         // collision detection after all the rest of the state has been updated
     collisionDetection();
-
-    G.STAGE.update();
     }
-}

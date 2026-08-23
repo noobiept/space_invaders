@@ -1,11 +1,14 @@
-module GameAudio
-{
-var AUDIO_CONTEXT;
-var BUFFER;
-var SOURCE = null;
-var GAIN = null;
-var SONG_TEMPO = 100;   // tempo of the song (before changing the playback rate)
-var GAIN_VALUE = 1;
+import * as Engine from "@drk4/game-engine";
+
+    // the music's tempo is changed by adjusting the playback rate, which the engine's
+    // `Sound` module doesn't expose, so the song is played through the web audio api directly
+let AUDIO_CONTEXT: AudioContext | null = null;
+let BUFFER: AudioBuffer | null = null;
+let SOURCE: AudioBufferSourceNode | null = null;
+let GAIN: GainNode | null = null;
+
+const SONG_TEMPO = 100;     // tempo of the song (before changing the playback rate)
+let GAIN_VALUE = 1;
 
 
 export function init()
@@ -13,22 +16,28 @@ export function init()
     try {
         AUDIO_CONTEXT = new AudioContext();
     }
-    catch( error ) {
+    catch {
         AUDIO_CONTEXT = null;
     }
 
-    BUFFER = G.PRELOAD.getResult( 'music' );
+    BUFFER = Engine.Preload.get( "music" ) as AudioBuffer;
     }
 
 
-export function playSong( tempo )
+export function playSong( tempo: number )
     {
-    if ( !AUDIO_CONTEXT )
+    if ( !AUDIO_CONTEXT || !BUFFER )
         {
         return;
         }
 
     stop();
+
+        // the audio context starts suspended until there's a user interaction
+    if ( AUDIO_CONTEXT.state === "suspended" )
+        {
+        AUDIO_CONTEXT.resume();
+        }
 
     SOURCE = AUDIO_CONTEXT.createBufferSource();
     SOURCE.buffer = BUFFER;
@@ -44,9 +53,10 @@ export function playSong( tempo )
     SOURCE.start();
     }
 
-export function setTempo( tempo )
+
+export function setTempo( tempo: number )
     {
-    if ( !AUDIO_CONTEXT )
+    if ( !SOURCE )
         {
         return;
         }
@@ -55,11 +65,11 @@ export function setTempo( tempo )
     }
 
 
-export function setGain( gain )
+export function setGain( gain: number )
     {
     GAIN_VALUE = gain;
 
-    if ( AUDIO_CONTEXT !== null && GAIN !== null )
+    if ( GAIN !== null )
         {
         GAIN.gain.value = gain;
         }
@@ -68,11 +78,10 @@ export function setGain( gain )
 
 export function stop()
     {
-    if ( AUDIO_CONTEXT !== null && SOURCE !== null )
+    if ( SOURCE !== null )
         {
         SOURCE.stop();
         SOURCE = null;
         GAIN = null;
         }
     }
-}

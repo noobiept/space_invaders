@@ -43,9 +43,20 @@ Controls
 Dependencies
 ============
 
-- typescript : 1.8
-- createjs
-    - easeljs   : 0.8
-    - preloadjs : 0.6
-    - soundjs   : 0.6
-- utilities : 1.8
+- [@drk4/game-engine](https://www.npmjs.com/package/@drk4/game-engine) : 3
+- [@drk4/utilities](https://www.npmjs.com/package/@drk4/utilities) : 7
+- typescript : 5
+
+
+Development
+===========
+
+The node/pnpm versions are pinned in `.tool-versions` (managed with [mise](https://mise.jdx.dev/)).
+
+    mise install       # install the pinned node/pnpm
+    pnpm install       # install the dependencies
+
+    pnpm dev           # start the development server
+    pnpm build         # type-check and build to dist/
+    pnpm preview       # serve the built files
+    pnpm typecheck     # type-check only

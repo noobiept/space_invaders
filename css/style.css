@@ -5,9 +5,16 @@ body
     font-size: 24px;
     }
 
-#MainCanvas
+    /* the canvas created by the game engine */
+.Game-Canvas
     {
     border: 1px solid white;
+    }
+
+    /* the engine's stylesheet defaults the first canvas to a white background */
+#Game-canvasContainer canvas:first-child
+    {
+    background-color: black;
     }
 
 .button

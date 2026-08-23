@@ -1,28 +1,37 @@
-class Player
+import * as Engine from "@drk4/game-engine";
+import { Bullet } from "./bullet";
+import * as Game from "./game";
+import * as GameMenu from "./game_menu";
+import { CANVAS_HEIGHT, CANVAS_WIDTH } from "./globals";
+import * as Message from "./message";
+
+export class Player
 {
 static width = 30;
 static height = 16;
-static _container: createjs.Container;
 static movement_speed = 100;
+private static _container: Engine.Container;
 
-shape: createjs.Bitmap;
+shape: Engine.Bitmap;
 lives: number;
 
 
-static init( stage )
+static init()
     {
-    Player._container = new createjs.Container();
+    Player._container = new Engine.Container();
 
-    stage.addChild( Player._container );
+    Engine.addElement( Player._container );
     }
 
 
 constructor()
     {
-    var shape = new createjs.Bitmap( G.PRELOAD.getResult( 'cannon' ) );
-
-    shape.x = G.CANVAS_WIDTH / 2 - Player.width / 2;
-    shape.y = G.CANVAS_HEIGHT - Player.height;
+        // the engine positions the elements by their center
+    const shape = new Engine.Bitmap({
+            x: CANVAS_WIDTH / 2,
+            y: CANVAS_HEIGHT - Player.height / 2,
+            image: Engine.Preload.get( "cannon" ),
+        });
 
     Player._container.addChild( shape );
 
@@ -44,7 +53,7 @@ tookDamage()
 
     else
         {
-        Message.show( 'Took damage!', 1000 );
+        Message.show( "Took damage!", 1000 );
         }
     }
 
@@ -57,31 +66,28 @@ remove()
 
 fire()
     {
-    var bulletX = this.getCenterX() - Bullet.width / 2;
-    var bulletY = this.getCenterY() - Bullet.height / 2;
-
-    new Bullet( bulletX, bulletY, true );
+    new Bullet( this.getCenterX(), this.getCenterY(), true );
     }
 
 
-moveLeft( event )
+moveLeft( deltaTime: number )
     {
-    var nextX = this.shape.x - Player.movement_speed * event.delta / 1000;
+    let nextX = this.shape.x - Player.movement_speed * deltaTime;
+    const limit = Player.width / 2;
 
-    if ( nextX < 0 )
+    if ( nextX < limit )
         {
-        nextX = 0;
+        nextX = limit;
         }
 
     this.shape.x = nextX;
     }
 
-moveRight( event )
-    {
-    var nextX = this.shape.x + Player.movement_speed * event.delta / 1000;
 
-    var canvasWidth = G.STAGE.canvas.width;
-    var limit = canvasWidth - Player.width;
+moveRight( deltaTime: number )
+    {
+    let nextX = this.shape.x + Player.movement_speed * deltaTime;
+    const limit = CANVAS_WIDTH - Player.width / 2;
 
     if ( nextX > limit )
         {
@@ -97,7 +103,7 @@ moveRight( event )
 
 getX()
     {
-    return this.shape.x;
+    return this.shape.left;
     }
 
 /*
@@ -106,20 +112,20 @@ getX()
 
 getY()
     {
-    return this.shape.y;
+    return this.shape.top;
     }
 
 getCenterX()
     {
-    return this.shape.x + Player.width / 2;
+    return this.shape.x;
     }
 
 getCenterY()
     {
-    return this.shape.y + Player.height / 2;
+    return this.shape.y;
     }
 
-tick( event )
+tick( _deltaTime: number )
     {
 
     }

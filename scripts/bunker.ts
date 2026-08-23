@@ -1,30 +1,36 @@
-class Bunker
+import * as Engine from "@drk4/game-engine";
+
+export class Bunker
 {
 static width = 12;
 static height = 12;
-static _container: createjs.Container;
 static all: Bunker[] = [];
+private static _container: Engine.Container;
 
-shape: createjs.Bitmap;
+shape: Engine.Bitmap;
 health: number;
 
 
-static init( stage )
+static init()
     {
-    Bunker._container = new createjs.Container();
+    Bunker._container = new Engine.Container();
 
-    stage.addChild( Bunker._container );
+    Engine.addElement( Bunker._container );
     }
 
 
-constructor( x, y )
+/**
+ * The `x`/`y` position refers to the center of the bunker.
+ */
+constructor( x: number, y: number )
     {
     this.health = 4;
 
-    var shape = new createjs.Bitmap( G.PRELOAD.getResult( 'bunker_' + this.health ) );
-
-    shape.x = x;
-    shape.y = y;
+    const shape = new Engine.Bitmap({
+            x: x,
+            y: y,
+            image: Engine.Preload.get( "bunker_" + this.health ),
+        });
 
     this.shape = shape;
 
@@ -44,14 +50,14 @@ tookDamage()
 
     else
         {
-        this.shape.image = G.PRELOAD.getResult( 'bunker_' + this.health );
+        this.shape.image = Engine.Preload.get( "bunker_" + this.health );
         }
     }
 
 
 remove()
     {
-    var index = Bunker.all.indexOf( this );
+    const index = Bunker.all.indexOf( this );
 
     Bunker.all.splice( index, 1 );
     Bunker._container.removeChild( this.shape );
@@ -60,13 +66,13 @@ remove()
 
 getX()
     {
-    return this.shape.x;
+    return this.shape.left;
     }
 
 
 getY()
     {
-    return this.shape.y;
+    return this.shape.top;
     }
 
 
@@ -84,9 +90,9 @@ getHeight()
 
 static clear()
     {
-    for (var a = Bunker.all.length - 1 ; a >= 0 ; a--)
+    for (let a = Bunker.all.length - 1 ; a >= 0 ; a--)
         {
-        Bunker.all[ a ].remove();
+        Bunker.all[ a ]!.remove();
         }
     }
 }

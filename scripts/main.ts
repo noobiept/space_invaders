@@ -1,93 +1,77 @@
-/// <reference path="../typings/browser.d.ts" />
-/// <reference path="../typings/utilities.1.8.0.d.ts" />
-/// <reference path="game.ts" />
-/// <reference path="player.ts" />
-/// <reference path="bullet.ts" />
-/// <reference path="ship.ts" />
-/// <reference path="mystery_ship.ts" />
-/// <reference path="bunker.ts" />
-/// <reference path="game_menu.ts" />
-/// <reference path="message.ts" />
-/// <reference path="high_score.ts" />
-/// <reference path="game_audio.ts" />
+import "@drk4/game-engine/style.css";
+import "../css/style.css";
 
-var G = {
-    CANVAS_WIDTH: 0,
-    CANVAS_HEIGHT: 0,
-    STAGE: null,
-    PRELOAD: null
-};
+import * as Engine from "@drk4/game-engine";
+import * as AppStorage from "./app_storage";
+import { Bullet } from "./bullet";
+import { Bunker } from "./bunker";
+import * as Game from "./game";
+import * as GameAudio from "./game_audio";
+import * as GameMenu from "./game_menu";
+import { CANVAS_HEIGHT, CANVAS_WIDTH } from "./globals";
+import * as HighScore from "./high_score";
+import * as Message from "./message";
+import { MysteryShip } from "./mystery_ship";
+import * as Options from "./options";
+import { Player } from "./player";
+import { Ship } from "./ship";
 
-var BASE_URL = '';
-
-interface Data {
-    space_invaders_high_score: HighScore.HighScoreData;
-    space_invaders_options: Options.OptionsData
-}
-
-
-window.onload = function()
-{
-AppStorage.getData( [ 'space_invaders_high_score', 'space_invaders_options' ], initApp );
-};
-
-
-function initApp( data: Data )
-{
-var canvas = <HTMLCanvasElement> document.querySelector( '#MainCanvas' );
-
-canvas.width = G.CANVAS_WIDTH = 500;
-canvas.height = G.CANVAS_HEIGHT = 400;
-
-G.STAGE = new createjs.Stage( canvas );
-
-createjs.Ticker.timingMode = createjs.Ticker.RAF;
-
-Options.init( data[ 'space_invaders_options' ] );
-HighScore.init( data[ 'space_invaders_high_score' ] );
-GameMenu.init();
-
-    // the order matters for the z-index (player is going to appear on top of the bullets for example)
-Bullet.init( G.STAGE );
-Ship.init( G.STAGE );
-MysteryShip.init( G.STAGE );
-Bunker.init( G.STAGE );
-Player.init( G.STAGE );
-Message.init( G.STAGE );
+const MANIFEST = [
+    { id: "ship_one_1", path: "images/ship_one_1.png" },
+    { id: "ship_one_2", path: "images/ship_one_2.png" },
+    { id: "ship_two_1", path: "images/ship_two_1.png" },
+    { id: "ship_two_2", path: "images/ship_two_2.png" },
+    { id: "ship_three_1", path: "images/ship_three_1.png" },
+    { id: "ship_three_2", path: "images/ship_three_2.png" },
+    { id: "mystery_ship", path: "images/mystery_ship.png" },
+    { id: "cannon", path: "images/cannon.png" },
+    { id: "bunker_1", path: "images/bunker_1.png" },
+    { id: "bunker_2", path: "images/bunker_2.png" },
+    { id: "bunker_3", path: "images/bunker_3.png" },
+    { id: "bunker_4", path: "images/bunker_4.png" },
+    { id: "music", path: "audio/space_invaders.ogg" },
+];
 
 
-var manifest = {
-        path: BASE_URL,
-        manifest: [
-            { id: 'ship_one_1', src: 'images/ship_one_1.png' },
-            { id: 'ship_one_2', src: 'images/ship_one_2.png' },
-            { id: 'ship_two_1', src: 'images/ship_two_1.png' },
-            { id: 'ship_two_2', src: 'images/ship_two_2.png' },
-            { id: 'ship_three_1', src: 'images/ship_three_1.png' },
-            { id: 'ship_three_2', src: 'images/ship_three_2.png' },
-            { id: 'mystery_ship', src: 'images/mystery_ship.png' },
-            { id: 'cannon', src: 'images/cannon.png' },
-            { id: 'bunker_1', src: 'images/bunker_1.png' },
-            { id: 'bunker_2', src: 'images/bunker_2.png' },
-            { id: 'bunker_3', src: 'images/bunker_3.png' },
-            { id: 'bunker_4', src: 'images/bunker_4.png' },
-            { id: 'music', src: 'audio/space_invaders.ogg' }
-        ]
-    };
-
-G.PRELOAD = new createjs.LoadQueue();
-G.PRELOAD.installPlugin( createjs.Sound );
-G.PRELOAD.on( 'progress', function( event )
+function init()
     {
-    Message.show( 'Loading.. ' + (event.progress * 100 | 0) + '%' );
-    G.STAGE.update();
-    });
-G.PRELOAD.on( 'complete', function()
-    {
-    Message.hide();
-    GameMenu.show();
-    GameAudio.init();
-    Game.start();
-    });
-G.PRELOAD.loadManifest( manifest );
-}
+    const container = document.querySelector<HTMLElement>( "#GameContainer" )!;
+
+    Engine.init({
+            container: container,
+            width: CANVAS_WIDTH,
+            height: CANVAS_HEIGHT,
+        });
+    Engine.setFps( 60 );
+
+    Options.init( AppStorage.getData<Options.OptionsData>( Options.STORAGE_KEY ) );
+    HighScore.init( AppStorage.getData<HighScore.HighScoreData>( HighScore.STORAGE_KEY ) );
+    GameMenu.init();
+
+        // the order matters for the z-index (player is going to appear on top of the bullets for example)
+    Bullet.init();
+    Ship.init();
+    MysteryShip.init();
+    Bunker.init();
+    Player.init();
+    Message.init();
+
+    const preload = new Engine.Preload({ saveGlobal: true });
+
+    preload.addEventListener( "progress", function( progress: number )
+        {
+        Message.show( "Loading.. " + progress + "%" );
+        });
+    preload.addEventListener( "complete", function()
+        {
+        Message.hide();
+        GameMenu.show();
+        GameAudio.init();
+        Game.start();
+        });
+
+    preload.loadManifest( MANIFEST );
+    }
+
+
+init();

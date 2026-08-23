@@ -1,37 +1,43 @@
-enum BulletDirection { top, bottom }
+import * as Engine from "@drk4/game-engine";
+import * as Game from "./game";
+import { CANVAS_HEIGHT } from "./globals";
 
-class Bullet
+export enum BulletDirection { top, bottom }
+
+export class Bullet
 {
 static width = 2;
 static height = 6;
-static _container: createjs.Container;
 static all_player: Bullet[] = [];   // all the bullets fired by the player
 static all_ship: Bullet[] = [];     // all the bullets fired by an enemy ship
 static movement_speed = 200;
+private static _container: Engine.Container;
 
-shape: createjs.Shape;
+shape: Engine.Rectangle;
 direction: BulletDirection;
 from_player: boolean;
 
-static init( stage )
-    {
-    Bullet._container = new createjs.Container();
 
-    stage.addChild( Bullet._container );
+static init()
+    {
+    Bullet._container = new Engine.Container();
+
+    Engine.addElement( Bullet._container );
     }
 
+
+/**
+ * The `x`/`y` position refers to the center of the bullet.
+ */
 constructor( x: number, y: number, fromPlayer: boolean )
     {
-    var shape = new createjs.Shape();
-
-    var g = shape.graphics;
-
-    g.beginFill( 'blue' );
-    g.drawRect( 0, 0, Bullet.width, Bullet.height );
-    g.endFill();
-
-    shape.x = x;
-    shape.y = y;
+    const shape = new Engine.Rectangle({
+            x: x,
+            y: y,
+            width: Bullet.width,
+            height: Bullet.height,
+            color: "blue",
+        });
 
     this.shape = shape;
     this.from_player = fromPlayer;
@@ -64,19 +70,8 @@ tookDamage()
 
 remove()
     {
-    var all;
-
-    if ( this.from_player === true )
-        {
-        all = Bullet.all_player;
-        }
-
-    else
-        {
-        all = Bullet.all_ship;
-        }
-
-    var index = all.indexOf( this );
+    const all = this.from_player === true ? Bullet.all_player : Bullet.all_ship;
+    const index = all.indexOf( this );
 
     all.splice( index, 1 );
 
@@ -86,13 +81,13 @@ remove()
 
 getX()
     {
-    return this.shape.x;
+    return this.shape.left;
     }
 
 
 getY()
     {
-    return this.shape.y;
+    return this.shape.top;
     }
 
 
@@ -108,13 +103,13 @@ getHeight()
     }
 
 
-tick( tickMove )
+tick( tickMove: number )
     {
     if ( this.direction === BulletDirection.top )
         {
         this.shape.y -= tickMove;
 
-        if ( this.shape.y < 0 )
+        if ( this.shape.top < 0 )
             {
             this.remove();
             }
@@ -125,43 +120,44 @@ tick( tickMove )
         {
         this.shape.y += tickMove;
 
-        if ( this.shape.y > G.CANVAS_HEIGHT )
+        if ( this.shape.top > CANVAS_HEIGHT )
             {
             this.remove();
             }
         }
     }
 
-static tick( event )
+
+static tick( deltaTime: number )
     {
         // how much each bullet moves per tick
-    var tickMove = Bullet.movement_speed * event.delta / 1000;
-    var a;
+    const tickMove = Bullet.movement_speed * deltaTime;
+    let a;
 
     for (a = Bullet.all_player.length - 1 ; a >= 0 ; a--)
         {
-        Bullet.all_player[ a ].tick( tickMove );
+        Bullet.all_player[ a ]!.tick( tickMove );
         }
 
     for (a = Bullet.all_ship.length - 1 ; a >= 0 ; a--)
         {
-        Bullet.all_ship[ a ].tick( tickMove );
+        Bullet.all_ship[ a ]!.tick( tickMove );
         }
     }
 
 
 static clear()
     {
-    var a;
+    let a;
 
     for (a = Bullet.all_player.length - 1 ; a >= 0 ; a--)
         {
-        Bullet.all_player[ a ].remove();
+        Bullet.all_player[ a ]!.remove();
         }
 
     for (a = Bullet.all_ship.length - 1 ; a >= 0 ; a--)
         {
-        Bullet.all_ship[ a ].remove();
+        Bullet.all_ship[ a ]!.remove();
         }
     }
 }

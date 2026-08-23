@@ -1,18 +1,21 @@
-module GameMenu
-{
+import { Timer } from "@drk4/utilities";
+import * as Game from "./game";
+import * as GameAudio from "./game_audio";
+import * as Options from "./options";
+
     // reference to html elements
-var GAME_MENU;
-var SCORE;
-var LIVES;
-var TIMER: Utilities.Timer;
-var MUTE: HTMLElement;
+let GAME_MENU: HTMLElement;
+let SCORE: HTMLElement;
+let LIVES: HTMLElement;
+let TIMER: Timer;
+let MUTE: HTMLElement;
 
 
 export function init()
     {
-    GAME_MENU = document.querySelector( '#GameMenu' );
+    GAME_MENU = document.querySelector<HTMLElement>( "#GameMenu" )!;
 
-    var restart = GAME_MENU.querySelector( '#Restart' );
+    const restart = GAME_MENU.querySelector<HTMLElement>( "#Restart" )!;
 
     restart.onclick = function( event )
         {
@@ -20,9 +23,9 @@ export function init()
         event.stopPropagation();
         };
 
-    var muted = Options.get( 'muted' );
+    let muted = Options.get( "muted" );
 
-    MUTE = GAME_MENU.querySelector( '#Mute' );
+    MUTE = GAME_MENU.querySelector<HTMLElement>( "#Mute" )!;
     MUTE.onclick = function( event )
         {
         muted = !muted;
@@ -32,25 +35,20 @@ export function init()
         };
     setMuted( muted, false );
 
-    var timer = GAME_MENU.querySelector( '#Timer' );
+    const timer = GAME_MENU.querySelector<HTMLElement>( "#Timer" )!;
 
-    TIMER = new Utilities.Timer( timer );
+    TIMER = new Timer({ updateElement: { element: timer } });
 
-    SCORE = GAME_MENU.querySelector( '#Score' );
-    LIVES = GAME_MENU.querySelector( '#Lives' );
+    SCORE = GAME_MENU.querySelector<HTMLElement>( "#Score" )!;
+    LIVES = GAME_MENU.querySelector<HTMLElement>( "#Lives" )!;
     }
 
 
-export function startTimer( startTime? )
+export function startTimer( startTime = 0 )
     {
-    if ( typeof startTime === 'undefined' )
-        {
-        startTime = 0;
-        }
-
     TIMER.start({
             startValue: startTime,
-            tickCallback: function()
+            onTick: function()
                 {
                 Game.addScore( -1 );
                 }
@@ -70,47 +68,46 @@ export function getCurrentTime()
     }
 
 
-export function updateScore( score )
+export function updateScore( score: number )
     {
-    SCORE.innerHTML = score;
+    SCORE.innerHTML = score.toString();
     }
 
 
-export function updateLives( lives )
+export function updateLives( lives: number )
     {
-    LIVES.innerHTML = lives;
+    LIVES.innerHTML = lives.toString();
     }
 
 
 export function show()
     {
-    GAME_MENU.style.visibility = 'visible';
+    GAME_MENU.style.visibility = "visible";
     }
 
 
 export function hide()
     {
-    GAME_MENU.style.visibility = 'hidden';
+    GAME_MENU.style.visibility = "hidden";
     }
 
 
-function setMuted( muted: boolean, save= true )
+function setMuted( muted: boolean, save = true )
     {
     if ( muted === true )
         {
         GameAudio.setGain( 0 );
-        MUTE.innerHTML = 'Un-mute';
+        MUTE.innerHTML = "Un-mute";
         }
 
     else
         {
         GameAudio.setGain( 1 );
-        MUTE.innerHTML = 'Mute';
+        MUTE.innerHTML = "Mute";
         }
 
     if ( save !== false )
         {
-        Options.set( 'muted', muted );
+        Options.set( "muted", muted );
         }
     }
-}
