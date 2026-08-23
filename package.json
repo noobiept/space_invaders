@@ -12,7 +12,9 @@
         "preview": "vite preview",
         "typecheck": "tsc --noEmit",
         "lint": "oxlint",
-        "lint:fix": "oxlint --fix"
+        "lint:fix": "oxlint --fix",
+        "format": "prettier --write .",
+        "format:check": "prettier --check ."
     },
     "dependencies": {
         "@drk4/game-engine": "^3.0.2",
@@ -20,6 +22,7 @@
     },
     "devDependencies": {
         "oxlint": "^1.79.0",
+        "prettier": "^3.9.6",
         "typescript": "^7.0.2",
         "vite": "^7.1.9"
     }
