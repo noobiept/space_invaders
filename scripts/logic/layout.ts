@@ -100,12 +100,17 @@ export function bunkerGroups(args: BunkerGroupsArgs): Placement[] {
 
     const groupWidth = columnHeights.length * bunkerWidth;
     const availableWidth = canvasWidth - 2 * margin;
-    const spaceBetween = Math.round((availableWidth - groups * groupWidth) / (groups - 1));
+
+    // Distance between the start of one group and the start of the next. It is
+    // deliberately kept fractional and only rounded per group below -- rounding the
+    // gap itself would accumulate the error into the last group, leaving the block
+    // a pixel short and the margins uneven.
+    const step = groups > 1 ? (availableWidth - groupWidth) / (groups - 1) : 0;
 
     const placements: Placement[] = [];
 
     for (let group = 0; group < groups; group++) {
-        const groupX = margin + group * (groupWidth + spaceBetween);
+        const groupX = margin + Math.round(group * step);
 
         for (let column = 0; column < columnHeights.length; column++) {
             const columnX = groupX + column * bunkerWidth;

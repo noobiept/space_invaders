@@ -122,11 +122,11 @@ describe("bunkerGroups()", () => {
         ]);
     });
 
-    it("starts each group at the original game's offsets", () => {
+    it("starts each group at the expected offset", () => {
         const bunkers = bunkerGroups(BUNKER_ARGS);
         const groupLefts = [0, 10, 20, 30].map((i) => bunkers[i]!.x - 6);
 
-        expect(groupLefts).toEqual([50, 167, 284, 401]);
+        expect(groupLefts).toEqual([50, 167, 285, 402]);
     });
 
     it("leaves the notch in the middle of each group", () => {
@@ -138,23 +138,42 @@ describe("bunkerGroups()", () => {
         expect(bottomRow.map((p) => p.x - 6)).toEqual([50, 86]);
     });
 
-    it("leaves the rounding remainder against the right margin", () => {
+    it("gives both margins the same width", () => {
         const bunkers = bunkerGroups(BUNKER_ARGS);
         const lefts = bunkers.map((p) => p.x - 6);
         const rights = bunkers.map((p) => p.x + 6);
 
-        // the gap between groups is rounded down (69 rather than 69.33), so the
-        // four groups span 399px of the 400px available and the leftover pixel
-        // ends up on the right. This asymmetry comes from the original game.
         expect(Math.min(...lefts)).toBe(BUNKER_ARGS.margin);
-        expect(CANVAS_WIDTH - Math.max(...rights)).toBe(BUNKER_ARGS.margin + 1);
+        expect(CANVAS_WIDTH - Math.max(...rights)).toBe(BUNKER_ARGS.margin);
     });
 
-    it("keeps the groups evenly spaced between themselves", () => {
+    it("keeps every bunker on a whole pixel, so the sprites stay crisp", () => {
+        for (const placement of bunkerGroups(BUNKER_ARGS)) {
+            expect(Number.isInteger(placement.x - BUNKER_ARGS.bunkerWidth / 2)).toBe(true);
+            expect(Number.isInteger(placement.y - BUNKER_ARGS.bunkerHeight / 2)).toBe(true);
+        }
+    });
+
+    it("spreads the rounding across the gaps rather than piling it on the last one", () => {
         const bunkers = bunkerGroups(BUNKER_ARGS);
         const groupLefts = [0, 10, 20, 30].map((i) => bunkers[i]!.x - 6);
-        const gaps = groupLefts.slice(1).map((left, i) => left - groupLefts[i]!);
+        const gaps = groupLefts
+            .slice(1)
+            .map((left, i) => left - groupLefts[i]! - 4 * BUNKER_ARGS.bunkerWidth);
 
-        expect(new Set(gaps).size).toBe(1);
+        // 208px of slack over 3 gaps cannot divide evenly, so one gap is a pixel
+        // wider -- but it is the middle one, which keeps the layout symmetric
+        expect(gaps).toEqual([69, 70, 69]);
+        expect(gaps[0]).toBe(gaps[gaps.length - 1]);
+    });
+
+    it("stays symmetric for an even split too", () => {
+        // 4 groups of 48 in 396px leaves 204px over 3 gaps == exactly 68 each
+        const even = bunkerGroups({ ...BUNKER_ARGS, canvasWidth: 496 });
+        const lefts = even.map((p) => p.x - 6);
+        const rights = even.map((p) => p.x + 6);
+
+        expect(Math.min(...lefts)).toBe(BUNKER_ARGS.margin);
+        expect(496 - Math.max(...rights)).toBe(BUNKER_ARGS.margin);
     });
 });
