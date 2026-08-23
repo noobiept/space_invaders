@@ -1,67 +1,55 @@
-body
-    {
+body {
     background-color: black;
     text-align: center;
     font-size: 24px;
-    }
+}
 
-    /* the canvas created by the game engine */
-.Game-Canvas
-    {
+/* the canvas created by the game engine */
+.Game-Canvas {
     border: 1px solid white;
-    }
+}
 
-    /* the engine's stylesheet defaults the first canvas to a white background */
-#Game-canvasContainer canvas:first-child
-    {
+/* the engine's stylesheet defaults the first canvas to a white background */
+#Game-canvasContainer canvas:first-child {
     background-color: black;
-    }
+}
 
-.button
-    {
+.button {
     cursor: pointer;
     color: white;
-    }
+}
 
-.button:hover
-    {
+.button:hover {
     text-decoration: underline;
-    }
+}
 
-#GameMenu
-    {
+#GameMenu {
     color: white;
     visibility: hidden;
     list-style-type: none;
     padding: 0;
     margin: 0;
     margin-top: 30px;
-    }
+}
 
-#GameMenu ul > *
-    {
+#GameMenu ul > * {
     display: inline-block;
     margin: 0 10px;
+}
 
-    }
-
-#GameMenu-first > *
-    {
+#GameMenu-first > * {
     min-width: 110px;
-    }
+}
 
-#GameMenu-second > *
-    {
+#GameMenu-second > * {
     min-width: 200px;
-    }
+}
 
-#GameMenu .value
-    {
+#GameMenu .value {
     color: rgb(0, 128, 0);
-    }
+}
 
-a
-    {
+a {
     text-decoration: none;
     display: inline-block;
-    }
+}

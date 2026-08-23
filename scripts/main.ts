@@ -32,23 +32,21 @@ const MANIFEST = [
     { id: "music", path: "audio/space_invaders.ogg" },
 ];
 
-
-function init()
-    {
-    const container = document.querySelector<HTMLElement>( "#GameContainer" )!;
+function init() {
+    const container = document.querySelector<HTMLElement>("#GameContainer")!;
 
     Engine.init({
-            container: container,
-            width: CANVAS_WIDTH,
-            height: CANVAS_HEIGHT,
-        });
-    Engine.setFps( 60 );
+        container: container,
+        width: CANVAS_WIDTH,
+        height: CANVAS_HEIGHT,
+    });
+    Engine.setFps(60);
 
-    Options.init( AppStorage.getData<Options.OptionsData>( Options.STORAGE_KEY ) );
-    HighScore.init( AppStorage.getData<HighScore.HighScoreData>( HighScore.STORAGE_KEY ) );
+    Options.init(AppStorage.getData<Options.OptionsData>(Options.STORAGE_KEY));
+    HighScore.init(AppStorage.getData<HighScore.HighScoreData>(HighScore.STORAGE_KEY));
     GameMenu.init();
 
-        // the order matters for the z-index (player is going to appear on top of the bullets for example)
+    // the order matters for the z-index (player is going to appear on top of the bullets for example)
     Bullet.init();
     Ship.init();
     MysteryShip.init();
@@ -58,20 +56,17 @@ function init()
 
     const preload = new Engine.Preload({ saveGlobal: true });
 
-    preload.addEventListener( "progress", function( progress: number )
-        {
-        Message.show( "Loading.. " + progress + "%" );
-        });
-    preload.addEventListener( "complete", function()
-        {
+    preload.addEventListener("progress", function (progress: number) {
+        Message.show("Loading.. " + progress + "%");
+    });
+    preload.addEventListener("complete", function () {
         Message.hide();
         GameMenu.show();
         GameAudio.init();
         Game.start();
-        });
+    });
 
-    preload.loadManifest( MANIFEST );
-    }
-
+    preload.loadManifest(MANIFEST);
+}
 
 init();

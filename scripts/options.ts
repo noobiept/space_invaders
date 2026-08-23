@@ -10,31 +10,22 @@ let OPTIONS: OptionsData = {
     muted: false,
 };
 
-
-export function init( options: OptionsData | null )
-    {
-    if ( options )
-        {
+export function init(options: OptionsData | null) {
+    if (options) {
         OPTIONS = options;
-        }
     }
+}
 
+export function get<K extends keyof OptionsData>(key: K): OptionsData[K] {
+    return OPTIONS[key];
+}
 
-export function get<K extends keyof OptionsData>( key: K ): OptionsData[ K ]
-    {
-    return OPTIONS[ key ];
-    }
-
-
-export function set<K extends keyof OptionsData>( key: K, value: OptionsData[ K ] )
-    {
-    OPTIONS[ key ] = value;
+export function set<K extends keyof OptionsData>(key: K, value: OptionsData[K]) {
+    OPTIONS[key] = value;
 
     save();
-    }
+}
 
-
-function save()
-    {
-    AppStorage.setData( STORAGE_KEY, OPTIONS );
-    }
+function save() {
+    AppStorage.setData(STORAGE_KEY, OPTIONS);
+}

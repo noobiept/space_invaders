@@ -9,9 +9,7 @@ When you finish a level, the score/lives you had is carried on to the next level
 
 Firing bullets reduces your overall score (also is reduced as time passes), so its important to use as less bullets as possible, and finish the level fast, to get a higher score.
 
-
 [Try it out here](http://nbpt.eu/games/space_invaders/)
-
 
 Gameplay
 ========
@@ -31,14 +29,12 @@ Gameplay
 - you gain score by destroying the enemy ships
 - you lose score as time passes by, and for each bullet fired
 
-
 Controls
 ========
 
-- move left - *a* or *left arrow*
-- move right - *d* or *right arrow*
-- fire - *left click* or *space*
-
+- move left - _a_ or _left arrow_
+- move right - _d_ or _right arrow_
+- fire - _left click_ or _space_
 
 Dependencies
 ============
@@ -46,7 +42,6 @@ Dependencies
 - [@drk4/game-engine](https://www.npmjs.com/package/@drk4/game-engine) : 3
 - [@drk4/utilities](https://www.npmjs.com/package/@drk4/utilities) : 7
 - typescript : 5
-
 
 Development
 ===========

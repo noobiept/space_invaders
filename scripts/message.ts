@@ -5,50 +5,40 @@ import { CANVAS_HEIGHT, CANVAS_WIDTH } from "./globals";
 let TEXT: Engine.Text;
 let TIMEOUT: Timeout;
 
-
-export function init()
-    {
+export function init() {
     TIMEOUT = new Timeout();
 
     TEXT = new Engine.Text({
-            x: CANVAS_WIDTH / 2,
-            y: CANVAS_HEIGHT / 2,
-            text: "",
-            fontFamily: "monospace",
-            fontSize: 30,
-            color: "white",
-            textAlign: "center",
-            textBaseline: "middle",
-        });
+        x: CANVAS_WIDTH / 2,
+        y: CANVAS_HEIGHT / 2,
+        text: "",
+        fontFamily: "monospace",
+        fontSize: 30,
+        color: "white",
+        textAlign: "center",
+        textBaseline: "middle",
+    });
     TEXT.visible = false;
 
-    Engine.addElement( TEXT );
-    }
+    Engine.addElement(TEXT);
+}
 
-
-export function show( text: string, timeout?: number, callback?: () => void )
-    {
+export function show(text: string, timeout?: number, callback?: () => void) {
     TEXT.text = text;
     TEXT.visible = true;
 
-    if ( isNumber( timeout ) )
-        {
-        TIMEOUT.start( function()
-            {
+    if (isNumber(timeout)) {
+        TIMEOUT.start(function () {
             TEXT.visible = false;
 
-            if ( callback )
-                {
+            if (callback) {
                 callback();
-                }
-
-            }, timeout );
-        }
+            }
+        }, timeout);
     }
+}
 
-
-export function hide()
-    {
+export function hide() {
     TIMEOUT.clear();
     TEXT.visible = false;
-    }
+}

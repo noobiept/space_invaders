@@ -2,113 +2,87 @@ import * as Engine from "@drk4/game-engine";
 import * as Game from "./game";
 import { CANVAS_WIDTH } from "./globals";
 
-export class MysteryShip
-{
-static width = 32;
-static height = 14;
-static all: MysteryShip[] = [];
-static movement_speed = 70;
-private static _container: Engine.Container;
+export class MysteryShip {
+    static width = 32;
+    static height = 14;
+    static all: MysteryShip[] = [];
+    static movement_speed = 70;
+    private static _container: Engine.Container;
 
-shape: Engine.Bitmap;
-score: number;
+    shape: Engine.Bitmap;
+    score: number;
 
+    static init() {
+        MysteryShip._container = new Engine.Container();
 
-static init()
-    {
-    MysteryShip._container = new Engine.Container();
-
-    Engine.addElement( MysteryShip._container );
+        Engine.addElement(MysteryShip._container);
     }
 
-
-constructor()
-    {
+    constructor() {
         // starts outside the left side of the canvas, and moves towards the right side
-    const shape = new Engine.Bitmap({
+        const shape = new Engine.Bitmap({
             x: -MysteryShip.width / 2,
             y: MysteryShip.height + MysteryShip.height / 2,
-            image: Engine.Preload.get( "mystery_ship" ),
+            image: Engine.Preload.get("mystery_ship"),
         });
 
-    this.shape = shape;
-    this.score = 100;
+        this.shape = shape;
+        this.score = 100;
 
-    MysteryShip._container.addChild( shape );
+        MysteryShip._container.addChild(shape);
 
-    MysteryShip.all.push( this );
+        MysteryShip.all.push(this);
     }
 
-
-tookDamage()
-    {
-    this.remove();
-
-    Game.addScore( this.score );
-    }
-
-
-remove()
-    {
-    const index = MysteryShip.all.indexOf( this );
-
-    MysteryShip.all.splice( index, 1 );
-
-    MysteryShip._container.removeChild( this.shape );
-    }
-
-
-getX()
-    {
-    return this.shape.left;
-    }
-
-
-getY()
-    {
-    return this.shape.top;
-    }
-
-
-getWidth()
-    {
-    return MysteryShip.width;
-    }
-
-
-getHeight()
-    {
-    return MysteryShip.height;
-    }
-
-
-tick( tickMove: number )
-    {
-    this.shape.x += tickMove;
-
-    if ( this.shape.left > CANVAS_WIDTH )
-        {
+    tookDamage() {
         this.remove();
+
+        Game.addScore(this.score);
+    }
+
+    remove() {
+        const index = MysteryShip.all.indexOf(this);
+
+        MysteryShip.all.splice(index, 1);
+
+        MysteryShip._container.removeChild(this.shape);
+    }
+
+    getX() {
+        return this.shape.left;
+    }
+
+    getY() {
+        return this.shape.top;
+    }
+
+    getWidth() {
+        return MysteryShip.width;
+    }
+
+    getHeight() {
+        return MysteryShip.height;
+    }
+
+    tick(tickMove: number) {
+        this.shape.x += tickMove;
+
+        if (this.shape.left > CANVAS_WIDTH) {
+            this.remove();
         }
     }
 
+    static tick(deltaTime: number) {
+        const tickMove = MysteryShip.movement_speed * deltaTime;
 
-static tick( deltaTime: number )
-    {
-    const tickMove = MysteryShip.movement_speed * deltaTime;
-
-    for (let a = MysteryShip.all.length - 1 ; a >= 0 ; a--)
-        {
-        MysteryShip.all[ a ]!.tick( tickMove );
+        for (let a = MysteryShip.all.length - 1; a >= 0; a--) {
+            MysteryShip.all[a]!.tick(tickMove);
         }
     }
 
-
-static clear()
-    {
-    for (let a = MysteryShip.all.length - 1 ; a >= 0 ; a--)
-        {
-        MysteryShip.all[ a ]!.remove();
+    static clear() {
+        for (let a = MysteryShip.all.length - 1; a >= 0; a--) {
+            MysteryShip.all[a]!.remove();
         }
     }
 }

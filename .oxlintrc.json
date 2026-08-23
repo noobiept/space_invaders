@@ -1,26 +1,26 @@
 {
     "$schema": "./node_modules/oxlint/configuration_schema.json",
-    "plugins": [ "typescript", "unicorn", "oxc", "promise" ],
+    "plugins": ["typescript", "unicorn", "oxc", "promise"],
     "env": {
         "browser": true,
         "es2024": true
     },
-        // the `pedantic` category is deliberately left out -- it mostly flags this project's
-        // own conventions, and its `prefer-dom-node-remove` rule misfires on the game
-        // engine's `Container.removeChild()`, which is not a DOM node.
+    // the `pedantic` category is deliberately left out -- it mostly flags this project's
+    // own conventions, and its `prefer-dom-node-remove` rule misfires on the game
+    // engine's `Container.removeChild()`, which is not a DOM node.
     "categories": {
         "correctness": "error",
         "suspicious": "error",
         "perf": "error"
     },
     "rules": {
-            // `_container` is the naming convention used for the private static containers
+        // `_container` is the naming convention used for the private static containers
         "no-underscore-dangle": "off",
-            // the entities register themselves in a static list on construction,
-            // so `new Bullet( ... )` for its side effect is intentional
+        // the entities register themselves in a static list on construction,
+        // so `new Bullet( ... )` for its side effect is intentional
         "no-new": "off",
-            // the local helpers are scoped where they're used on purpose
+        // the local helpers are scoped where they're used on purpose
         "unicorn/consistent-function-scoping": "off"
     },
-    "ignorePatterns": [ "dist", "release", "node_modules" ]
+    "ignorePatterns": ["dist", "release", "node_modules"]
 }
