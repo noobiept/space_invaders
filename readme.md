@@ -9,7 +9,7 @@ When you finish a level, the score/lives you had is carried on to the next level
 
 Firing bullets reduces your overall score (also is reduced as time passes), so its important to use as less bullets as possible, and finish the level fast, to get a higher score.
 
-[Try it out here](http://nbpt.eu/games/space_invaders/)
+[Try it out here](https://pedruu.ch/games/space_invaders)
 
 Gameplay
 ========
