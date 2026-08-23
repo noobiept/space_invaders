@@ -373,7 +373,6 @@ export function tick(deltaTime: number) {
         }
     }
 
-    PLAYER.tick(deltaTime);
     Bullet.tick(deltaTime);
 
     // collision detection after all the rest of the state has been updated

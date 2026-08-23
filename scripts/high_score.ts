@@ -30,10 +30,3 @@ function save() {
 function updateHtmlElement() {
     HTML_ELEMENT.innerHTML = BEST_SCORE.toString();
 }
-
-export function clear() {
-    BEST_SCORE = 0;
-
-    save();
-    updateHtmlElement();
-}

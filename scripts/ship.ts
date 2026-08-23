@@ -6,10 +6,7 @@ import { hasReachedPlayer, shipTickMove, shouldReverse } from "./logic/movement"
 import {
     SHIP_HEIGHT,
     SHIP_HIGHEST_WIDTH,
-    SHIP_TYPES,
     type ShipType,
-    type ShipTypeInfo,
-    type ShipTypeName,
     shipTypeInfo,
     shipTypeName,
 } from "./logic/ship_types";
@@ -23,8 +20,6 @@ export class Ship {
     static furthest_left: Ship;
     static furthest_right: Ship;
     static moving_right = true;
-    static types: Record<ShipTypeName, ShipTypeInfo> = SHIP_TYPES;
-
     static highest_width = SHIP_HIGHEST_WIDTH; // the width is different for all ship types, this has the highest
     static height = SHIP_HEIGHT; // height is the same for all the ships, but not width
     private static _container: Engine.Container;

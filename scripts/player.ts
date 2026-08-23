@@ -90,6 +90,4 @@ export class Player {
     getCenterY() {
         return this.shape.y;
     }
-
-    tick(_deltaTime: number) {}
 }
