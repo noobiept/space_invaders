@@ -17,22 +17,22 @@ export function init()
 
     const restart = GAME_MENU.querySelector<HTMLElement>( "#Restart" )!;
 
-    restart.onclick = function( event )
+    restart.addEventListener( "click", function( event )
         {
         Game.restart();
         event.stopPropagation();
-        };
+        });
 
     let muted = Options.get( "muted" );
 
     MUTE = GAME_MENU.querySelector<HTMLElement>( "#Mute" )!;
-    MUTE.onclick = function( event )
+    MUTE.addEventListener( "click", function( event )
         {
         muted = !muted;
         setMuted( muted );
 
         event.stopPropagation();
-        };
+        });
     setMuted( muted, false );
 
     const timer = GAME_MENU.querySelector<HTMLElement>( "#Timer" )!;
