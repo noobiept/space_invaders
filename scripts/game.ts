@@ -251,15 +251,6 @@ function fireInterval() {
     return getRandomInt(1000, 2500) / 1000;
 }
 
-/**
- * Start a new random interval (keeping the time past the last one).
- * The order matters: `restart()` works out the time past the interval that just ended.
- */
-function restartRandom(cooldown: Engine.Cooldown, interval: number) {
-    cooldown.restart();
-    cooldown.interval = interval;
-}
-
 export function setTempo(tempo: number) {
     CURRENT_TEMPO = tempo;
 
@@ -392,7 +383,7 @@ export function tick(deltaTime: number) {
     if (MYSTERY_SPAWN.isReady()) {
         new MysteryShip();
 
-        restartRandom(MYSTERY_SPAWN, mysteryInterval());
+        MYSTERY_SPAWN.restart(mysteryInterval());
     }
 
     // a random ship fires a bullet
@@ -401,7 +392,7 @@ export function tick(deltaTime: number) {
 
         Ship.all[position]!.fire();
 
-        restartRandom(SHIP_FIRE, fireInterval());
+        SHIP_FIRE.restart(fireInterval());
     }
 
     Bullet.tick(deltaTime);

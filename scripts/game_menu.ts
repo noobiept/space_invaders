@@ -1,3 +1,4 @@
+import * as Engine from "@drk4/game-engine";
 import { Timer } from "@drk4/utilities";
 import * as Game from "./game";
 import * as GameAudio from "./game_audio";
@@ -38,7 +39,8 @@ export function init() {
     const timer = GAME_MENU.querySelector<HTMLElement>("#Timer")!;
 
     TIMER = new Timer({ updateElement: { element: timer } });
-    document.addEventListener("visibilitychange", onVisibilityChange);
+    Engine.addEventListener("pause", onGameLoopPause);
+    Engine.addEventListener("resume", onGameLoopResume);
 
     SCORE = GAME_MENU.querySelector<HTMLElement>("#Score")!;
     LIVES = GAME_MENU.querySelector<HTMLElement>("#Lives")!;
@@ -62,8 +64,9 @@ export function startTimer(startTime = 0) {
         },
     });
 
-    // a new level can start while the page is hidden (from the victory message's timeout)
-    if (document.hidden) {
+    // a new level can start while the game loop is paused (from the victory message's timeout,
+    // with the page hidden)
+    if (!Engine.isGameLoopRunning()) {
         TIMER.stop();
     }
 }
@@ -74,17 +77,17 @@ export function stopTimer() {
 }
 
 /**
- * The engine pauses the game loop while the page is hidden, so pause the timer as well
+ * The timer goes along with the game loop, which the engine pauses while the page is hidden
  * (otherwise the time and its score decay keep going while the game is frozen).
  */
-function onVisibilityChange() {
-    if (!TIMER_STARTED) {
-        return;
-    }
-
-    if (document.hidden) {
+function onGameLoopPause() {
+    if (TIMER_STARTED) {
         TIMER.stop();
-    } else {
+    }
+}
+
+function onGameLoopResume() {
+    if (TIMER_STARTED) {
         TIMER.resume();
     }
 }
