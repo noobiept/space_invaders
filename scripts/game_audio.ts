@@ -22,6 +22,15 @@ export function init() {
     }
 
     BUFFER = Engine.Preload.get("music") as AudioBuffer;
+
+    // the song goes along with the game loop (which the engine pauses while the page is hidden),
+    // so it stays in time with the march
+    Engine.addEventListener("pause", function () {
+        AUDIO_CONTEXT?.suspend();
+    });
+    Engine.addEventListener("resume", function () {
+        AUDIO_CONTEXT?.resume();
+    });
 }
 
 export function playSong(tempo: number) {
@@ -31,8 +40,9 @@ export function playSong(tempo: number) {
 
     stop();
 
-    // the audio context starts suspended until there's a user interaction
-    if (AUDIO_CONTEXT.state === "suspended") {
+    // the audio context starts suspended until there's a user interaction (but while the game
+    // loop is paused, it's resumed along with it)
+    if (AUDIO_CONTEXT.state === "suspended" && Engine.isGameLoopRunning()) {
         AUDIO_CONTEXT.resume();
     }
 
