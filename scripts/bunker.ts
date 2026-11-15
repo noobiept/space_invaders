@@ -47,7 +47,7 @@ export class Bunker {
         const index = Bunker.all.indexOf(this);
 
         Bunker.all.splice(index, 1);
-        Bunker._container.removeChild(this.shape);
+        this.shape.destroy();
     }
 
     getX() {

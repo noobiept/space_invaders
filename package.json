@@ -20,8 +20,8 @@
         "format:check": "prettier --check ."
     },
     "dependencies": {
-        "@drk4/game-engine": "^3.0.2",
-        "@drk4/utilities": "^7.0.1"
+        "@drk4/game-engine": "^4.1.0",
+        "@drk4/utilities": "^8.0.0"
     },
     "devDependencies": {
         "@vitest/coverage-v8": "^4.1.11",

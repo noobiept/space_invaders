@@ -47,7 +47,7 @@ export class MysteryShip {
 
         MysteryShip.all.splice(index, 1);
 
-        MysteryShip._container.removeChild(this.shape);
+        this.shape.destroy();
     }
 
     getX() {

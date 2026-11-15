@@ -83,7 +83,7 @@ export class Ship {
 
         Ship.all.splice(index, 1);
 
-        Ship._container.removeChild(this.shape);
+        this.shape.destroy();
     }
 
     fire() {

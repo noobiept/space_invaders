@@ -48,7 +48,7 @@ export class Player {
     }
 
     remove() {
-        Player._container.removeChild(this.shape);
+        this.shape.destroy();
     }
 
     fire() {

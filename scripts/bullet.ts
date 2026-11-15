@@ -67,7 +67,7 @@ export class Bullet {
 
         all.splice(index, 1);
 
-        Bullet._container.removeChild(this.shape);
+        this.shape.destroy();
     }
 
     getX() {
