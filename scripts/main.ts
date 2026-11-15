@@ -55,13 +55,13 @@ function init() {
 
     const preload = new Engine.Preload({ saveGlobal: true });
 
-    preload.addEventListener("progress", function (progress: number) {
+    preload.addEventListener("progress", function (progress) {
         Message.show("Loading.. " + progress + "%");
     });
-    preload.addEventListener("error", function (data: Engine.PreloadErrorData) {
+    preload.addEventListener("error", function (data) {
         console.warn(`Couldn't load "${data.id}".`, data.status ?? data.error ?? data.event);
     });
-    preload.addEventListener("complete", function (data: { failedIds: string[] }) {
+    preload.addEventListener("complete", function (data) {
         // the game can be played without the music, but not without the images
         if (data.failedIds.some((id) => id !== "music")) {
             Message.show("Couldn't load the game.\nTry reloading the page.");

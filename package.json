@@ -20,7 +20,7 @@
         "format:check": "prettier --check ."
     },
     "dependencies": {
-        "@drk4/game-engine": "^4.1.0",
+        "@drk4/game-engine": "^4.2.0",
         "@drk4/utilities": "^8.0.0"
     },
     "devDependencies": {

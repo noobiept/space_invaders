@@ -176,8 +176,8 @@ importers:
   .:
     dependencies:
       '@drk4/game-engine':
-        specifier: ^4.1.0
-        version: 4.1.0
+        specifier: ^4.2.0
+        version: 4.2.0
       '@drk4/utilities':
         specifier: ^8.0.0
         version: 8.0.0
@@ -224,8 +224,8 @@ packages:
     resolution: {integrity: sha512-6zABk/ECA/QYSCQ1NGiVwwbQerUCZ+TQbp64Q3AgmfNvurHH0j8TtXa1qbShXA6qqkpAj4V5W8pP6mLe1mcMqA==}
     engines: {node: '>=18'}
 
-  '@drk4/game-engine@4.1.0':
-    resolution: {integrity: sha512-I1GgIGC0OMsvV0fbEhcd9OE/66m4OOGY7ctgGa+nv+5Ue5MGpaS1t0eUgOl6B8rDYQf0QVnvDQNW/L6xNLpnzw==}
+  '@drk4/game-engine@4.2.0':
+    resolution: {integrity: sha512-qjfNxLfbnjg3v1X2ZVnyxBFKkGoRrXxp2Yuj9L0IrwS0Dh9MccF8EjwLgwqFDhvhLdTcP9cq+mMvnizMxgItIQ==}
 
   '@drk4/utilities@8.0.0':
     resolution: {integrity: sha512-xbbhKZ+l8Qo/tUwF4QQP2X/KSjT3Yy6q+YOv6CdZNjFwXPaHHqde9ILCNVwE75Hih3dViljTzD7LmlnbJ7gklw==}
@@ -1118,7 +1118,7 @@ snapshots:
 
   '@bcoe/v8-coverage@1.0.2': {}
 
-  '@drk4/game-engine@4.1.0':
+  '@drk4/game-engine@4.2.0':
     dependencies:
       '@drk4/utilities': 8.0.0
 
