@@ -1,15 +1,17 @@
 import * as AppStorage from "./app_storage";
+import { parseHighScore } from "./logic/saved_data";
 
 export const STORAGE_KEY = "space_invaders_high_score";
 
-export type HighScoreData = number;
-
 let HTML_ELEMENT: HTMLElement;
-let BEST_SCORE: HighScoreData;
+let BEST_SCORE: number;
 
-export function init(data: HighScoreData | null) {
+/**
+ * @param data What was saved (it can be anything, only a valid score is used).
+ */
+export function init(data: unknown) {
     HTML_ELEMENT = document.querySelector<HTMLElement>("#HighScore")!;
-    BEST_SCORE = data ?? 0;
+    BEST_SCORE = parseHighScore(data);
 
     updateHtmlElement();
 }

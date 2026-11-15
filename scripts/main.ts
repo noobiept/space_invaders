@@ -41,8 +41,8 @@ function init() {
         height: CANVAS_HEIGHT,
     });
 
-    Options.init(AppStorage.getData<Options.OptionsData>(Options.STORAGE_KEY));
-    HighScore.init(AppStorage.getData<HighScore.HighScoreData>(HighScore.STORAGE_KEY));
+    Options.init(AppStorage.getData(Options.STORAGE_KEY));
+    HighScore.init(AppStorage.getData(HighScore.STORAGE_KEY));
     GameMenu.init();
 
     // the order matters for the z-index (player is going to appear on top of the bullets for example)

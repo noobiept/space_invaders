@@ -1,19 +1,15 @@
 import * as AppStorage from "./app_storage";
+import { type OptionsData, parseOptions } from "./logic/saved_data";
 
 export const STORAGE_KEY = "space_invaders_options";
 
-export interface OptionsData {
-    muted: boolean;
-}
+let OPTIONS: OptionsData = parseOptions(null); // the defaults, until `init()`
 
-let OPTIONS: OptionsData = {
-    muted: false,
-};
-
-export function init(options: OptionsData | null) {
-    if (options) {
-        OPTIONS = options;
-    }
+/**
+ * @param data What was saved (it can be anything, only the valid options are used).
+ */
+export function init(data: unknown) {
+    OPTIONS = parseOptions(data);
 }
 
 export function get<K extends keyof OptionsData>(key: K): OptionsData[K] {
