@@ -40,9 +40,9 @@ Controls
 Dependencies
 ============
 
-- [@drk4/game-engine](https://www.npmjs.com/package/@drk4/game-engine) : 3
-- [@drk4/utilities](https://www.npmjs.com/package/@drk4/utilities) : 7
-- typescript : 5
+- [@drk4/game-engine](https://www.npmjs.com/package/@drk4/game-engine) : 4
+- [@drk4/utilities](https://www.npmjs.com/package/@drk4/utilities) : 8
+- typescript : 7
 
 Development
 ===========
