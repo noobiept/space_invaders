@@ -10,6 +10,10 @@ let GAIN: GainNode | null = null;
 const SONG_TEMPO = 100; // tempo of the song (before changing the playback rate)
 let GAIN_VALUE = 1;
 
+/**
+ * Call it after an interaction with the page (a key press or click), otherwise the browser
+ * doesn't let the audio play.
+ */
 export function init() {
     try {
         AUDIO_CONTEXT = new AudioContext();

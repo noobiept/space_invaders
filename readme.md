@@ -32,6 +32,7 @@ Gameplay
 Controls
 ========
 
+- start - any key or _left click_
 - move left - _a_ or _left arrow_
 - move right - _d_ or _right arrow_
 - fire - _left click_ or _space_

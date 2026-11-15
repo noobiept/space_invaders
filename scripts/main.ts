@@ -68,13 +68,64 @@ function init() {
             return;
         }
 
-        Message.hide();
-        GameMenu.show();
-        GameAudio.init();
-        Game.start();
+        Message.show("Press any key to start");
+        waitForStart(function () {
+            Message.hide();
+            GameMenu.show();
+            GameAudio.init();
+            Game.start();
+        });
     });
 
     preload.loadManifest(MANIFEST);
+}
+
+/**
+ * Wait for the player to press a key (or click) before starting the game. The browser only lets
+ * the music play after an interaction with the page, so this way it starts along with the game.
+ * The menu is shown after, since its buttons need a game to be running.
+ */
+function waitForStart(start: () => void) {
+    function begin() {
+        document.removeEventListener("keydown", onKeyDown);
+        document.removeEventListener("click", begin);
+        start();
+    }
+
+    function onKeyDown(event: KeyboardEvent) {
+        if (!isStartKey(event)) {
+            return;
+        }
+
+        ignoreRelease(event.code);
+        begin();
+    }
+
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("click", begin);
+}
+
+/**
+ * The browser doesn't count the `escape` or the modifier keys as an interaction (so the music
+ * still couldn't play after them).
+ */
+function isStartKey(event: KeyboardEvent): boolean {
+    return !["Escape", "Shift", "Control", "Alt", "Meta"].includes(event.key);
+}
+
+/**
+ * The game fires on the release of `space`, so the key that started the game shouldn't also fire
+ * (it would cost score).
+ */
+function ignoreRelease(code: string) {
+    function onKeyUp(event: KeyboardEvent) {
+        if (event.code === code) {
+            event.stopPropagation();
+            window.removeEventListener("keyup", onKeyUp, true);
+        }
+    }
+
+    window.addEventListener("keyup", onKeyUp, true);
 }
 
 init();
