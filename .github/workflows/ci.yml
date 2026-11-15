@@ -16,11 +16,11 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/checkout@v5
+            - uses: actions/checkout@v7
 
             # installs the node/pnpm versions pinned in `.tool-versions`,
             # so that the CI matches the local setup
-            - uses: jdx/mise-action@v2
+            - uses: jdx/mise-action@v5
               with:
                   cache: true
 
