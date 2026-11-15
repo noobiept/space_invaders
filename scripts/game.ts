@@ -32,6 +32,9 @@ let MOVE_RIGHT = false;
 let PLAYER!: Player;
 let SCORE = 0;
 
+// if a game is being played (it ends with `clear()`, which can happen in the middle of a `tick()`)
+let PLAYING = false;
+
 // the tempo of the song/game (the movement of the enemies follow the tempo as well)
 // the ships move on every beat (the cooldown's interval)
 let BEAT!: Engine.Cooldown;
@@ -141,6 +144,7 @@ export function start(
     document.body.addEventListener("keyup", keyUpEvent);
     document.body.addEventListener("click", clickEvent);
     Engine.addToGameLoop(tick);
+    PLAYING = true;
 }
 
 export function restart() {
@@ -176,6 +180,7 @@ export function defeat() {
 }
 
 function clear() {
+    PLAYING = false;
     Engine.removeFromGameLoop(tick);
     document.body.removeEventListener("keydown", keyDownEvent);
     document.body.removeEventListener("keyup", keyUpEvent);
@@ -343,6 +348,11 @@ function collisionDetection() {
         ) {
             bullet.tookDamage();
             PLAYER.tookDamage();
+
+            // the last life ends the game, which clears the bullets
+            if (!PLAYING) {
+                return;
+            }
         }
     }
 }
@@ -368,6 +378,11 @@ export function tick(deltaTime: number) {
         BEAT.restart();
 
         Ship.tick();
+
+        // the ships may have reached the player, which ends the game (and clears everything)
+        if (!PLAYING) {
+            return;
+        }
     }
 
     // the mystery ship is moved normally every tick
