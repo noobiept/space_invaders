@@ -44,18 +44,21 @@ export function clampPlayerX(x: number, playerWidth: number, canvasWidth: number
 }
 
 /**
+ * The ships take one step on each beat, as far as their speed covers in this time. It's a
+ * constant so the step doesn't depend on the frame rate. The speeds were tuned with v3 of the
+ * engine, whose `setFps(60)` ran at about 40 updates per second on a 60Hz display (it skipped
+ * the frames it measured at 16ms), so this keeps that pace.
+ */
+export const SHIP_STEP_TIME = 1 / 40;
+
+/**
  * The remaining ships move faster as their numbers dwindle.
  *
  * @param shipCount How many ships are still alive.
- * @returns How far each ship moves this tick.
+ * @returns How far each ship moves on a beat.
  */
-export function shipTickMove(
-    maxSpeed: number,
-    shipCount: number,
-    speedDecrease: number,
-    deltaTime: number,
-): number {
-    return (maxSpeed - shipCount * speedDecrease) * deltaTime;
+export function shipTickMove(maxSpeed: number, shipCount: number, speedDecrease: number): number {
+    return travel(maxSpeed - shipCount * speedDecrease, SHIP_STEP_TIME);
 }
 
 export interface ShouldReverseArgs {

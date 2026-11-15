@@ -9,7 +9,7 @@ import * as HighScore from "./high_score";
 import * as Message from "./message";
 import { bunkerGroups, shipGrid } from "./logic/layout";
 import { nextLevelSpeed } from "./logic/scoring";
-import { INITIAL_TEMPO, nextTempo, tempoLimitMs } from "./logic/tempo";
+import { INITIAL_TEMPO, beatInterval, nextTempo } from "./logic/tempo";
 import { MysteryShip } from "./mystery_ship";
 import { Player } from "./player";
 import { Ship } from "./ship";
@@ -33,16 +33,15 @@ let PLAYER!: Player;
 let SCORE = 0;
 
 // the tempo of the song/game (the movement of the enemies follow the tempo as well)
-// the ships move every 'TEMPO_LIMIT' milliseconds
-let TEMPO_COUNT = 0;
-let TEMPO_LIMIT = 0;
+// the ships move on every beat (the cooldown's interval)
+let BEAT!: Engine.Cooldown;
 let CURRENT_TEMPO = 0;
 
-// when to spawn a mystery ship, the count is a random value assigned later
-let MYSTERY_COUNT = 0;
+// when to spawn a mystery ship (a new random interval after each one)
+let MYSTERY_SPAWN!: Engine.Cooldown;
 
-// time until a random ship fires a bullet
-let FIRE_COUNT = 0; // its assigned randomly
+// when a random ship fires a bullet (a new random interval after each one)
+let SHIP_FIRE!: Engine.Cooldown;
 
 /*
     Starts a new game.
@@ -128,11 +127,12 @@ export function start(
 
     GameMenu.startTimer(initialTime);
 
-    setTempo(INITIAL_TEMPO);
+    // they all wait their interval before the first time
+    BEAT = new Engine.Cooldown(beatInterval(INITIAL_TEMPO), { ready: false });
+    MYSTERY_SPAWN = new Engine.Cooldown(mysteryInterval(), { ready: false });
+    SHIP_FIRE = new Engine.Cooldown(fireInterval(), { ready: false });
 
-    setTempoLimit();
-    setMysteryLimit();
-    setFireLimit();
+    setTempo(INITIAL_TEMPO);
 
     GameAudio.playSong(INITIAL_TEMPO);
 
@@ -232,22 +232,34 @@ function clickEvent(event: MouseEvent) {
     }
 }
 
-function setMysteryLimit() {
-    MYSTERY_COUNT = getRandomInt(8000, 15000);
+/**
+ * Time until the next mystery ship (in seconds).
+ */
+function mysteryInterval() {
+    return getRandomInt(8000, 15000) / 1000;
 }
 
-function setFireLimit() {
-    FIRE_COUNT = getRandomInt(1000, 2500);
+/**
+ * Time until a ship fires the next bullet (in seconds).
+ */
+function fireInterval() {
+    return getRandomInt(1000, 2500) / 1000;
 }
 
-function setTempoLimit() {
-    TEMPO_COUNT = TEMPO_LIMIT;
+/**
+ * Start a new random interval (keeping the time past the last one).
+ * The order matters: `restart()` works out the time past the interval that just ended.
+ */
+function restartRandom(cooldown: Engine.Cooldown, interval: number) {
+    cooldown.restart();
+    cooldown.interval = interval;
 }
 
 export function setTempo(tempo: number) {
     CURRENT_TEMPO = tempo;
 
-    TEMPO_LIMIT = tempoLimitMs(CURRENT_TEMPO);
+    // applies to the current beat as well, like the song's playback rate
+    BEAT.interval = beatInterval(CURRENT_TEMPO);
 }
 
 export function increaseTempo() {
@@ -336,15 +348,13 @@ function collisionDetection() {
 }
 
 /**
- * The engine's game loop gives the `deltaTime` in seconds, while the counters below are in milliseconds.
+ * @param deltaTime Seconds since the last update (from the engine's game loop).
  */
 export function tick(deltaTime: number) {
-    // update the counters
-    const delta = deltaTime * 1000;
-
-    TEMPO_COUNT -= delta;
-    MYSTERY_COUNT -= delta;
-    FIRE_COUNT -= delta;
+    // update the timers
+    BEAT.update(deltaTime);
+    MYSTERY_SPAWN.update(deltaTime);
+    SHIP_FIRE.update(deltaTime);
 
     // deal with the movement of the player
     if (MOVE_LEFT) {
@@ -354,33 +364,29 @@ export function tick(deltaTime: number) {
     }
 
     // move the enemy ships according to the current tempo
-    if (TEMPO_COUNT < 0) {
-        setTempoLimit();
+    if (BEAT.isReady()) {
+        BEAT.restart();
 
-        Ship.tick(deltaTime);
+        Ship.tick();
     }
 
     // the mystery ship is moved normally every tick
     MysteryShip.tick(deltaTime);
 
     // spawn a new mystery ship
-    if (MYSTERY_COUNT < 0) {
+    if (MYSTERY_SPAWN.isReady()) {
         new MysteryShip();
 
-        // new random limit for the next one
-        setMysteryLimit();
+        restartRandom(MYSTERY_SPAWN, mysteryInterval());
     }
 
     // a random ship fires a bullet
-    if (FIRE_COUNT < 0) {
-        // get a random ship
-        if (Ship.all.length > 0) {
-            const position = getRandomInt(0, Ship.all.length - 1);
+    if (SHIP_FIRE.isReady() && Ship.all.length > 0) {
+        const position = getRandomInt(0, Ship.all.length - 1);
 
-            Ship.all[position]!.fire();
+        Ship.all[position]!.fire();
 
-            setFireLimit();
-        }
+        restartRandom(SHIP_FIRE, fireInterval());
     }
 
     Bullet.tick(deltaTime);

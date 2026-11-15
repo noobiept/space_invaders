@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
     INVASION_DEPTH,
     SHIP_EDGE_LIMIT,
+    SHIP_STEP_TIME,
     clampPlayerX,
     hasReachedPlayer,
     isAboveCanvas,
@@ -60,22 +61,27 @@ describe("clampPlayerX()", () => {
 
 describe("shipTickMove()", () => {
     it("speeds the fleet up as it is thinned out", () => {
-        const full = shipTickMove(1000, 55, 15, 1 / 60);
-        const half = shipTickMove(1000, 27, 15, 1 / 60);
-        const last = shipTickMove(1000, 1, 15, 1 / 60);
+        const full = shipTickMove(1000, 55, 15);
+        const half = shipTickMove(1000, 27, 15);
+        const last = shipTickMove(1000, 1, 15);
 
         expect(full).toBeLessThan(half);
         expect(half).toBeLessThan(last);
     });
 
     it("matches the speed formula for a full fleet", () => {
-        // (1000 - 55 * 15) / 60
-        expect(shipTickMove(1000, 55, 15, 1 / 60)).toBeCloseTo(175 / 60, 6);
+        // (1000 - 55 * 15) / 40
+        expect(shipTickMove(1000, 55, 15)).toBeCloseTo(175 / 40, 6);
+    });
+
+    it("steps as far as the speed covers in v3's update time, whatever the frame rate", () => {
+        expect(SHIP_STEP_TIME).toBe(1 / 40);
+        expect(shipTickMove(1000, 55, 15)).toBe(travel(175, SHIP_STEP_TIME));
     });
 
     it("scales with the level's max speed", () => {
-        const level1 = shipTickMove(1000, 55, 15, 1 / 60);
-        const level2 = shipTickMove(1100, 55, 15, 1 / 60);
+        const level1 = shipTickMove(1000, 55, 15);
+        const level2 = shipTickMove(1100, 55, 15);
 
         expect(level2).toBeGreaterThan(level1);
     });

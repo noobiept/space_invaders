@@ -176,7 +176,10 @@ export class Ship {
         }
     }
 
-    static tick(deltaTime: number) {
+    /**
+     * Called on each beat of the song (see `Game.tick()`).
+     */
+    static tick() {
         // determine if we reach the extremes of the canvas, and if so, need to change direction
         const reverse = shouldReverse({
             movingRight: Ship.moving_right,
@@ -193,12 +196,7 @@ export class Ship {
         }
 
         const length = Ship.all.length;
-        const tickMove = shipTickMove(
-            Ship.current_max_speed,
-            length,
-            Ship.speed_decrease,
-            deltaTime,
-        );
+        const tickMove = shipTickMove(Ship.current_max_speed, length, Ship.speed_decrease);
 
         for (let a = length - 1; a >= 0; a--) {
             Ship.all[a]!.tick(tickMove);

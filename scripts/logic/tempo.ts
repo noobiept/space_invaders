@@ -11,12 +11,12 @@ export const INITIAL_TEMPO = 100;
 export const TEMPO_INCREASE_PER_SHIP = 2;
 
 /**
- * How long to wait between ship movements, in milliseconds, for a given tempo.
+ * How long to wait between ship movements (one beat), in seconds, for a given tempo.
  *
  * @param tempo Beats per minute.
  */
-export function tempoLimitMs(tempo: number): number {
-    return (60 / tempo) * 1000;
+export function beatInterval(tempo: number): number {
+    return 60 / tempo;
 }
 
 /**

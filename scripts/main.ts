@@ -40,7 +40,6 @@ function init() {
         width: CANVAS_WIDTH,
         height: CANVAS_HEIGHT,
     });
-    Engine.setFps(60);
 
     Options.init(AppStorage.getData<Options.OptionsData>(Options.STORAGE_KEY));
     HighScore.init(AppStorage.getData<HighScore.HighScoreData>(HighScore.STORAGE_KEY));
