@@ -58,7 +58,16 @@ function init() {
     preload.addEventListener("progress", function (progress: number) {
         Message.show("Loading.. " + progress + "%");
     });
-    preload.addEventListener("complete", function () {
+    preload.addEventListener("error", function (data: Engine.PreloadErrorData) {
+        console.warn(`Couldn't load "${data.id}".`, data.status ?? data.error ?? data.event);
+    });
+    preload.addEventListener("complete", function (data: { failedIds: string[] }) {
+        // the game can be played without the music, but not without the images
+        if (data.failedIds.some((id) => id !== "music")) {
+            Message.show("Couldn't load the game.\nTry reloading the page.");
+            return;
+        }
+
         Message.hide();
         GameMenu.show();
         GameAudio.init();
