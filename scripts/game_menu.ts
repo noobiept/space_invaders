@@ -1,7 +1,7 @@
 import { Timer } from "@drk4/utilities";
 import * as Game from "./game";
 import * as GameAudio from "./game_audio";
-import { TIME_DECAY_PER_TICK } from "./logic/scoring";
+import { timeDecay } from "./logic/scoring";
 import * as Options from "./options";
 
 // reference to html elements
@@ -9,6 +9,7 @@ let GAME_MENU: HTMLElement;
 let SCORE: HTMLElement;
 let LIVES: HTMLElement;
 let TIMER: Timer;
+let TIMER_STARTED = false; // between `startTimer()` and `stopTimer()` (the timer itself is stopped while the page is hidden)
 let MUTE: HTMLElement;
 
 export function init() {
@@ -37,22 +38,55 @@ export function init() {
     const timer = GAME_MENU.querySelector<HTMLElement>("#Timer")!;
 
     TIMER = new Timer({ updateElement: { element: timer } });
+    document.addEventListener("visibilitychange", onVisibilityChange);
 
     SCORE = GAME_MENU.querySelector<HTMLElement>("#Score")!;
     LIVES = GAME_MENU.querySelector<HTMLElement>("#Lives")!;
 }
 
 export function startTimer(startTime = 0) {
+    let lastTime = startTime;
+
+    TIMER_STARTED = true;
     TIMER.start({
         startValue: startTime,
         onTick: function () {
-            Game.addScore(TIME_DECAY_PER_TICK);
+            const time = TIMER.getTimeMilliseconds();
+            const decay = timeDecay(lastTime, time);
+
+            lastTime = time;
+
+            if (decay !== 0) {
+                Game.addScore(decay);
+            }
         },
     });
+
+    // a new level can start while the page is hidden (from the victory message's timeout)
+    if (document.hidden) {
+        TIMER.stop();
+    }
 }
 
 export function stopTimer() {
+    TIMER_STARTED = false;
     TIMER.stop();
+}
+
+/**
+ * The engine pauses the game loop while the page is hidden, so pause the timer as well
+ * (otherwise the time and its score decay keep going while the game is frozen).
+ */
+function onVisibilityChange() {
+    if (!TIMER_STARTED) {
+        return;
+    }
+
+    if (document.hidden) {
+        TIMER.stop();
+    } else {
+        TIMER.resume();
+    }
 }
 
 export function getCurrentTime() {
